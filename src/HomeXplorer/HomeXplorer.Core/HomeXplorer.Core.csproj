@@ -15,4 +15,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HomeXplorer.Data\HomeXplorer.Data.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -15,11 +15,11 @@
         [Required]
         public string Name { get; set; } = null!;
 
-        [Comment("Country ID of the property")]
+        [Comment("Country ID of the city")]
         [ForeignKey(nameof(Country))]
         public int CountryId { get; set; }
 
-        [Comment("Country of the property")]
+        [Comment("Country of the city")]
         public virtual Country Country { get; set; } = null!;
     }
 }

@@ -4,6 +4,7 @@ using HomeXplorer.Core.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeXplorer.Core.Migrations
 {
     [DbContext(typeof(HomeXplorerDbContext))]
-    partial class HomeXplorerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230613111018_AddNewTables")]
+    partial class AddNewTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,6 +106,21 @@ namespace HomeXplorer.Core.Migrations
                     b.ToTable("Agents");
 
                     b.HasComment("Agent who offers the property");
+                });
+
+            modelBuilder.Entity("HomeXplorer.Data.Entities.AgentProperty", b =>
+                {
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AgentId", "PropertyId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("AgentsProperties");
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.BuildingType", b =>
@@ -222,10 +239,6 @@ namespace HomeXplorer.Core.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasComment("Address of the property");
 
-                    b.Property<int>("AgentId")
-                        .HasColumnType("int")
-                        .HasComment("Agent ID of the property");
-
                     b.Property<int>("BuildingTypeId")
                         .HasColumnType("int")
                         .HasComment("Building type ID of the property");
@@ -267,8 +280,6 @@ namespace HomeXplorer.Core.Migrations
                         .HasComment("Size of the property (square meters)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AgentId");
 
                     b.HasIndex("BuildingTypeId");
 
@@ -545,6 +556,25 @@ namespace HomeXplorer.Core.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("HomeXplorer.Data.Entities.AgentProperty", b =>
+                {
+                    b.HasOne("HomeXplorer.Data.Entities.Agent", "Agent")
+                        .WithMany("AgentsProperties")
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HomeXplorer.Data.Entities.Property", "Property")
+                        .WithMany("AgentsProperties")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Property");
+                });
+
             modelBuilder.Entity("HomeXplorer.Data.Entities.City", b =>
                 {
                     b.HasOne("HomeXplorer.Data.Entities.Country", "Country")
@@ -558,12 +588,6 @@ namespace HomeXplorer.Core.Migrations
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Property", b =>
                 {
-                    b.HasOne("HomeXplorer.Data.Entities.Agent", "Agent")
-                        .WithMany("Properties")
-                        .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("HomeXplorer.Data.Entities.BuildingType", "BuildingType")
                         .WithMany()
                         .HasForeignKey("BuildingTypeId")
@@ -587,8 +611,6 @@ namespace HomeXplorer.Core.Migrations
                         .HasForeignKey("PropertyTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Agent");
 
                     b.Navigation("BuildingType");
 
@@ -657,12 +679,17 @@ namespace HomeXplorer.Core.Migrations
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Agent", b =>
                 {
-                    b.Navigation("Properties");
+                    b.Navigation("AgentsProperties");
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Country", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("HomeXplorer.Data.Entities.Property", b =>
+                {
+                    b.Navigation("AgentsProperties");
                 });
 #pragma warning restore 612, 618
         }

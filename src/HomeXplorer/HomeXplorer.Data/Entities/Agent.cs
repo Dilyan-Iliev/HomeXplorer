@@ -1,5 +1,6 @@
 ﻿namespace HomeXplorer.Data.Entities
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -7,6 +8,11 @@
     [Comment("Agent who offers the property")]
     public class Agent
     {
+        public Agent()
+        {
+            this.Properties = new HashSet<Property>();
+        }
+
         [Comment("Primary key")]
         [Key]
         public int Id { get; set; }
@@ -30,11 +36,21 @@
         [Comment("Rating of the agent")]
         public decimal Rating { get; set; }
 
+        [Comment("Reference to the IdentityUser")]
+        [ForeignKey(nameof(User))]
+        public string UserId { get; set; }
+
+        [Comment("The associated IdentityUser")]
+        public virtual IdentityUser User { get; set; }
+
         [Comment("Agency ID of the agent")]
         [ForeignKey(nameof(Agency))]
         public int AgencyId { get; set; }
 
         [Comment("Agency of the agent")]
         public virtual Agency Agency { get; set; } = null!;
+
+        [Comment("Properties offered by the agent")]
+        public virtual ICollection<Property> Properties { get; set; }
     }
 }
