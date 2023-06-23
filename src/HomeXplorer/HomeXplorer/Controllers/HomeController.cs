@@ -1,10 +1,10 @@
 ﻿namespace HomeXplorer.Controllers
 {
-    using HomeXplorer.Models;
+    using HomeXplorer.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using System.Diagnostics;
 
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 

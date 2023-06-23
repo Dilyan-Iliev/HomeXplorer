@@ -7,9 +7,14 @@
     [Comment("Offered property")]
     public class Property
     {
+        public Property()
+        {
+            this.Images = new HashSet<CloudImage>();
+        }
+
         [Key]
         [Comment("Primary key")]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Comment("Name of the property")]
         public string? Name { get; set; }
@@ -76,5 +81,14 @@
 
         [Comment("Agent of the property")]
         public virtual Agent Agent { get; set; } = null!;
+
+        [Comment("Property renter ID")]
+        [ForeignKey(nameof(Renter))]
+        public int? RenterId { get; set; }
+
+        [Comment("Property renter")]
+        public virtual Renter? Renter { get; set; }
+
+        public virtual ICollection<CloudImage> Images { get; set; }
     }
 }

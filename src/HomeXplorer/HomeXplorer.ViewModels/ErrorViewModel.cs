@@ -1,4 +1,4 @@
-namespace HomeXplorer.Models
+namespace HomeXplorer.ViewModels
 {
     public class ErrorViewModel
     {

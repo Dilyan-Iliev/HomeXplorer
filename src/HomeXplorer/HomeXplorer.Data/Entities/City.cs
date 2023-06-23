@@ -7,6 +7,12 @@
     [Comment("City where the property is")]
     public class City
     {
+        public City()
+        {
+            this.Properties = new HashSet<Property>();
+            this.Agents = new HashSet<Agent>();
+        }
+
         [Comment("Primary key")]
         [Key]
         public int Id { get; set; }
@@ -21,5 +27,11 @@
 
         [Comment("Country of the city")]
         public virtual Country Country { get; set; } = null!;
+
+        [Comment("Properties in the city")]
+        public virtual ICollection<Property> Properties { get; set; }
+
+        [Comment("Agents in the city")]
+        public virtual ICollection<Agent> Agents { get; set; }
     }
 }

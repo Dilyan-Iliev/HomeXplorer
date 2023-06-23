@@ -11,4 +11,18 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HomeXplorer.Common\HomeXplorer.Common.csproj" />
+    <ProjectReference Include="..\HomeXplorer.ViewModels\HomeXplorer.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="bg %281%29.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="bg.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

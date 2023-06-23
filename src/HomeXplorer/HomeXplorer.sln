@@ -9,6 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeXplorer.Core", "HomeXpl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.Data", "HomeXplorer.Data\HomeXplorer.Data.csproj", "{5ED7AC33-2FB9-418C-8A36-8DAFCFEB9C38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.Services", "HomeXplorer.Services\HomeXplorer.Services.csproj", "{020AA721-ACB4-4FCC-8400-3DB76BFE1A42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.Common", "HomeXplorer.Common\HomeXplorer.Common.csproj", "{6BB60B83-54E3-471D-9AC9-A9B9D369D6F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.ViewModels", "HomeXplorer.ViewModels\HomeXplorer.ViewModels.csproj", "{20628CB3-977C-4828-A34B-53F41C7A7C95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +33,18 @@ Global
 		{5ED7AC33-2FB9-418C-8A36-8DAFCFEB9C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ED7AC33-2FB9-418C-8A36-8DAFCFEB9C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ED7AC33-2FB9-418C-8A36-8DAFCFEB9C38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{020AA721-ACB4-4FCC-8400-3DB76BFE1A42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{020AA721-ACB4-4FCC-8400-3DB76BFE1A42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{020AA721-ACB4-4FCC-8400-3DB76BFE1A42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{020AA721-ACB4-4FCC-8400-3DB76BFE1A42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BB60B83-54E3-471D-9AC9-A9B9D369D6F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BB60B83-54E3-471D-9AC9-A9B9D369D6F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BB60B83-54E3-471D-9AC9-A9B9D369D6F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BB60B83-54E3-471D-9AC9-A9B9D369D6F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20628CB3-977C-4828-A34B-53F41C7A7C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20628CB3-977C-4828-A34B-53F41C7A7C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20628CB3-977C-4828-A34B-53F41C7A7C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20628CB3-977C-4828-A34B-53F41C7A7C95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,6 +17,23 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HomeXplorer.Core\HomeXplorer.Core.csproj" />
+    <ProjectReference Include="..\HomeXplorer.Services\HomeXplorer.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Administration\Controllers\" />
+    <Folder Include="Areas\Administration\Views\" />
+    <Folder Include="Areas\Agent\Controllers\" />
+    <Folder Include="Areas\Agent\Views\" />
+    <Folder Include="Areas\Renter\Controllers\" />
+    <Folder Include="Areas\Renter\Views\" />
+    <Folder Include="wwwroot\assets\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\assets\register.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
