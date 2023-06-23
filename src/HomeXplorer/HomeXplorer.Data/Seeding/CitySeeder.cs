@@ -8,7 +8,7 @@
     {
         public ICollection<City> GenerateCities()
         {
-            string jsonPath = "../bg.json"; //check the path
+            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"bin\..\bg.json");//check the path
             string jsonFile = File.ReadAllText(jsonPath);
 
             CityViewModel[] cityModels = JsonSerializer.Deserialize<CityViewModel[]>(jsonFile);
@@ -19,6 +19,7 @@
             {
                 City city = new City
                 {
+                    Id = c.Id,
                     Name = c.Name,
                     CountryId = c.CountryId,
                 };

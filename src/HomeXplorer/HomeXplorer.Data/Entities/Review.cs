@@ -18,7 +18,7 @@
         [Comment("Reviewer ID")]
         [Required]
         [ForeignKey(nameof(Reviewer))]
-        public string ReviewerId { get; set; } = null!;
+        public int ReviewerId { get; set; }
 
         [Comment("Creator of the review")] //this is the Renter
         public Renter Reviewer { get; set; } = null!;

@@ -37,7 +37,7 @@
         public string Address { get; set; } = null!;
 
         [Comment("Is the property active or not")]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         [Comment("Time when property offer is being added")]
         [Required]

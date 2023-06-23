@@ -19,7 +19,7 @@
         [Required]
         public string LastName { get; set; } = null!;
 
-        public DateTime RegisteredOn { get; set; }
+        public DateTime RegisteredOn { get; set; } = DateTime.UtcNow;
 
         public virtual ICollection<Review> Reviews { get; set; }
     }

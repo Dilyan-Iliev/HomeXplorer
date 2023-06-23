@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.Core.Contexts
 {
     using HomeXplorer.Data.Entities;
+    using HomeXplorer.Data.Entities.Configuration;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +39,10 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new CountryConfiguration());
+            builder.ApplyConfiguration(new PropertyConfiguration());
+            builder.ApplyConfiguration(new CityConfiguration());
+
             base.OnModelCreating(builder);
         }
     }

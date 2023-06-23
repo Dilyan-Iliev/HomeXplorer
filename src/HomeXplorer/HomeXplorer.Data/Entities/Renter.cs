@@ -1,5 +1,7 @@
 ﻿namespace HomeXplorer.Data.Entities
 {
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class Renter
     {
         public Renter()
@@ -23,6 +25,7 @@
 
         public ApplicationUser User { get; set; }
 
+        //[InverseProperty(nameof(Property.Renter))]
         public virtual ICollection<Property> RentedProperties { get; set; }
 
         public virtual ICollection<Property> FavouriteProperties { get; set; }
