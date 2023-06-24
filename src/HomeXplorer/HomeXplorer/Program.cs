@@ -1,8 +1,9 @@
 namespace HomeXplorer
 {
-    using HomeXplorer.Core.Contexts;
-    using HomeXplorer.Extensions;
     using Microsoft.EntityFrameworkCore;
+
+    using HomeXplorer.Extensions;
+    using HomeXplorer.Core.Contexts;
 
     public class Program
     {

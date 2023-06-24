@@ -1,12 +1,13 @@
 ﻿namespace HomeXplorer.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Authorization;
+
     using HomeXplorer.Common;
     using HomeXplorer.Core.Contexts;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.ViewModels.User;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
 
     public class UserController : BaseController
     {

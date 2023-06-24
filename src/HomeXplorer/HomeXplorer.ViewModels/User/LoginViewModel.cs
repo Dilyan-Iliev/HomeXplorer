@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.ViewModels.User
 {
     using System.ComponentModel.DataAnnotations;
+
     using static HomeXplorer.Common.ErrorConstants;
     using static HomeXplorer.Common.DataConstants.ApplicationUserConstants;
 

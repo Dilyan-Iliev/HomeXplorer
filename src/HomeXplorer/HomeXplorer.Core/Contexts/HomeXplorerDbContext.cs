@@ -1,9 +1,10 @@
 ﻿namespace HomeXplorer.Core.Contexts
 {
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Data.Entities.Configuration;
-    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore;
 
     public class HomeXplorerDbContext : IdentityDbContext<ApplicationUser>
     {

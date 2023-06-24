@@ -1,8 +1,9 @@
 ﻿namespace HomeXplorer.Data.Seeding
 {
+    using System.Text.Json;
+
     using HomeXplorer.Data.Entities;
     using HomeXplorer.ViewModels.Seeding;
-    using System.Text.Json;
 
     public class CitySeeder
     {

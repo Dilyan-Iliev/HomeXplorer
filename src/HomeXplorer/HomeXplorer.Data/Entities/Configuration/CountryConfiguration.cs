@@ -1,8 +1,9 @@
 ﻿namespace HomeXplorer.Data.Entities.Configuration
 {
-    using HomeXplorer.Data.Seeding;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+    using HomeXplorer.Data.Seeding;
 
     public class CountryConfiguration
         : IEntityTypeConfiguration<Country>
