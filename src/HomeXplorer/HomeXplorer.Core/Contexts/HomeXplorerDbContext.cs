@@ -14,27 +14,27 @@
 
         //public DbSet<Agency> Agencies { get; set; }
 
-        public DbSet<Agent> Agents { get; set; }
+        public DbSet<Agent> Agents { get; set; } = null!;
 
-        public DbSet<Renter> Renters { get; set; }
+        public DbSet<Renter> Renters { get; set; } = null!;
 
-        public DbSet<CloudImage> CloudImages { get; set; }
+        public DbSet<CloudImage> CloudImages { get; set; } = null!;
 
-        public DbSet<BuildingType> BuildingTypes { get; set; }
+        public DbSet<BuildingType> BuildingTypes { get; set; } = null!;
 
-        public DbSet<City> Cities { get; set; }
+        public DbSet<City> Cities { get; set; } = null!;
 
-        public DbSet<Country> Countries { get; set; }
+        public DbSet<Country> Countries { get; set; } = null!;
 
-        public DbSet<Property> Properties { get; set; }
+        public DbSet<Property> Properties { get; set; } = null!;
 
-        public DbSet<PropertyStatus> PropertyStatuses { get; set; }
+        public DbSet<PropertyStatus> PropertyStatuses { get; set; } = null!;
 
-        public DbSet<PropertyType> PropertyTypes { get; set; }
+        public DbSet<PropertyType> PropertyTypes { get; set; } = null!;
 
-        public DbSet<PageVisit> PageVisits { get; set; }
+        public DbSet<PageVisit> PageVisits { get; set; } = null!;
 
-        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Review> Reviews { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -9,6 +9,7 @@
     {
         public Property()
         {
+            this.Id = Guid.NewGuid();
             this.Images = new HashSet<CloudImage>();
         }
 

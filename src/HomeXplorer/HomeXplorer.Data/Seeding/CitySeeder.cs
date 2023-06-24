@@ -6,28 +6,44 @@
 
     public class CitySeeder
     {
-        public ICollection<City> GenerateCities()
+        public static ICollection<City>? GenerateCities()
         {
-            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"bin\..\bg.json");//check the path
+            //check the path
+            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"bin\..\bg.json");
             string jsonFile = File.ReadAllText(jsonPath);
 
-            CityViewModel[] cityModels = JsonSerializer.Deserialize<CityViewModel[]>(jsonFile);
+            CityViewModel[]? cityModels = JsonSerializer.Deserialize<CityViewModel[]>(jsonFile);
 
-            var cities = new List<City>();
-
-            foreach (var c in cityModels)
+            return cityModels?.Select(c => new City
             {
-                City city = new City
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    CountryId = c.CountryId,
-                };
+                Id = c.Id,
+                Name = c.Name,
+                CountryId = c.CountryId
+            }).ToList() ?? null;
 
-                cities.Add(city);
-            }
+            //CityViewModel[]? cityModels =
+            //    JsonSerializer.Deserialize<CityViewModel[]>(jsonFile);
 
-            return cities;
+            //var cities = new List<City>();
+
+            //if (cityModels != null)
+            //{
+            //    foreach (var c in cityModels)
+            //    {
+            //        City city = new City
+            //        {
+            //            Id = c.Id,
+            //            Name = c.Name,
+            //            CountryId = c.CountryId,
+            //        };
+
+            //        cities.Add(city);
+            //    }
+
+            //    return cities;
+            //}
+
+            //return null;
         }
     }
 }

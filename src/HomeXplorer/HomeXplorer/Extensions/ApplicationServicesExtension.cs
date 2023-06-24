@@ -8,15 +8,34 @@
 
     public static class ApplicationServicesExtension
     {
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        public static IServiceCollection AddServices(
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.User.RequireUniqueEmail = true;
-                options.SignIn.RequireConfirmedPhoneNumber = false;
+                options.SignIn.RequireConfirmedAccount =
+                    configuration.GetValue<bool>("Identity:RequireConfirmedAccount");
+
+                options.User.RequireUniqueEmail =
+                    configuration.GetValue<bool>("Identity:RequireUniqueEmail");
+
+                options.SignIn.RequireConfirmedPhoneNumber =
+                    configuration.GetValue<bool>("Identity:RequireConfirmedPhoneNumber");
+
+                options.Password.RequireNonAlphanumeric =
+                    configuration.GetValue<bool>("Identity:RequireNonAlphanumeric");
+
+                options.Password.RequireUppercase =
+                    configuration.GetValue<bool>("Identity:RequireUppercase");
+
+                options.Password.RequireDigit = 
+                    configuration.GetValue<bool>("Identity:RequireDigit");
+
+                options.Password.RequiredLength =
+                    configuration.GetValue<int>("Identity:RequiredLength");
             })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<HomeXplorerDbContext>();

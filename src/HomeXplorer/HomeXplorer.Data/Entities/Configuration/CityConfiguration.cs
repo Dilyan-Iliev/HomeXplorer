@@ -16,9 +16,12 @@
 
         public void Configure(EntityTypeBuilder<City> builder)
         {
-            var cities = this.seeder.GenerateCities();
+            var cities = CitySeeder.GenerateCities();
 
-            builder.HasData(cities);
+            if (cities != null)
+            {
+                builder.HasData(cities);
+            }
         }
     }
 }

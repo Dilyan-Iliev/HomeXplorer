@@ -4,21 +4,39 @@
     <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
 }
 
+<h3 style="text-align:center">Welcome to HomeXplorer</h3>
 
-<h1 class="text-center fs-4">Form Wizard - Multi Step Form</h1>
-<form id="signUpForm" action="#!">
+<form id="signUpForm" method="post">
     <!-- start step indicators -->
     <div class="form-header d-flex mb-4">
-        <span class="stepIndicator">Choose your role</span>
-        <span class="stepIndicator">Social Information</span>
         <span class="stepIndicator">Account Setup</span>
+        <span class="stepIndicator">Personal Information</span>
     </div>
     <!-- end step indicators -->
     <!-- step one -->
 
     <div class="step">
-        <p class="text-center mb-4">Create your account</p>
+        <p class="text-center mb-4"> Setup your acount </p>
+
+        <div class="mb-3">
+            <input type="text" placeholder="Email" oninput="this.className = ''" name="Email">
+        </div>
+
+        <div class="mb-3">
+            <input type="text" placeholder="Phone Number" oninput="this.className = ''" name="Phone Number">
+        </div>
+
+        <div class="mb-3">
+            <input type="text" placeholder="Password" oninput="this.className = ''" name="Password">
+        </div>
+
+        <div class="mb-3">
+            <input type="text" placeholder="Confirm Password" oninput="this.className = ''" name="Confirm Password">
+        </div>
+
+        <p class="text-center mb-4">Choose  your role</p>
         <div class="mb-3 radio-buttons-container">
+
             <label>
                 <input asp-for="Role" type="radio" value="Agent"> Agent
             </label>
@@ -30,29 +48,22 @@
 
     <!-- step two -->
     <div class="step">
-        <p class="text-center mb-4">Your presence on the social network</p>
-        <div class="mb-3">
-            <input type="text" placeholder="Linked In" oninput="this.className = ''" name="linkedin">
-        </div>
-        <div class="mb-3">
-            <input type="text" placeholder="Twitter" oninput="this.className = ''" name="twitter">
-        </div>
-        <div class="mb-3">
-            <input type="text" placeholder="Facebook" oninput="this.className = ''" name="facebook">
-        </div>
-    </div>
+        <p class="text-center mb-4">We need some personal information about you</p>
 
-    <!-- step three -->
-    <div class="step">
-        <p class="text-center mb-4">We will never sell it</p>
         <div class="mb-3">
-            <input type="text" placeholder="Full name" oninput="this.className = ''" name="fullname">
+            <input type="text" placeholder="First Name" oninput="this.className = ''" name="First Name">
         </div>
+
         <div class="mb-3">
-            <input type="text" placeholder="Mobile" oninput="this.className = ''" name="mobile">
+            <input type="text" placeholder="Last Name" oninput="this.className = ''" name="Last Name">
         </div>
+
         <div class="mb-3">
-            <input type="text" placeholder="Address" oninput="this.className = ''" name="address">
+            <input type="text" placeholder="Country" oninput="this.className = ''" name="Country">
+        </div>
+
+        <div class="mb-3">
+            <input type="text" placeholder="City" oninput="this.className = ''" name="City">
         </div>
     </div>
 
@@ -60,83 +71,9 @@
     <div class="form-footer d-flex">
         <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
         <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+        @*<button type="submit" id="submitBtn" style="display: none;">Submit</button>*@
     </div>
     <!-- end previous / next buttons -->
 </form>
 
-
-<script src=""></script>
-
-@*<form id="registerForm" method="post">
-    <section class="h-100 bg-dark">
-        <div class="container py-3">
-            <div class="row d-flex justify-content-center">
-                <div class="col">
-                    <div class="card card-registration my-4">
-                        <div class="row g-0">
-                            <div class="col-xl-6 d-none d-xl-block">
-                                <img src="~/assets/register.jpg"
-                                     alt="Sample photo" class="img-fluid"
-                                     style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="card-body p-md-3 text-black">
-                                    <h3 class="mb-4 text-uppercase">Student registration form</h3>
-
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-outline">
-                                                <input type="text" id="form3Example1m" class="form-control form-control-sm" />
-                                                <label class="form-label" for="form3Example1m">First name</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-outline">
-                                                <input type="text" id="form3Example1n" class="form-control form-control-sm" />
-                                                <label class="form-label" for="form3Example1n">Last name</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-outline mb-3">
-                                        <input type="text" id="form3Example8" class="form-control form-control-sm" />
-                                        <label class="form-label" for="form3Example8">Email</label>
-                                    </div>
-
-                                    <div class="d-md-flex justify-content-start align-items-center mb-3 py-1">
-                                        <h6 class="mb-0 me-3">Role:</h6>
-                                        <div class="form-check form-check-inline mb-0 me-3">
-                                            <input asp-for="Role" class="form-check-input" type="radio" id="agent"
-                                                   value="Agent" />
-                                            <label class="form-check-label" for="agent">Agent</label>
-                                        </div>
-                                        <div class="form-check form-check-inline mb-0 me-3">
-                                            <input asp-for="Role" class="form-check-input" type="radio" id="renter"
-                                                   value="Renter" />
-                                            <label class="form-check-label" for="renter">Renter</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-outline mb-3">
-                                        <input type="text" id="form3Example9" class="form-control form-control-sm" />
-                                        <label class="form-label" for="form3Example9">Password</label>
-                                    </div>
-
-                                    <div class="form-outline mb-3">
-                                        <input type="text" id="form3Example90" class="form-control form-control-sm" />
-                                        <label class="form-label" for="form3Example90">Confirm Password</label>
-                                    </div>
-
-                                    <div class="d-flex justify-content-end pt-2">
-                                        <button type="button" class="btn btn-light btn-sm">Reset all</button>
-                                        <button type="submit" class="btn btn-warning btn-sm ms-2">Register</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</form>*@
+<script src="~/js/register/register.js"></script>

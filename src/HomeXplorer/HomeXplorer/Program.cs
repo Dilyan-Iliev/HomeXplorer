@@ -18,7 +18,7 @@ namespace HomeXplorer
             services.AddDbContext<HomeXplorerDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddServices();
+            services.AddServices(builder.Configuration);
 
             var app = builder.Build();
 
