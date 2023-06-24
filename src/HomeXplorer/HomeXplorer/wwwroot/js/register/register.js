@@ -19,7 +19,7 @@ function showTab(n) {
         document.getElementById("submitBtn").style.display = "none";
     }
     //... and run a function that will display the correct step indicator:
-    fixStepIndicator(n)
+    fixStepIndicator(n);
 }
 
 function nextPrev(n) {
@@ -46,22 +46,39 @@ function validateForm() {
     var x, y, i, valid = true;
     x = document.getElementsByClassName("step");
     y = x[currentTab].getElementsByTagName("input");
+    var radioChecked = false; // Flag to track if a radio button is selected
+
     // A loop that checks every input field in the current tab:
     for (i = 0; i < y.length; i++) {
         // If a field is empty...
-        if (y[i].value == "") {
-            // add an "invalid" class to the field:
+        if (y[i].type === "radio" && y[i].checked) {
+            // Set the radioChecked flag to true if a radio button is selected
+            radioChecked = true;
+        } else if (y[i].value === "") {
+            // Add an "invalid" class to the field:
             y[i].className += " invalid";
-            // and set the current valid status to false
+            // Set the current valid status to false:
             valid = false;
         }
     }
+
+    // If a radio button is not selected, set valid to false:
+    if (!radioChecked) {
+        valid = false;
+        var radioErrorMsg = document.getElementById("radioErrorMsg");
+        radioErrorMsg.style.display = "block";
+    } else {
+        var radioErrorMsg = document.getElementById("radioErrorMsg");
+        radioErrorMsg.style.display = "none";
+    }
+
     // If the valid status is true, mark the step as finished and valid:
     if (valid) {
         document.getElementsByClassName("stepIndicator")[currentTab].className += " finish";
     }
     return valid; // return the valid status
 }
+
 
 function fixStepIndicator(n) {
     // This function removes the "active" class of all steps...

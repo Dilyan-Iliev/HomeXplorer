@@ -26,18 +26,19 @@
         public string LastName { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
-        [RegularExpression(EmailRegex)]
+        [RegularExpression(EmailRegex, ErrorMessage = EmailError)]
         public string Email { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
-        [RegularExpression(PhoneNumberRegex)]
+        [RegularExpression(PhoneNumberRegex, ErrorMessage = PhoneError)]
         public string PhoneNumber { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
         public string Role { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
-        [StringLength(PasswordMinLength, ErrorMessage = PasswordRequirements)]
+        [StringLength(PasswordMaxLength, MinimumLength = PasswordMinLength,
+            ErrorMessage = PasswordRequirements)]
         [DataType(DataType.Password)]
         public string Password { get; set; } = null!;
 
@@ -51,7 +52,7 @@
         public IEnumerable<SelectCountryViewModel> Countries { get; set; }
 
         public int CityId { get; set; }
-        
+
         public IEnumerable<SelectCityViewModel> Cities { get; set; }
     }
 }

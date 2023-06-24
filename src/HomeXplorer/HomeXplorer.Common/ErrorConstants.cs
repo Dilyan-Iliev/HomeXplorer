@@ -6,8 +6,12 @@
 
         public const string FieldLength = "Field must be between {2} and {1} characters";
 
-        public const string PasswordRequirements = "Password must be at least {2} characters and must have at least 1 number and 1 symbol";
+        public const string PasswordRequirements = "Password must be at least 6 characters long";
 
         public const string PasswordsMissmatch = "Passwords must be the same";
+
+        public const string EmailError = "Invalid email";
+
+        public const string PhoneError = "Invalid phone number";
     }
 }

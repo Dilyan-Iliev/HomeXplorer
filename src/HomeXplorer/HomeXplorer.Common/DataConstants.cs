@@ -15,6 +15,7 @@
             public const string PhoneNumberRegex = @"^(?:\+\d{12}|\d{10})$";
 
             public const int PasswordMinLength = 6;
+            public const int PasswordMaxLength = 12;
         }
 
         public static class PropertyConstants

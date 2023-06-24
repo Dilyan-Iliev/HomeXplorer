@@ -50,6 +50,7 @@
         {
             if (!ModelState.IsValid)
             {
+                //TODO: Add message into tempdata
                 var countries = await this.countryService.GetCountriesAsync();
                 model.Countries = countries;
                 return this.View(model);
