@@ -8,6 +8,7 @@
     using HomeXplorer.Core.Contexts;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.ViewModels.User;
+    using HomeXplorer.Services.Contracts;
 
     public class UserController : BaseController
     {
@@ -15,23 +16,32 @@
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly HomeXplorerDbContext context; //TODO - switch with repository
+        private readonly ICountryService countryService;
+        private readonly ICityService cityService;
 
         public UserController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            HomeXplorerDbContext context)
+            HomeXplorerDbContext context,
+            ICountryService countryService,
+            ICityService cityService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.context = context;
+            this.countryService = countryService;
+            this.cityService = cityService;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
-            return this.View(new RegisterViewModel());
+            return this.View(new RegisterViewModel()
+            {
+                Countries = await this.countryService.GetCountriesAsync()
+            });
         }
 
         [HttpPost]
@@ -40,11 +50,14 @@
         {
             if (!ModelState.IsValid)
             {
+                var countries = await this.countryService.GetCountriesAsync();
+                model.Countries = countries;
                 return this.View(model);
             }
 
             var user = new ApplicationUser()
             {
+                UserName = model.Email,
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -53,9 +66,9 @@
 
             await this.CheckForRoleAsync(model.Role);
 
-            await this.userManager.AddToRoleAsync(user, model.Role);
-
             var result = await this.userManager.CreateAsync(user, model.Password);
+
+            await this.userManager.AddToRoleAsync(user, model.Role);
 
             if (result.Succeeded)
             {
@@ -140,7 +153,7 @@
 
         private async Task CheckForRoleAsync(string role)
         {
-            var roleExists = await this.roleManager.RoleExistsAsync(role);
+            bool roleExists = await this.roleManager.RoleExistsAsync(role);
 
             if (!roleExists)
             {

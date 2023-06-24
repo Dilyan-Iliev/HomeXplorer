@@ -30,10 +30,4 @@
     <Folder Include="wwwroot\assets\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="wwwroot\assets\register.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>

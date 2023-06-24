@@ -19,29 +19,37 @@
         <p class="text-center mb-4"> Setup your acount </p>
 
         <div class="mb-3">
-            <input type="text" placeholder="Email" oninput="this.className = ''" name="Email">
+            <label asp-for="@Model.Email">Email</label>
+            <input asp-for="@Model.Email" type="text" placeholder="Email" oninput="this.className = ''">
+            <span asp-validation-for="@Model.Email" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <input type="text" placeholder="Phone Number" oninput="this.className = ''" name="Phone Number">
+            <label asp-for="@Model.PhoneNumber">Phone Number</label>
+            <input asp-for="@Model.PhoneNumber" type="text" placeholder="Phone Number" oninput="this.className = ''" name="PhoneNumber">
+            <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <input type="text" placeholder="Password" oninput="this.className = ''" name="Password">
+            <label asp-for="@Model.Password"></label>
+            <input asp-for="@Model.Password" type="password" placeholder="Password" oninput="this.className = ''" name="Password">
+            <span asp-validation-for="@Model.Password" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <input type="text" placeholder="Confirm Password" oninput="this.className = ''" name="Confirm Password">
+            <label asp-for="@Model.ConfirmPassword">Confirm Password</label>
+            <input asp-for="@Model.ConfirmPassword" type="password" placeholder="Confirm Password" oninput="this.className = ''" name="ConfirmPassword">
+            <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
         </div>
 
         <p class="text-center mb-4">Choose  your role</p>
         <div class="mb-3 radio-buttons-container">
 
-            <label>
-                <input asp-for="Role" type="radio" value="Agent"> Agent
+            <label asp-for="@Model.Role">
+                <input asp-for="@Model.Role" type="radio" value="Agent" required> Agent
             </label>
-            <label>
-                <input asp-for="Role" type="radio" value="Renter"> Renter
+            <label asp-for="@Model.Role">
+                <input asp-for="@Model.Role" type="radio" value="Renter" required> Renter
             </label>
         </div>
     </div>
@@ -51,19 +59,35 @@
         <p class="text-center mb-4">We need some personal information about you</p>
 
         <div class="mb-3">
-            <input type="text" placeholder="First Name" oninput="this.className = ''" name="First Name">
+            <label asp-for="@Model.FirstName">First Name</label>
+            <input asp-for="@Model.FirstName" type="text" placeholder="First Name" oninput="this.className = ''" name="FirstName">
+            <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <input type="text" placeholder="Last Name" oninput="this.className = ''" name="Last Name">
+            <label asp-for="@Model.LastName">Last Name</label>
+            <input asp-for="@Model.LastName" type="text" placeholder="Last Name" oninput="this.className = ''" name="LastName">
+            <span asp-validation-for="@Model.LastName" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <input type="text" placeholder="Country" oninput="this.className = ''" name="Country">
+            <label asp-for="@Model.CountryId" class="form-label-add-edit">Choose a country</label>
+            <select asp-for="@Model.CountryId" class="form-control" aria-required="true" id="countryDropdown">
+                <option value="" selected>Select a country</option>
+                @foreach (var country in Model.Countries)
+                {
+                    <option value="@country.Id">@country.Name</option>
+                }
+            </select>
+            @*<input type="text" placeholder="Country" oninput="this.className = ''" name="Country">*@
         </div>
 
         <div class="mb-3">
-            <input type="text" placeholder="City" oninput="this.className = ''" name="City">
+            <label asp-for="@Model.CityId" class="form-label-add-edit">Choose a city</label>
+            <select asp-for="@Model.CityId" class="form-control" aria-required="true" id="cityDropdown" disabled>
+                <option value="">Select City</option>
+            </select>
+            @*<input type="text" placeholder="City" oninput="this.className = ''" name="City">*@
         </div>
     </div>
 
@@ -71,12 +95,13 @@
     <div class="form-footer d-flex">
         <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
         <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
-        @*<button type="submit" id="submitBtn" style="display: none;">Submit</button>*@
+        <button type="submit" id="submitBtn" style="display: none;">Submit</button>
     </div>
     <!-- end previous / next buttons -->
 </form>
 
 <script src="~/js/register/register.js"></script>
+<script src="~/js/register/loadCities.js"></script>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />

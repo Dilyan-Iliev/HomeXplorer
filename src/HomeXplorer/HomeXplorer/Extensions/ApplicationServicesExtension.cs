@@ -2,6 +2,8 @@
 {
     using HomeXplorer.Core.Contexts;
     using HomeXplorer.Data.Entities;
+    using HomeXplorer.Services.Contracts;
+    using HomeXplorer.Services.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +53,9 @@
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
+
+            services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<ICityService, CityService>();
 
             return services;
         }

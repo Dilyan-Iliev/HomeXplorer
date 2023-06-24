@@ -5,16 +5,18 @@ function showTab(n) {
     // This function will display the specified tab of the form...
     var x = document.getElementsByClassName("step");
     x[n].style.display = "block";
-    //... and fix the Previous/Next buttons:
+    //... and fix the Previous/Next/Submit buttons:
     if (n == 0) {
         document.getElementById("prevBtn").style.display = "none";
     } else {
         document.getElementById("prevBtn").style.display = "inline";
     }
     if (n == (x.length - 1)) {
-        document.getElementById("nextBtn").innerHTML = "Submit";
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("submitBtn").style.display = "inline";
     } else {
-        document.getElementById("nextBtn").innerHTML = "Next";
+        document.getElementById("nextBtn").style.display = "inline";
+        document.getElementById("submitBtn").style.display = "none";
     }
     //... and run a function that will display the correct step indicator:
     fixStepIndicator(n)
@@ -31,8 +33,8 @@ function nextPrev(n) {
     currentTab = currentTab + n;
     // if you have reached the end of the form...
     if (currentTab >= x.length) {
-        // ... the form gets submitted:
-        document.getElementById("signUpForm").submit();
+        // ... the submit button is clicked:
+        document.getElementById("submitBtn").click();
         return false;
     }
     // Otherwise, display the correct tab:
