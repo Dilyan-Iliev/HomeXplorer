@@ -9,27 +9,28 @@
     using HomeXplorer.Data.Entities;
     using HomeXplorer.ViewModels.User;
     using HomeXplorer.Services.Contracts;
+    using HomeXplorer.Core.Repositories;
 
     public class UserController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly HomeXplorerDbContext context; //TODO - switch with repository
+        private readonly IRepository repo;
         private readonly ICountryService countryService;
         private readonly ICityService cityService;
 
         public UserController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            HomeXplorerDbContext context,
+            IRepository repo,
             ICountryService countryService,
             ICityService cityService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.roleManager = roleManager;
-            this.context = context;
+            this.repo = repo;
             this.countryService = countryService;
             this.cityService = cityService;
         }
@@ -75,7 +76,7 @@
             {
                 await this.CreateUserTypeAsync(model, user);
 
-                await this.context.SaveChangesAsync();
+                await this.repo.SaveChangesAsync();
 
                 return this.RedirectToAction(nameof(Login));
             }
@@ -139,7 +140,7 @@
                     UserId = user.Id,
                 };
 
-                await this.context.Agents.AddAsync(agent);
+                await this.repo.AddAsync<Agent>(agent);
             }
             else if (model.Role == UserRoleConstants.Renter)
             {
@@ -148,7 +149,7 @@
                     UserId = user.Id,
                 };
 
-                await this.context.Renters.AddAsync(renter);
+                await this.repo.AddAsync<Renter>(renter);
             }
         }
 

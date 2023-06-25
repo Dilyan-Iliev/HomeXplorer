@@ -8,11 +8,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Administration\**" />
+    <Compile Remove="Areas\Agent\**" />
+    <Compile Remove="Areas\Renter\**" />
+    <Content Remove="Areas\Administration\**" />
+    <Content Remove="Areas\Agent\**" />
+    <Content Remove="Areas\Renter\**" />
+    <EmbeddedResource Remove="Areas\Administration\**" />
+    <EmbeddedResource Remove="Areas\Agent\**" />
+    <EmbeddedResource Remove="Areas\Renter\**" />
+    <None Remove="Areas\Administration\**" />
+    <None Remove="Areas\Agent\**" />
+    <None Remove="Areas\Renter\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.15" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.14" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,12 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Administration\Controllers\" />
-    <Folder Include="Areas\Administration\Views\" />
     <Folder Include="Areas\Agent\Controllers\" />
+    <Folder Include="Areas\Agent\Data\" />
+    <Folder Include="Areas\Agent\Models\" />
     <Folder Include="Areas\Agent\Views\" />
-    <Folder Include="Areas\Renter\Controllers\" />
-    <Folder Include="Areas\Renter\Views\" />
   </ItemGroup>
 
 </Project>
