@@ -23,6 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Areas\Agent\Controllers\BaseAgentController.cs" />
+    <Compile Include="Areas\Agent\Controllers\PropertyController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.15" />
@@ -37,10 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Agent\Controllers\" />
-    <Folder Include="Areas\Agent\Data\" />
-    <Folder Include="Areas\Agent\Models\" />
-    <Folder Include="Areas\Agent\Views\" />
+    <None Include="Areas\Agent\Views\Property\Add.cshtml" />
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     using HomeXplorer.ViewModels;
+    using Microsoft.AspNetCore.Authorization;
 
     public class HomeController : BaseController
     {
@@ -14,6 +15,7 @@
             _logger = logger;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();

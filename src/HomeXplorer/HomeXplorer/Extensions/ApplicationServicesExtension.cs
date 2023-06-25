@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.Extensions
 {
     using HomeXplorer.Core.Contexts;
+    using HomeXplorer.Core.Repositories;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Interfaces;
@@ -56,6 +57,8 @@
 
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
+            services.AddScoped<IPropertyService, PropertyService>();
+            services.AddScoped<IRepository, Repository>();
 
             return services;
         }
