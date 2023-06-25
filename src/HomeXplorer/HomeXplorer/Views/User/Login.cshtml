@@ -1,37 +1,66 @@
 ﻿@model LoginViewModel
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/fonts/icomoon/style.css">
+
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="~/css/login.css">
 }
 
-<div class="container-fluid ps-md-0">
-    <div class="row g-0">
-        <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
-        <div class="col-md-8 col-lg-6">
-            <div class="login d-flex align-items-center py-5">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-9 col-lg-8 mx-auto">
-                            <h3 class="login-heading mb-4">Welcome back!</h3>
-
-                            <!-- Login Form -->
+<div class="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 contents">
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        <div class="form-block">
+                            <div class="mb-4">
+                                <h3>Sign In to <strong>HomeXplorer</strong></h3>
+                                <p class="mb-4">Online platform for renting and managing properties</p>
+                            </div>
                             <form method="post">
-                                <div class="form-floating mb-3">
-                                    <input asp-for="@Model.Email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                    <label asp-for="@Model.Email">Email address</label>
+                                <div class="form-group first">
+                                    <label asp-for="@Model.Email">Email</label>
+                                    <input asp-for="@Model.Email" type="text" class="form-control" id="username">
+
                                 </div>
-                                <div class="form-floating mb-3">
-                                    <input asp-for="@Model.Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                <div class="form-group last mb-4">
                                     <label asp-for="@Model.Password">Password</label>
+                                    <input asp-for="@Model.Password" type="password" class="form-control" id="password">
+
                                 </div>
 
-                                <div class="d-grid">
-                                    <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit">Login</button>
-                                    <div class="text-center">
-                                        <a class="small" href="/User/Register">Don't have an account?</a>
-                                    </div>
+                                <div class="d-flex mb-5 align-items-center">
+                                    <label class="control control--checkbox mb-0">
+                                        <span class="caption">Remember me</span>
+                                        <input type="checkbox" checked="checked" />
+                                        <div class="control__indicator"></div>
+                                    </label>
+                                    <span class="ml-auto"><a href="/User/Register" class="forgot-pass">Don't have an acount?'</a></span>
                                 </div>
 
+                                <input type="submit" value="Log In" class="btn btn-pill text-white btn-block btn-primary">
+
+                               @* <span class="d-block text-center my-4 text-muted"> or sign in with</span>
+
+                                <div class="social-login text-center">
+                                    <a href="#" class="facebook">
+                                        <span class="icon-facebook mr-3"></span>
+                                    </a>
+                                    <a href="#" class="twitter">
+                                        <span class="icon-twitter mr-3"></span>
+                                    </a>
+                                    <a href="#" class="google">
+                                        <span class="icon-google mr-3"></span>
+                                    </a>
+                                </div>*@
                             </form>
                         </div>
                     </div>
@@ -41,6 +70,11 @@
     </div>
 </div>
 
+
+<script src="~/js/jquery-3.3.1.min.js"></script>
+<script src="~/js/popper.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/login.js"></script>
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }

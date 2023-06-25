@@ -27,7 +27,6 @@
     <Folder Include="Areas\Agent\Views\" />
     <Folder Include="Areas\Renter\Controllers\" />
     <Folder Include="Areas\Renter\Views\" />
-    <Folder Include="wwwroot\assets\" />
   </ItemGroup>
 
 </Project>
