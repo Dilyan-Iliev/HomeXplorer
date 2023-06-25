@@ -10,6 +10,7 @@
     using HomeXplorer.ViewModels.User;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Core.Repositories;
+    using HomeXplorer.Extensions;
 
     public class UserController : BaseController
     {
@@ -116,6 +117,8 @@
 
                 if (result.Succeeded)
                 {
+                    string userEmail = model.Email;
+                    this.TempData["SuccessLogin"] = $"Welcome {userEmail}";
                     return this.RedirectToAction("Index", "Home");
                 }
             }
