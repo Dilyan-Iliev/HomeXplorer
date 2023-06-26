@@ -13,5 +13,8 @@
 
         [Required(ErrorMessage = FieldRequired)]
         public string Password { get; set; } = null!;
+
+        [Required]
+        public string Token { get; set; } = null!;
     }
 }

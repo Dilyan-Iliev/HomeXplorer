@@ -11,6 +11,7 @@
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Extensions;
+    using HomeXplorer.Config.Google;
 
     public class UserController : BaseController
     {
@@ -20,13 +21,15 @@
         private readonly IRepository repo;
         private readonly ICountryService countryService;
         private readonly ICityService cityService;
+        private readonly GoogleCaptchaService googleCaptchaService;
 
         public UserController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IRepository repo,
             ICountryService countryService,
-            ICityService cityService)
+            ICityService cityService,
+            GoogleCaptchaService googleCaptchaService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -34,6 +37,7 @@
             this.repo = repo;
             this.countryService = countryService;
             this.cityService = cityService;
+            this.googleCaptchaService = googleCaptchaService;
         }
 
         [HttpGet]
@@ -102,6 +106,14 @@
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            //Verify Response Token with google
+            var googleCaptchaResult = await this.googleCaptchaService.VerifyToken(model.Token);
+
+            if (!googleCaptchaResult)
+            {
+                return this.View(model);
+            }
+
             if (!ModelState.IsValid)
             {
                 return this.View(model);

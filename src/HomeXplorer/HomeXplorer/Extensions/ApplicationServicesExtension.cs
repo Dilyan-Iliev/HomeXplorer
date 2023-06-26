@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.Extensions
 {
     using CloudinaryDotNet;
+    using HomeXplorer.Config.Google;
     using HomeXplorer.Core.Contexts;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Data.Entities;
@@ -62,9 +63,12 @@
                 configuration.GetValue<string>("Cloudinary:api_secret")
                 );
 
+            services.Configure<GoogleCaptchaConfig>(configuration.GetSection("GoogleReCaptcha"));
+
             Cloudinary cloudinary = new Cloudinary(account);
 
             services.AddSingleton(cloudinary);
+            services.AddScoped(typeof(GoogleCaptchaService));
 
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();

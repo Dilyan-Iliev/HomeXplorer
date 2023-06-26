@@ -1,4 +1,10 @@
-﻿@model LoginViewModel
+﻿@using HomeXplorer.Config;
+@using Microsoft.Extensions.Configuration;
+@using Microsoft.Extensions.Options;
+@using HomeXplorer.Config.Google;
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptchaConfig
+
+@model LoginViewModel
 
 @section Styles {
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
@@ -26,6 +32,7 @@
                                 <p class="mb-4">Online platform for renting and managing properties</p>
                             </div>
                             <form method="post">
+                                <input type="hidden" asp-for="@Model.Token" id="ModelToken" />
                                 <div class="form-group first">
                                     <label asp-for="@Model.Email">Email</label>
                                     <input asp-for="@Model.Email" type="text" class="form-control" id="username">
@@ -39,27 +46,27 @@
 
                                 <div class="d-flex mb-5 align-items-center">
                                     @*<label class="control control--checkbox mb-0">
-                                        <span class="caption">Remember me</span>
-                                        <input type="checkbox" checked="checked" />
-                                        <div class="control__indicator"></div>
+                                    <span class="caption">Remember me</span>
+                                    <input type="checkbox" checked="checked" />
+                                    <div class="control__indicator"></div>
                                     </label>*@
                                     <span class="ml-auto"><a href="/User/Register" class="forgot-pass">Don't have an acount?'</a></span>
                                 </div>
 
                                 <input type="submit" value="Log In" class="btn btn-pill text-white btn-block btn-primary">
 
-                               @* <span class="d-block text-center my-4 text-muted"> or sign in with</span>
+                                @* <span class="d-block text-center my-4 text-muted"> or sign in with</span>
 
                                 <div class="social-login text-center">
-                                    <a href="#" class="facebook">
-                                        <span class="icon-facebook mr-3"></span>
-                                    </a>
-                                    <a href="#" class="twitter">
-                                        <span class="icon-twitter mr-3"></span>
-                                    </a>
-                                    <a href="#" class="google">
-                                        <span class="icon-google mr-3"></span>
-                                    </a>
+                                <a href="#" class="facebook">
+                                <span class="icon-facebook mr-3"></span>
+                                </a>
+                                <a href="#" class="twitter">
+                                <span class="icon-twitter mr-3"></span>
+                                </a>
+                                <a href="#" class="google">
+                                <span class="icon-google mr-3"></span>
+                                </a>
                                 </div>*@
                             </form>
                         </div>
@@ -75,6 +82,29 @@
 <script src="~/js/popper.min.js"></script>
 <script src="~/js/bootstrap.min.js"></script>
 <script src="~/js/login.js"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=@GoogleCaptchaConfig.Value.SiteKey"></script>
+<script>
+
+    function getToken() {
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@GoogleCaptchaConfig.Value.SiteKey', { action: 'submit' }).then(function (token) {
+                // Add your logic to submit to your backend server here.
+
+                console.log(token);
+
+                document.getElementById("ModelToken").value = token;
+            });
+        });
+    };
+
+    //since the token automatically expires in 2 minutes, we need to refresh it
+    setInterval(getToken, 115000)
+
+    $(function () {
+        getToken();
+    });
+</script>
+
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }
