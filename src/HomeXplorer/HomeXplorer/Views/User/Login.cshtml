@@ -77,7 +77,6 @@
     </div>
 </div>
 
-
 <script src="~/js/jquery-3.3.1.min.js"></script>
 <script src="~/js/popper.min.js"></script>
 <script src="~/js/bootstrap.min.js"></script>
@@ -87,19 +86,18 @@
 
     function getToken() {
         grecaptcha.ready(function () {
-            grecaptcha.execute('@GoogleCaptchaConfig.Value.SiteKey', { action: 'submit' }).then(function (token) {
-                // Add your logic to submit to your backend server here.
-
-                console.log(token);
-
-                document.getElementById("ModelToken").value = token;
-            });
+            grecaptcha.execute('@GoogleCaptchaConfig.Value.SiteKey', { action: 'submit' })
+                .then(function (token) {
+                    //    console.log(token);
+                    document.getElementById("ModelToken").value = token;
+                });
         });
     };
 
     //since the token automatically expires in 2 minutes, we need to refresh it
     setInterval(getToken, 115000)
 
+    //on loaded screen:
     $(function () {
         getToken();
     });

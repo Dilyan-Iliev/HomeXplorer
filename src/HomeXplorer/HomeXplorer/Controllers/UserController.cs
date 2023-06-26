@@ -5,13 +5,11 @@
     using Microsoft.AspNetCore.Authorization;
 
     using HomeXplorer.Common;
-    using HomeXplorer.Core.Contexts;
+    using HomeXplorer.Config.Google;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.ViewModels.User;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Core.Repositories;
-    using HomeXplorer.Extensions;
-    using HomeXplorer.Config.Google;
 
     public class UserController : BaseController
     {

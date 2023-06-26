@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cloudinary.Core" Version="1.31.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.16" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.16" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HomeXplorer.Data\HomeXplorer.Data.csproj" />
+    <ProjectReference Include="..\HomeXplorer.Common\HomeXplorer.Common.csproj" />
     <ProjectReference Include="..\HomeXplorer.ViewModels\HomeXplorer.ViewModels.csproj" />
   </ItemGroup>
 

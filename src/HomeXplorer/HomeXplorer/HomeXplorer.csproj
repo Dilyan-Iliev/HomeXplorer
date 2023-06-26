@@ -4,45 +4,21 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-HomeXplorer-9a6aa7e9-95d8-4f62-97bd-f1d3267578e8</UserSecretsId>
+    <UserSecretsId>aspnet-HomeXplorer-678cb22a-7d3d-4f46-b61c-212ac6e29d35</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\Administration\**" />
-    <Compile Remove="Areas\Agent\**" />
-    <Compile Remove="Areas\Renter\**" />
-    <Content Remove="Areas\Administration\**" />
-    <Content Remove="Areas\Agent\**" />
-    <Content Remove="Areas\Renter\**" />
-    <EmbeddedResource Remove="Areas\Administration\**" />
-    <EmbeddedResource Remove="Areas\Agent\**" />
-    <EmbeddedResource Remove="Areas\Renter\**" />
-    <None Remove="Areas\Administration\**" />
-    <None Remove="Areas\Agent\**" />
-    <None Remove="Areas\Renter\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Areas\Agent\Controllers\BaseAgentController.cs" />
-    <Compile Include="Areas\Agent\Controllers\PropertyController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.16" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.16" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.16" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.14" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HomeXplorer.Core\HomeXplorer.Core.csproj" />
+    <ProjectReference Include="..\HomeXplorer.Data\HomeXplorer.Data.csproj" />
     <ProjectReference Include="..\HomeXplorer.Services\HomeXplorer.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Areas\Agent\Views\Property\Add.cshtml" />
   </ItemGroup>
 
 </Project>
