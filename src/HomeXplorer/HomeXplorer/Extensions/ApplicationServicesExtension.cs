@@ -1,5 +1,6 @@
 ﻿namespace HomeXplorer.Extensions
 {
+    using CloudinaryDotNet;
     using HomeXplorer.Core.Contexts;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Data.Entities;
@@ -34,7 +35,7 @@
                 options.Password.RequireUppercase =
                     configuration.GetValue<bool>("Identity:RequireUppercase");
 
-                options.Password.RequireDigit = 
+                options.Password.RequireDigit =
                     configuration.GetValue<bool>("Identity:RequireDigit");
 
                 options.Password.RequiredLength =
@@ -55,10 +56,21 @@
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
+            Account account = new Account(
+                configuration.GetValue<string>("Cloudinary:cloud_name"),
+                configuration.GetValue<string>("Cloudinary:api_key"),
+                configuration.GetValue<string>("Cloudinary:api_secret")
+                );
+
+            Cloudinary cloudinary = new Cloudinary(account);
+
+            services.AddSingleton(cloudinary);
+
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<IPropertyService, PropertyService>();
             services.AddScoped<IRepository, Repository>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             return services;
         }
