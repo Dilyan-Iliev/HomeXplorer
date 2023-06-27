@@ -1,1 +1,115 @@
 ﻿@model AddPropertyViewModel
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
+}
+
+<form id="signUpForm" method="post" enctype="multipart/form-data">
+    <!-- start step indicators -->
+    <div class="form-header d-flex mb-4">
+        <span class="stepIndicator">Account Setup</span>
+        <span class="stepIndicator">Personal Information</span>
+    </div>
+    <!-- end step indicators -->
+    <!-- step one -->
+
+    <div class="step">
+        <p class="text-center mb-4">Add basic info about the property</p>
+
+        <div class="mb-3">
+            <label asp-for="@Model.Name">Property Name</label>
+            <input asp-for="@Model.Name" type="text" placeholder="Property Name" oninput="this.className = ''">
+            <span asp-validation-for="@Model.Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="@Model.Description">Property Description</label>
+            <input asp-for="@Model.Description" type="text" placeholder="Property Description" oninput="this.className = ''" name="Description">
+            <span asp-validation-for="@Model.Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="@Model.Price"></label>
+            <input asp-for="@Model.Price" placeholder="Property Price" oninput="this.className = ''" name="Price">
+            <span asp-validation-for="@Model.Price" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="@Model.Size">Property Size</label>
+            <input asp-for="@Model.Size" type="password" placeholder="Property Size" oninput="this.className = ''" name="Size">
+            <span asp-validation-for="@Model.Size" class="text-danger"></span>
+        </div>
+
+        @*<p class="text-center mb-4">Choose  your role</p>
+        <div class="mb-3 radio-buttons-container">
+
+        <label asp-for="@Model.Role">
+        <input asp-for="@Model.Role" type="radio" value="Agent" required> Agent
+        </label>
+        <label asp-for="@Model.Role">
+        <input asp-for="@Model.Role" type="radio" value="Renter" required> Renter
+        </label>
+        </div>
+        <span id="radioErrorMsg" class="text-danger text-center" style="display: none;">Please select a role.</span>*@
+    </div>
+
+    <!-- step two -->
+    <div class="step">
+        <p class="text-center mb-4">Add more info about the property</p>
+
+        <label asp-for="@Model.PropertyTypeId" class="form-label-add-edit">Choose a property type</label>
+        <select asp-for="@Model.PropertyTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
+            <option value="" selected>Select a property type</option>
+            @foreach (var type in Model.PropertyTypes)
+            {
+                <option value="@type.Id">@type.Name</option>
+            }
+        </select>
+
+        <div class="mb-3">
+            <label asp-for="@Model.CountryId" class="form-label-add-edit">Choose a country</label>
+            <select asp-for="@Model.CountryId" class="form-control" aria-required="true" id="countryDropdown">
+                <option value="" selected>Select a country</option>
+                @foreach (var country in Model.Countries)
+                {
+                    <option value="@country.Id">@country.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="@Model.CityId" class="form-label-add-edit">Choose a city</label>
+            <select asp-for="@Model.CityId" class="form-control" aria-required="true" id="cityDropdown" disabled>
+                <option value="">Select City</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="@Model.Address">Address</label>
+            <input asp-for="@Model.Address" type="text" placeholder="Address" oninput="this.className = ''" name="Address">
+            <span asp-validation-for="@Model.Address" class="text-danger"></span>
+        </div>
+
+    </div>
+
+    <!-- step three -->
+    <div class="step">
+        <p class="text-center mb-4">Add property pictures</p>
+
+    </div>
+
+    <!-- start previous / next buttons -->
+    <div class="form-footer d-flex">
+        <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+        <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+        <button type="submit" id="submitBtn" style="display: none;">Submit</button>
+    </div>
+    <!-- end previous / next buttons -->
+</form>
+
+<script src="~/js/register/register.js"></script>
+<script src="~/js/register/loadCities.js"></script>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

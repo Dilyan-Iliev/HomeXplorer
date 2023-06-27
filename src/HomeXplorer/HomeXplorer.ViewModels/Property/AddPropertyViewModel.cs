@@ -1,13 +1,15 @@
 ﻿namespace HomeXplorer.ViewModels.Property
 {
-    using HomeXplorer.ViewModels.BuildingType;
+    using System.ComponentModel.DataAnnotations;
+
+    using Microsoft.AspNetCore.Http;
     using HomeXplorer.ViewModels.City;
     using HomeXplorer.ViewModels.Country;
+    using HomeXplorer.ViewModels.BuildingType;
     using HomeXplorer.ViewModels.PropertyType;
-    using Microsoft.AspNetCore.Http;
-    using System.ComponentModel.DataAnnotations;
-    using static HomeXplorer.Common.DataConstants.PropertyConstants;
+
     using static HomeXplorer.Common.ErrorConstants;
+    using static HomeXplorer.Common.DataConstants.PropertyConstants;
 
     public class AddPropertyViewModel
     {
@@ -39,6 +41,8 @@
         public int Size { get; set; }
 
         [Required(ErrorMessage = FieldRequired)]
+        [StringLength(AddressMaxLength, MinimumLength = AddressMinLength,
+            ErrorMessage = FieldLength)]
         public string Address { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
