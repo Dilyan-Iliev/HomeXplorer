@@ -20,7 +20,14 @@
 
         public static class PropertyConstants
         {
+            public const int NameMinLength = 10;
+            public const int NameMaxLength = 30;
 
+            public const int DescriptionMinlength = 20;
+            public const int DescriptionMaxLength = 100;
+
+            public const int AddressMinLength = 15;
+            public const int AddressMaxLength = 80;
         }
     }
 }

@@ -6,13 +6,14 @@
     {
         public ICollection<Country> GenerateCountries()
         {
-            var countries = new List<Country>();
-
-            countries.Add(new Country()
+            var countries = new List<Country>
             {
-                Id = 1,
-                Name = "Bulgaria"
-            });
+                new Country()
+                {
+                    Id = 1,
+                    Name = "Bulgaria"
+                }
+            };
 
             return countries;
         }

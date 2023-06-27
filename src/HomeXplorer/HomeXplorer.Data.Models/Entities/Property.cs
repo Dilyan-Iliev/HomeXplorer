@@ -18,7 +18,8 @@
         public Guid Id { get; set; }
 
         [Comment("Name of the property")]
-        public string? Name { get; set; }
+        [Required]
+        public string Name { get; set; } = null!;
 
         [Comment("Desription of the property")]
         [Required]

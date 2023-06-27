@@ -5,6 +5,7 @@
 
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Data.Entities.Configuration;
+    using HomeXplorer.Data.Models.Entities.Configuration;
 
     public class HomeXplorerDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -40,6 +41,7 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new PropertyStatusConfiguration());
             builder.ApplyConfiguration(new CountryConfiguration());
             builder.ApplyConfiguration(new PropertyConfiguration());
             builder.ApplyConfiguration(new CityConfiguration());

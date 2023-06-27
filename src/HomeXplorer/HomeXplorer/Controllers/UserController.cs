@@ -54,7 +54,6 @@
         {
             if (!ModelState.IsValid)
             {
-                //TODO: Add message into tempdata
                 var countries = await this.countryService.GetCountriesAsync();
                 model.Countries = countries;
                 return this.View(model);
@@ -68,6 +67,8 @@
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber
             };
+
+            //TODO : check if there is user with same email address
 
             await this.CheckForRoleAsync(model.Role);
 
