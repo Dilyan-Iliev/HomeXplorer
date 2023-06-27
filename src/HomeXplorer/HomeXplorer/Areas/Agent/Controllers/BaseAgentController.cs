@@ -5,8 +5,8 @@
 
     using static HomeXplorer.Common.UserRoleConstants;
 
-    [Authorize]
     [Area(Agent)]
+    [Authorize(Roles = Agent)]
     public class BaseAgentController : Controller
     {
     }

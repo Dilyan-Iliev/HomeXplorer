@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.Extensions
 {
     using CloudinaryDotNet;
+    using HomeXplorer.Config.Cloudinary;
     using HomeXplorer.Config.Google;
     using HomeXplorer.Core.Contexts;
     using HomeXplorer.Core.Repositories;
@@ -57,19 +58,10 @@
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
-            Account account = new Account(
-                configuration.GetValue<string>("Cloudinary:cloud_name"),
-                configuration.GetValue<string>("Cloudinary:api_key"),
-                configuration.GetValue<string>("Cloudinary:api_secret")
-                );
+            services.Configure<GoogleCaptchaSettings>(configuration.GetSection("GoogleReCaptcha"));
 
-            services.Configure<GoogleCaptchaConfig>(configuration.GetSection("GoogleReCaptcha"));
-
-            Cloudinary cloudinary = new Cloudinary(account);
-
-            services.AddSingleton(cloudinary);
-            services.AddScoped(typeof(GoogleCaptchaService));
-
+            services.AddSingleton(typeof(CloudinaryConfig));
+            services.AddScoped(typeof(GoogleCaptchaConfig));
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<IPropertyService, PropertyService>();

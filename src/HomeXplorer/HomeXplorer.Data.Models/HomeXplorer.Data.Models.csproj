@@ -16,4 +16,10 @@
     <ProjectReference Include="..\HomeXplorer.ViewModels\HomeXplorer.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="bg.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

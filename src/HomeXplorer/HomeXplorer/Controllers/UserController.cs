@@ -19,7 +19,7 @@
         private readonly IRepository repo;
         private readonly ICountryService countryService;
         private readonly ICityService cityService;
-        private readonly GoogleCaptchaService googleCaptchaService;
+        private readonly GoogleCaptchaConfig googleCaptchaService;
 
         public UserController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
@@ -27,7 +27,7 @@
             IRepository repo,
             ICountryService countryService,
             ICityService cityService,
-            GoogleCaptchaService googleCaptchaService)
+            GoogleCaptchaConfig googleCaptchaService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -129,6 +129,24 @@
                 {
                     string userEmail = model.Email;
                     this.TempData["SuccessLogin"] = $"Welcome {userEmail}";
+
+                    //Uncomment when areas are ready
+
+                    //var roles = new[] { UserRoleConstants.Renter, UserRoleConstants.Agent, UserRoleConstants.Administrator };
+                    //var role = roles.FirstOrDefault(r => this.userManager.IsInRoleAsync(user, r).Result);
+
+                    //switch (role)
+                    //{
+                    //    case UserRoleConstants.Renter:
+                    //        return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Renter });
+
+                    //    case UserRoleConstants.Agent:
+                    //        return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent });
+
+                    //    case UserRoleConstants.Administrator:
+                    //        return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Administrator });
+                    //}
+
                     return this.RedirectToAction("Index", "Home");
                 }
             }
