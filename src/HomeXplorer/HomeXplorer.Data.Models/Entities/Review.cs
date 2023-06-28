@@ -20,7 +20,7 @@
         [ForeignKey(nameof(Reviewer))]
         public int ReviewerId { get; set; }
 
-        [Comment("Creator of the review")] //this is the Renter
+        [Comment("Creator of the review")]
         public Renter Reviewer { get; set; } = null!;
     }
 }

@@ -40,41 +40,35 @@
             <input asp-for="@Model.Size" placeholder="Property Size" oninput="this.className = ''" name="Size">
             <span asp-validation-for="@Model.Size" class="text-danger"></span>
         </div>
-
-        @*<p class="text-center mb-4">Choose  your role</p>
-        <div class="mb-3 radio-buttons-container">
-
-        <label asp-for="@Model.Role">
-        <input asp-for="@Model.Role" type="radio" value="Agent" required> Agent
-        </label>
-        <label asp-for="@Model.Role">
-        <input asp-for="@Model.Role" type="radio" value="Renter" required> Renter
-        </label>
-        </div>
-        <span id="radioErrorMsg" class="text-danger text-center" style="display: none;">Please select a role.</span>*@
     </div>
 
     <!-- step two -->
     <div class="step">
         <p class="text-center mb-4">Add more info about the property</p>
 
-        <label asp-for="@Model.PropertyTypeId" class="form-label-add-edit">Choose a property type</label>
-        <select asp-for="@Model.PropertyTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
-            <option value="" selected>Select a property type</option>
-            @foreach (var t in Model.PropertyTypes)
-            {
-                <option value="@t.Id">@t.Name</option>
-            }
-        </select>
+        <div class="mb-3">
+            <label asp-for="@Model.PropertyTypeId" class="form-label-add-edit">Choose a property type</label>
+            <select asp-for="@Model.PropertyTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
+                <option value="" selected>Select a property type</option>
+                @foreach (var t in Model.PropertyTypes)
+                {
+                    <option value="@t.Id">@t.Name</option>
+                }
+            </select>
+            <span asp-validation-for="@Model.PropertyTypeId" class="text-danger"></span>
+        </div>
 
-        <label asp-for="@Model.BuildingTypeId" class="form-label-add-edit">Choose a building type</label>
-        <select asp-for="@Model.BuildingTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
-            <option value="" selected>Select a property type</option>
-            @foreach (var t in Model.BuildingTypes)
-            {
-                <option value="@t.Id">@t.Name</option>
-            }
-        </select>
+        <div class="mb-3">
+            <label asp-for="@Model.BuildingTypeId" class="form-label-add-edit">Choose a building type</label>
+            <select asp-for="@Model.BuildingTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
+                <option value="" selected>Select a property type</option>
+                @foreach (var t in Model.BuildingTypes)
+                {
+                    <option value="@t.Id">@t.Name</option>
+                }
+            </select>
+            <span asp-validation-for="@Model.BuildingTypeId" class="text-danger"></span>
+        </div>
 
         <div class="mb-3">
             <label asp-for="@Model.CountryId" class="form-label-add-edit">Choose a country</label>
@@ -85,6 +79,7 @@
                     <option value="@country.Id">@country.Name</option>
                 }
             </select>
+            <span asp-validation-for="@Model.CountryId" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -92,6 +87,7 @@
             <select asp-for="@Model.CityId" class="form-control" aria-required="true" id="cityDropdown" disabled>
                 <option value="">Select City</option>
             </select>
+            <span asp-validation-for="@Model.CityId" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -106,8 +102,10 @@
     <div class="step">
         <p class="text-center mb-4">Add property pictures</p>
 
-        <label class="form-label" for="customFile">Default file input example</label>
-        <input type="file" class="form-control" id="customFile" name="Images" multiple />
+        <label class="form-label" for="customFile">Upload property images</label>
+        <input type="file" class="form-control" id="customFile" name="Images" multiple asp-for="@Model.Images" />
+        <span asp-validation-for="@Model.Images" class="text-danger"></span>
+
     </div>
 
     <!-- start previous / next buttons -->

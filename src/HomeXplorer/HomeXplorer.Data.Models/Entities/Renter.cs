@@ -1,7 +1,10 @@
 ﻿namespace HomeXplorer.Data.Entities
 {
+    using Microsoft.EntityFrameworkCore;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    [Comment("Renter of the property")]
     public class Renter
     {
         public Renter()
@@ -11,25 +14,24 @@
             this.Reviews = new HashSet<Review>();
         }
 
-        public int Id { get; set; }
+        [Comment("Primary key")]
+        [Key]
+        public int Id { get; set; } //TODO: Switch with Guid
 
-        //public string FirstName { get; set; }
+        [Comment("Refference to the Identity User")]
+        [ForeignKey(nameof(User))]
+        public string UserId { get; set; } = null!;
 
-        //public string LastName { get; set; }
+        [Comment("The associated IdentityUser")]
+        public ApplicationUser User { get; set; } = null!;
 
-        //public string PhoneNumber { get; set; }
-
-        //public string Email { get; set; }
-
-        public string UserId { get; set; }
-
-        public ApplicationUser User { get; set; }
-
-        //[InverseProperty(nameof(Property.Renter))]
+        [Comment("Rented properties")]
         public virtual ICollection<Property> RentedProperties { get; set; }
 
+        [Comment("Favourite properties")]
         public virtual ICollection<Property> FavouriteProperties { get; set; }
 
+        [Comment("Renter reviews")]
         public virtual ICollection<Review> Reviews { get; set; }
     }
 }

@@ -1,13 +1,12 @@
 ﻿namespace HomeXplorer.Services.Interfaces
 {
     using System.Threading.Tasks;
+    using Microsoft.EntityFrameworkCore;
 
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property;
-    using CloudinaryDotNet;
-    using Microsoft.EntityFrameworkCore;
 
     public class PropertyService
         : IPropertyService

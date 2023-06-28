@@ -4,6 +4,7 @@
     using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
 
+    [Comment("Extended Identity User")]
     public class ApplicationUser : IdentityUser
     {
         public ApplicationUser()
@@ -19,9 +20,9 @@
         [Required]
         public string LastName { get; set; } = null!;
 
-
+        [Comment("Date and time when the user is being registered")]
         public DateTime RegisteredOn { get; set; } = DateTime.UtcNow;
 
-        public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; } //TODO: think of removing from this class and keep only in renter
     }
 }
