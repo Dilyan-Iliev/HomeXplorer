@@ -15,11 +15,11 @@
     {
         public AddPropertyViewModel()
         {
-            this.Countries = new HashSet<SelectCountryViewModel>();
-            this.Cities = new HashSet<SelectCityViewModel>();
-            this.PropertyTypes = new HashSet<SelectPropertyTypeViewModel>();
-            this.BuildingTypes = new HashSet<SelectBuildingTypeViewModel>();
-            this.Images = new HashSet<IFormFile>();
+            this.Countries = new List<SelectCountryViewModel>();
+            this.Cities = new List<SelectCityViewModel>();
+            this.PropertyTypes = new List<SelectPropertyTypeViewModel>();
+            this.BuildingTypes = new List<SelectBuildingTypeViewModel>();
+            this.Images = new List<IFormFile>();
         }
 
         public Guid Id { get; set; }
@@ -63,10 +63,11 @@
         public int PropertyStatusId { get; set; } = 1;
 
         [Required(ErrorMessage = FieldRequired)]
-        public int BuildintTypeId { get; set; }
+        public int BuildingTypeId { get; set; }
 
         public IEnumerable<SelectBuildingTypeViewModel> BuildingTypes { get; set; }
 
+        [Required(ErrorMessage = FieldRequired)]
         public ICollection<IFormFile> Images { get; set; }
     }
 }

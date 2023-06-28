@@ -7,8 +7,9 @@
 <form id="signUpForm" method="post" enctype="multipart/form-data">
     <!-- start step indicators -->
     <div class="form-header d-flex mb-4">
-        <span class="stepIndicator">Account Setup</span>
-        <span class="stepIndicator">Personal Information</span>
+        <span class="stepIndicator">Basic info about the property</span>
+        <span class="stepIndicator">More info about the property</span>
+        <span class="stepIndicator">Property pictures</span>
     </div>
     <!-- end step indicators -->
     <!-- step one -->
@@ -36,7 +37,7 @@
 
         <div class="mb-3">
             <label asp-for="@Model.Size">Property Size</label>
-            <input asp-for="@Model.Size" type="password" placeholder="Property Size" oninput="this.className = ''" name="Size">
+            <input asp-for="@Model.Size" placeholder="Property Size" oninput="this.className = ''" name="Size">
             <span asp-validation-for="@Model.Size" class="text-danger"></span>
         </div>
 
@@ -60,9 +61,18 @@
         <label asp-for="@Model.PropertyTypeId" class="form-label-add-edit">Choose a property type</label>
         <select asp-for="@Model.PropertyTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
             <option value="" selected>Select a property type</option>
-            @foreach (var type in Model.PropertyTypes)
+            @foreach (var t in Model.PropertyTypes)
             {
-                <option value="@type.Id">@type.Name</option>
+                <option value="@t.Id">@t.Name</option>
+            }
+        </select>
+
+        <label asp-for="@Model.BuildingTypeId" class="form-label-add-edit">Choose a building type</label>
+        <select asp-for="@Model.BuildingTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
+            <option value="" selected>Select a property type</option>
+            @foreach (var t in Model.BuildingTypes)
+            {
+                <option value="@t.Id">@t.Name</option>
             }
         </select>
 
@@ -96,18 +106,19 @@
     <div class="step">
         <p class="text-center mb-4">Add property pictures</p>
 
+        <label class="form-label" for="customFile">Default file input example</label>
+        <input type="file" class="form-control" id="customFile" name="Images" multiple />
     </div>
 
     <!-- start previous / next buttons -->
     <div class="form-footer d-flex">
         <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
         <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
-        <button type="submit" id="submitBtn" style="display: none;">Submit</button>
     </div>
     <!-- end previous / next buttons -->
 </form>
 
-<script src="~/js/register/register.js"></script>
+<script src="~/js/property/add.js"></script>
 <script src="~/js/register/loadCities.js"></script>
 
 @section Scripts{

@@ -4,24 +4,16 @@
 
     public class CloudinaryConfig
     {
-        private readonly IConfiguration configuration;
-        private readonly Cloudinary cloudinary;
-
-        public CloudinaryConfig(IConfiguration configuration)
+        public static Cloudinary GetCloudinaryInstance(IConfiguration configuration)
         {
-            this.configuration = configuration;
-
             Account account = new Account(
-                this.configuration.GetValue<string>("Cloudinary:cloud_name"),
-                this.configuration.GetValue<string>("Cloudinary:api_key"),
-                this.configuration.GetValue<string>("Cloudinary:api_secret")
+                configuration.GetValue<string>("Cloudinary:cloud_name"),
+                configuration.GetValue<string>("Cloudinary:api_key"),
+                configuration.GetValue<string>("Cloudinary:api_secret")
             );
 
-            cloudinary = new Cloudinary(account);
-        }
+            Cloudinary cloudinary = new Cloudinary(account);
 
-        public Cloudinary GetCloudinaryInstance()
-        {
             return cloudinary;
         }
     }

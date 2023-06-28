@@ -4,6 +4,6 @@
 
     public interface IPropertyService
     {
-        Task AddAsync(AddPropertyViewModel model);
+        Task AddAsync(AddPropertyViewModel model, ICollection<string> imageUrls, string userId);
     }
 }

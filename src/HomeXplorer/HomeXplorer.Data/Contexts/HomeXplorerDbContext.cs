@@ -14,8 +14,6 @@
         {
         }
 
-        //public DbSet<Agency> Agencies { get; set; }
-
         public DbSet<Agent> Agents { get; set; } = null!;
 
         public DbSet<Renter> Renters { get; set; } = null!;
@@ -41,10 +39,12 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new PropertyTypeConfiguration());
             builder.ApplyConfiguration(new PropertyStatusConfiguration());
+            builder.ApplyConfiguration(new BuildingTypeConfiguration());
             builder.ApplyConfiguration(new CountryConfiguration());
-            builder.ApplyConfiguration(new PropertyConfiguration());
             builder.ApplyConfiguration(new CityConfiguration());
+            builder.ApplyConfiguration(new PropertyConfiguration());
 
             base.OnModelCreating(builder);
         }

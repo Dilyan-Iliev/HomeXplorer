@@ -60,11 +60,16 @@
 
             services.Configure<GoogleCaptchaSettings>(configuration.GetSection("GoogleReCaptcha"));
 
+            Cloudinary cloudinaryInstance = CloudinaryConfig.GetCloudinaryInstance(configuration);
+
+            services.AddSingleton(cloudinaryInstance);
             services.AddSingleton(typeof(CloudinaryConfig));
             services.AddScoped(typeof(GoogleCaptchaConfig));
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<IPropertyService, PropertyService>();
+            services.AddScoped<IBuildingTypeService, BuildingTypeService>();
+            services.AddScoped<IPropertyTypeService, PropertyTypeService>();
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
 

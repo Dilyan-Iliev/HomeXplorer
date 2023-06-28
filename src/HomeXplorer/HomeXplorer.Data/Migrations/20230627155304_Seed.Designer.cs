@@ -9,17 +9,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HomeXplorer.Core.Migrations
+namespace HomeXplorer.Data.Migrations
 {
     [DbContext(typeof(HomeXplorerDbContext))]
-    [Migration("20230623162046_Initial")]
-    partial class Initial
+    [Migration("20230627155304_Seed")]
+    partial class Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.15")
+                .HasAnnotation("ProductVersion", "6.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -148,6 +148,23 @@ namespace HomeXplorer.Core.Migrations
                     b.ToTable("BuildingTypes");
 
                     b.HasComment("Building type of the property");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Luxury"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Average"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Ordinary"
+                        });
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.City", b =>
@@ -1832,6 +1849,7 @@ namespace HomeXplorer.Core.Migrations
                         .HasComment("Time when property offer is being edited");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasComment("Name of the property");
 
@@ -1902,6 +1920,23 @@ namespace HomeXplorer.Core.Migrations
                     b.ToTable("PropertyStatuses");
 
                     b.HasComment("Status of the property");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Free"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Reserved"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Taken"
+                        });
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.PropertyType", b =>
@@ -1922,6 +1957,43 @@ namespace HomeXplorer.Core.Migrations
                     b.ToTable("PropertyTypes");
 
                     b.HasComment("Type of the property");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Villa"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Single-Family Home"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Townhome"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Bungalow"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Ranch"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Studio"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Residential area"
+                        });
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Renter", b =>
@@ -2183,7 +2255,8 @@ namespace HomeXplorer.Core.Migrations
 
                     b.HasOne("HomeXplorer.Data.Entities.Renter", "Renter")
                         .WithMany("RentedProperties")
-                        .HasForeignKey("RenterId");
+                        .HasForeignKey("RenterId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("HomeXplorer.Data.Entities.Renter", null)
                         .WithMany("FavouriteProperties")

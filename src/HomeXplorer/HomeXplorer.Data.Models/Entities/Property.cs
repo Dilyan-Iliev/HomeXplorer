@@ -49,12 +49,12 @@
         [Required]
         public DateTime ModifiedOn { get; set; }
 
-        [Comment("Country ID of the property")]
-        [ForeignKey(nameof(Country))]
-        public int CountryId { get; set; }
+        //[Comment("Country ID of the property")]
+        //[ForeignKey(nameof(Country))]
+        //public int CountryId { get; set; }
 
-        [Comment("Country of the property")]
-        public virtual Country Country { get; set; }
+        //[Comment("Country of the property")]
+        //public virtual Country Country { get; set; }
 
         [Comment("City ID of the property")]
         [ForeignKey(nameof(City))]

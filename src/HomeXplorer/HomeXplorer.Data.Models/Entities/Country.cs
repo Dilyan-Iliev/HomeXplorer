@@ -9,7 +9,7 @@
         public Country()
         {
             this.Cities = new HashSet<City>();
-            this.Properties = new HashSet<Property>();
+            //this.Properties = new HashSet<Property>();
         }
 
         [Comment("Primary key")]
@@ -22,6 +22,6 @@
 
         public virtual ICollection<City> Cities { get; set; }
 
-        public virtual ICollection<Property> Properties { get; set; }
+        //public virtual ICollection<Property> Properties { get; set; }
     }
 }
