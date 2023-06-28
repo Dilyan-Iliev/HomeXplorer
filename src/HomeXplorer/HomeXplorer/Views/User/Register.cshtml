@@ -80,7 +80,7 @@
                     <option value="@country.Id">@country.Name</option>
                 }
             </select>
-            @*<input type="text" placeholder="Country" oninput="this.className = ''" name="Country">*@
+            <span asp-validation-for="@Model.CountryId" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -88,7 +88,7 @@
             <select asp-for="@Model.CityId" class="form-control" aria-required="true" id="cityDropdown" disabled>
                 <option value="">Select City</option>
             </select>
-            @*<input type="text" placeholder="City" oninput="this.className = ''" name="City">*@
+            <span asp-validation-for="@Model.CityId" class="text-danger"></span>
         </div>
     </div>
 
