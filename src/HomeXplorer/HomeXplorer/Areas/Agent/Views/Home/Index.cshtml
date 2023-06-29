@@ -2,12 +2,12 @@
 
 @if (!Model.Any())
 {
-
+    <div>
+        <h2 class="text-center">You have no uploaded properties.</h2>
+    </div>
 }
 else
 {
-
-
     <!-- ======= Latest Properties Section ======= -->
     <section class="section-property section-t8">
         <div class="container">
@@ -70,8 +70,8 @@ else
                                                     <span>@property.Status</span>
                                                 </li>
                                                 <li>
-                                                    <h4 class="card-info-title">Is rented</h4>
-                                                    <span>@(property.IsRented ? "Rented" : "Not rented")</span>
+                                                    <h4 class="card-info-title">Added on:</h4>
+                                                    <span>@property.AddedOn</span>
                                                 </li>
                                                 <li>
                                                     <h4 class="card-info-title">Visits</h4>

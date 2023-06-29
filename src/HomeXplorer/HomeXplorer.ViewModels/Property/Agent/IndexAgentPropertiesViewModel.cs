@@ -12,8 +12,6 @@
 
         public string Status { get; set; } = null!;
 
-        public bool IsRented { get; set; }
-
         public int Visits { get; set; }
 
         public string AddedOn { get; set; } = null!;

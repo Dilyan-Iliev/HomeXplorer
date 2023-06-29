@@ -13,6 +13,7 @@
             this.propertyService = propertyService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             string userId = this.User.GetUserId();

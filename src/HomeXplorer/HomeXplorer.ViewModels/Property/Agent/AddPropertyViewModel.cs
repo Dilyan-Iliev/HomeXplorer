@@ -10,7 +10,6 @@
 
     using static HomeXplorer.Common.ErrorConstants;
     using static HomeXplorer.Common.DataConstants.PropertyConstants;
-    using HomeXplorer.Shared.ValidationAttributes;
 
     public class AddPropertyViewModel
     {
@@ -38,11 +37,11 @@
 
         [Required(ErrorMessage = FieldRequired)]
         [Range(typeof(decimal), "250", "100000",
-            ErrorMessage = FieldLength)]
+            ErrorMessage = RangeError)]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = FieldRequired)]
-        [Range(MinSize, MaxSize, ErrorMessage = FieldLength)]
+        [Range(MinSize, MaxSize, ErrorMessage = RangeError)]
         public int Size { get; set; }
 
         [Required(ErrorMessage = FieldRequired)]

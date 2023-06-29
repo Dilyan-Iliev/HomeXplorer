@@ -2,14 +2,14 @@
 @model AddPropertyViewModel
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
 }
 
 <form id="signUpForm" method="post" enctype="multipart/form-data">
 
     @if (Model?.Errors?.Any() ?? false)
     {
-        <div class="text-danger">Allowed file types: jpg, jpeg, png</div>
+            <div class="text-danger">Allowed file types: jpg, jpeg, png</div>
     }
 
     <!-- start step indicators -->
@@ -59,7 +59,7 @@
                 <option value="" selected>Select a property type</option>
                 @foreach (var t in Model.PropertyTypes)
                 {
-                    <option value="@t.Id">@t.Name</option>
+                        <option value="@t.Id">@t.Name</option>
                 }
             </select>
             <span asp-validation-for="@Model.PropertyTypeId" class="text-danger"></span>
@@ -71,7 +71,7 @@
                 <option value="" selected>Select a property type</option>
                 @foreach (var t in Model.BuildingTypes)
                 {
-                    <option value="@t.Id">@t.Name</option>
+                        <option value="@t.Id">@t.Name</option>
                 }
             </select>
             <span asp-validation-for="@Model.BuildingTypeId" class="text-danger"></span>
@@ -83,7 +83,7 @@
                 <option value="" selected>Select a country</option>
                 @foreach (var country in Model.Countries)
                 {
-                    <option value="@country.Id">@country.Name</option>
+                        <option value="@country.Id">@country.Name</option>
                 }
             </select>
             <span asp-validation-for="@Model.CountryId" class="text-danger"></span>
@@ -112,6 +112,7 @@
         <label class="form-label" for="customFile">Upload property images</label>
         <input type="file" class="form-control" id="customFile" name="Images" multiple asp-for="@Model.Images" />
         <span asp-validation-for="@Model.Images" class="text-danger"></span>
+        <p class="text-center mb-2 small">Note: The first added photo will be visualised as cover photo</p>
 
     </div>
 
@@ -127,5 +128,5 @@
 <script src="~/js/register/loadCities.js"></script>
 
 @section Scripts{
-    <partial name="_ValidationScriptsPartial" />
+        <partial name="_ValidationScriptsPartial" />
 }

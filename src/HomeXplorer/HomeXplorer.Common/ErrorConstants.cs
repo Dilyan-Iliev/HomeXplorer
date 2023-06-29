@@ -13,5 +13,7 @@
         public const string EmailError = "Invalid email";
 
         public const string PhoneError = "Invalid phone number";
+
+        public const string RangeError = "The field must be in range {1} and {2}";
     }
 }

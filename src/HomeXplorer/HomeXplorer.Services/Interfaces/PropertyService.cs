@@ -40,7 +40,9 @@
                 PropertyStatusId = model.PropertyStatusId,
                 BuildingTypeId = model.BuildingTypeId,
                 AgentId = currentAgent!.Id,
-                PetsAllowed = false
+                PetsAllowed = false,
+                AddedOn = DateTime.UtcNow,
+                ModifiedOn = DateTime.UtcNow
             };
 
             foreach (var imageUrl in imageUrls)
@@ -68,14 +70,14 @@
 
             var lastThreeProperties = await this.repo
                 .AllReadonly<Property>()
+                .OrderByDescending(p => p.AddedOn)
                 .Select(p => new IndexAgentPropertiesViewModel()
                 {
                     Id = p.Id,
                     Name = p.Name,
                     Price = p.Price,
                     Size = p.Size,
-                    IsRented = p.Renter != null,
-                    AddedOn = p.AddedOn.ToString("dddd, dd MMMM yyyy"),
+                    AddedOn = p.AddedOn.ToString("MM/dd/yyyy"),
                     Status = p.PropertyStatus.Name,
                     CoverPhotoUrl = p.Images
                         .Where(i => i.PropertyId == p.Id)

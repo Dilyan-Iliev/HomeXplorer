@@ -69,7 +69,7 @@
 
                 await this.propertyService.AddAsync(model, imagesUrls, userId);
 
-                return this.RedirectToAction("Index", "Home", new { area = "Admin" });
+                return this.RedirectToAction("Index", "Home", new { area = "Agent" });
             }
             catch (InvalidFileExtensionException ife)
             {

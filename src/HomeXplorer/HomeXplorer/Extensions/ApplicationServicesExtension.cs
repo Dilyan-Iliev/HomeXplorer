@@ -62,6 +62,12 @@
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             services.Configure<GoogleCaptchaSettings>(configuration.GetSection("GoogleReCaptcha"));
             services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
 
