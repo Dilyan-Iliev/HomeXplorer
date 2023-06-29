@@ -1,4 +1,4 @@
-﻿namespace HomeXplorer.ViewModels.Property
+﻿namespace HomeXplorer.ViewModels.Property.Agent
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -10,16 +10,18 @@
 
     using static HomeXplorer.Common.ErrorConstants;
     using static HomeXplorer.Common.DataConstants.PropertyConstants;
+    using HomeXplorer.Shared.ValidationAttributes;
 
     public class AddPropertyViewModel
     {
         public AddPropertyViewModel()
         {
-            this.Countries = new List<SelectCountryViewModel>();
-            this.Cities = new List<SelectCityViewModel>();
-            this.PropertyTypes = new List<SelectPropertyTypeViewModel>();
-            this.BuildingTypes = new List<SelectBuildingTypeViewModel>();
-            this.Images = new List<IFormFile>();
+            Countries = new List<SelectCountryViewModel>();
+            Cities = new List<SelectCityViewModel>();
+            PropertyTypes = new List<SelectPropertyTypeViewModel>();
+            BuildingTypes = new List<SelectBuildingTypeViewModel>();
+            Images = new List<IFormFile>();
+            Errors = new List<string>();
         }
 
         public Guid Id { get; set; }
@@ -53,11 +55,13 @@
         [Required(ErrorMessage = FieldRequired)]
         public int CityId { get; set; }
 
+        [Required(ErrorMessage = FieldRequired)]
         public IEnumerable<SelectCityViewModel> Cities { get; set; }
 
         [Required(ErrorMessage = FieldRequired)]
         public int PropertyTypeId { get; set; }
 
+        [Required(ErrorMessage = FieldRequired)]
         public IEnumerable<SelectPropertyTypeViewModel> PropertyTypes { get; set; }
 
         public int PropertyStatusId { get; set; } = 1;
@@ -68,6 +72,9 @@
         public IEnumerable<SelectBuildingTypeViewModel> BuildingTypes { get; set; }
 
         [Required(ErrorMessage = FieldRequired)]
+        //[AllowedFileExtensions("jpg", "png", "jpeg", ErrorMessage = "Not allowed file extension - only jpg, png and jpeg")]
         public ICollection<IFormFile> Images { get; set; }
+
+        public ICollection<string>? Errors { get; set; }
     }
 }

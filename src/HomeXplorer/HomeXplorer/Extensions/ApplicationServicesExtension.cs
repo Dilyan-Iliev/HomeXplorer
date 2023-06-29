@@ -8,6 +8,8 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Services.Contracts;
+    using HomeXplorer.Services.Exceptions;
+    using HomeXplorer.Services.Exceptions.Contracts;
     using HomeXplorer.Services.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
@@ -77,6 +79,7 @@
             services.AddScoped<IPropertyTypeService, PropertyTypeService>();
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
+            services.AddScoped<IGuard, Guard>();
 
             return services;
         }

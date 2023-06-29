@@ -167,6 +167,8 @@
             return this.RedirectToAction(nameof(Login));
         }
 
+        //TODO: Add forgotten password actions
+
         private async Task CreateUserTypeAsync(RegisterViewModel model, ApplicationUser user)
         {
             if (model.Role == UserRoleConstants.Agent)

@@ -1,10 +1,17 @@
-﻿@model AddPropertyViewModel
+﻿@using HomeXplorer.ViewModels.Property.Agent;
+@model AddPropertyViewModel
 
 @section Styles {
     <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
 }
 
 <form id="signUpForm" method="post" enctype="multipart/form-data">
+
+    @if (Model?.Errors?.Any() ?? false)
+    {
+        <div class="text-danger">Allowed file types: jpg, jpeg, png</div>
+    }
+
     <!-- start step indicators -->
     <div class="form-header d-flex mb-4">
         <span class="stepIndicator">Basic info about the property</span>

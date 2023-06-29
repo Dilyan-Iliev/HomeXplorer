@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.16" />
@@ -19,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\HomeXplorer.Common\HomeXplorer.Common.csproj" />
     <ProjectReference Include="..\HomeXplorer.Data\HomeXplorer.Data.csproj" />
-    <ProjectReference Include="..\HomeXplorer.Infrastructure\HomeXplorer.Infrastructure.csproj" />
     <ProjectReference Include="..\HomeXplorer.Services\HomeXplorer.Services.csproj" />
   </ItemGroup>
 

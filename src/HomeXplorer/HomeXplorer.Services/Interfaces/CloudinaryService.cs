@@ -3,6 +3,7 @@
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
     using HomeXplorer.Services.Contracts;
+    using HomeXplorer.Services.Exceptions;
     using Microsoft.AspNetCore.Http;
     using System.Collections.Generic;
 
@@ -13,6 +14,8 @@
         {
             ICollection<string> resultURIs = new List<string>();
 
+            string[] allowedFileExtensions = new string[] { "jpg", "png", "jpeg" };
+
             foreach (var file in files
                 .Where(f => f.Length > 0))
             {
@@ -20,9 +23,12 @@
 
                 using (var memoryStream = new MemoryStream())
                 {
-                    //TODO check file extension - allow only jpg, jpeg, png (in try-catch)
-                    var extension = Path.GetExtension(file.FileName)?.ToLower().Substring(1); 
-                    //check this ; also i have .Substring(1) because .GetExtension returns file extension with the period "."
+                    var extension = Path.GetExtension(file.FileName)?.ToLower().Substring(1);
+
+                    if (!allowedFileExtensions.Contains(extension))
+                    {
+                        throw new InvalidFileExtensionException("Not allowed file extension");
+                    }
 
                     await file.CopyToAsync(memoryStream);
                     imageBytes = memoryStream.ToArray();
@@ -43,7 +49,7 @@
 
             return resultURIs;
         }
-        
+
         public async Task<string> UploadSingle(Cloudinary cloudinary, IFormFile file)
         {
             string resultURI = string.Empty;

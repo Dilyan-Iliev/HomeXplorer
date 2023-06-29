@@ -6,7 +6,8 @@
 
     using HomeXplorer.Extensions;
     using HomeXplorer.Services.Contracts;
-    using HomeXplorer.ViewModels.Property;
+    using HomeXplorer.Services.Exceptions;
+    using HomeXplorer.ViewModels.Property.Agent;
 
     public class PropertyController : BaseAgentController
     {
@@ -59,14 +60,27 @@
                 return this.View(model);
             }
 
-            var modelImages = model.Images;
-            var imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, modelImages);
+            try
+            {
+                var modelImages = model.Images;
+                var imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, modelImages);
 
-            string userId = this.User.GetUserId();
+                string userId = this.User.GetUserId();
 
-            await this.propertyService.AddAsync(model, imagesUrls, userId);
+                await this.propertyService.AddAsync(model, imagesUrls, userId);
 
-            return this.RedirectToAction("Inex", "Home", new { area = "Admin" });
+                return this.RedirectToAction("Index", "Home", new { area = "Admin" });
+            }
+            catch (InvalidFileExtensionException ife)
+            {
+                model?.Errors?.Add(ife.Message);
+
+                model.Countries = await this.countryService.GetCountriesAsync();
+                model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
+                model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
+
+                return this.View(model);
+            }
         }
     }
 }
