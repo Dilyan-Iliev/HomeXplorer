@@ -3,23 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer", "HomeXplorer\HomeXplorer.csproj", "{5608D47D-C68C-4288-AA23-0C4E88F2A9AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeXplorer", "HomeXplorer\HomeXplorer.csproj", "{5608D47D-C68C-4288-AA23-0C4E88F2A9AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{7B235028-2E8C-4D43-BC31-10B2D9630E41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.ViewModels", "HomeXplorer.ViewModels\HomeXplorer.ViewModels.csproj", "{C627B4C5-9F2C-4261-A113-6A02C46E5217}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeXplorer.ViewModels", "HomeXplorer.ViewModels\HomeXplorer.ViewModels.csproj", "{C627B4C5-9F2C-4261-A113-6A02C46E5217}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{6C7B43C3-7870-4E43-A0F5-5A68866F8FB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.Data", "HomeXplorer.Data\HomeXplorer.Data.csproj", "{8AC4EB64-3628-4025-82B7-5D8D0A7535DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeXplorer.Data", "HomeXplorer.Data\HomeXplorer.Data.csproj", "{8AC4EB64-3628-4025-82B7-5D8D0A7535DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.Data.Models", "HomeXplorer.Data.Models\HomeXplorer.Data.Models.csproj", "{35228B28-4106-4AC2-AEC1-85DDE2060EFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeXplorer.Data.Models", "HomeXplorer.Data.Models\HomeXplorer.Data.Models.csproj", "{35228B28-4106-4AC2-AEC1-85DDE2060EFC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{332D4132-80D8-452C-A3B5-3B1694FE750E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.Services", "HomeXplorer.Services\HomeXplorer.Services.csproj", "{9BC87AF4-2C09-409B-B2B9-29E6493FD3A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeXplorer.Services", "HomeXplorer.Services\HomeXplorer.Services.csproj", "{9BC87AF4-2C09-409B-B2B9-29E6493FD3A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.Common", "HomeXplorer.Common\HomeXplorer.Common.csproj", "{FBAF1F44-774E-43C4-971F-7F71330D592C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeXplorer.Common", "HomeXplorer.Common\HomeXplorer.Common.csproj", "{FBAF1F44-774E-43C4-971F-7F71330D592C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.Infrastructure", "HomeXplorer.Infrastructure\HomeXplorer.Infrastructure.csproj", "{5F223647-F0B9-423F-8C6B-35E0024B60E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{FBAF1F44-774E-43C4-971F-7F71330D592C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBAF1F44-774E-43C4-971F-7F71330D592C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBAF1F44-774E-43C4-971F-7F71330D592C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F223647-F0B9-423F-8C6B-35E0024B60E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F223647-F0B9-423F-8C6B-35E0024B60E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F223647-F0B9-423F-8C6B-35E0024B60E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F223647-F0B9-423F-8C6B-35E0024B60E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +67,7 @@ Global
 		{8AC4EB64-3628-4025-82B7-5D8D0A7535DC} = {6C7B43C3-7870-4E43-A0F5-5A68866F8FB1}
 		{35228B28-4106-4AC2-AEC1-85DDE2060EFC} = {6C7B43C3-7870-4E43-A0F5-5A68866F8FB1}
 		{9BC87AF4-2C09-409B-B2B9-29E6493FD3A2} = {332D4132-80D8-452C-A3B5-3B1694FE750E}
+		{5F223647-F0B9-423F-8C6B-35E0024B60E0} = {7B235028-2E8C-4D43-BC31-10B2D9630E41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1EB241D-B9B6-49AF-8BCB-97A9E91722F4}

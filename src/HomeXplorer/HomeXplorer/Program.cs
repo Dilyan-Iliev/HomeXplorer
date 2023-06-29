@@ -26,6 +26,7 @@ namespace HomeXplorer
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
+                app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -48,7 +49,6 @@ namespace HomeXplorer
             app.MapControllerRoute(
                name: "default",
                pattern: "{controller=Home}/{action=Index}/{id?}");
-
 
             app.Run();
         }

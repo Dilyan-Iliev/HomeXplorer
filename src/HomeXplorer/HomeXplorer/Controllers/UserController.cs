@@ -10,6 +10,7 @@
     using HomeXplorer.ViewModels.User;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Core.Repositories;
+    using Microsoft.AspNetCore.Identity.UI.Services;
 
     public class UserController : BaseController
     {
@@ -20,6 +21,7 @@
         private readonly ICountryService countryService;
         private readonly ICityService cityService;
         private readonly GoogleCaptchaConfig googleCaptchaService;
+        private readonly IEmailSender emailSender;
 
         public UserController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
@@ -27,7 +29,8 @@
             IRepository repo,
             ICountryService countryService,
             ICityService cityService,
-            GoogleCaptchaConfig googleCaptchaService)
+            GoogleCaptchaConfig googleCaptchaService,
+            IEmailSender emailSender)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -36,6 +39,7 @@
             this.countryService = countryService;
             this.cityService = cityService;
             this.googleCaptchaService = googleCaptchaService;
+            this.emailSender = emailSender;
         }
 
         [HttpGet]

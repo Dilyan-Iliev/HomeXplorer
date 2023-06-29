@@ -3,12 +3,14 @@
     using CloudinaryDotNet;
     using HomeXplorer.Config.Cloudinary;
     using HomeXplorer.Config.Google;
+    using HomeXplorer.Config.SMTP;
     using HomeXplorer.Core.Contexts;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Interfaces;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -59,11 +61,14 @@
             });
 
             services.Configure<GoogleCaptchaSettings>(configuration.GetSection("GoogleReCaptcha"));
+            services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
 
-            Cloudinary cloudinaryInstance = CloudinaryConfig.GetCloudinaryInstance(configuration);
+            Cloudinary cloudinaryInstance =
+                CloudinaryConfig.GetCloudinaryInstance(configuration);
 
             services.AddSingleton(cloudinaryInstance);
             services.AddSingleton(typeof(CloudinaryConfig));
+            services.AddSingleton<IEmailSender, SmtpEmailSender>();
             services.AddScoped(typeof(GoogleCaptchaConfig));
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();

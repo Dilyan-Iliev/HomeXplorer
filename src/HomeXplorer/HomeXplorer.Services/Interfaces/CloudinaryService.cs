@@ -20,6 +20,10 @@
 
                 using (var memoryStream = new MemoryStream())
                 {
+                    //TODO check file extension - allow only jpg, jpeg, png (in try-catch)
+                    var extension = Path.GetExtension(file.FileName)?.ToLower().Substring(1); 
+                    //check this ; also i have .Substring(1) because .GetExtension returns file extension with the period "."
+
                     await file.CopyToAsync(memoryStream);
                     imageBytes = memoryStream.ToArray();
                 }

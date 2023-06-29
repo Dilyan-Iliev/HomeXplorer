@@ -66,7 +66,7 @@
 
             await this.propertyService.AddAsync(model, imagesUrls, userId);
 
-            return this.Ok();
+            return this.RedirectToAction("Inex", "Home", new { area = "Admin" });
         }
     }
 }

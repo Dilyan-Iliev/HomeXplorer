@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HomeXplorer.Common\HomeXplorer.Common.csproj" />
     <ProjectReference Include="..\HomeXplorer.Data\HomeXplorer.Data.csproj" />
+    <ProjectReference Include="..\HomeXplorer.Infrastructure\HomeXplorer.Infrastructure.csproj" />
     <ProjectReference Include="..\HomeXplorer.Services\HomeXplorer.Services.csproj" />
   </ItemGroup>
 
