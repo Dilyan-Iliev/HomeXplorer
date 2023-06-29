@@ -28,6 +28,12 @@
 
             public const int AddressMinLength = 15;
             public const int AddressMaxLength = 80;
+
+            public const decimal MinPrie = 250m;
+            public const decimal MaxPrice = 100_000m;
+
+            public const int MinSize = 40;
+            public const int MaxSize = 500;
         }
     }
 }

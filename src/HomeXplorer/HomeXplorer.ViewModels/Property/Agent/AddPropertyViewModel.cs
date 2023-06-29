@@ -37,9 +37,12 @@
         public string Description { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
+        [Range(typeof(decimal), "250", "100000",
+            ErrorMessage = FieldLength)]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = FieldRequired)]
+        [Range(MinSize, MaxSize, ErrorMessage = FieldLength)]
         public int Size { get; set; }
 
         [Required(ErrorMessage = FieldRequired)]
