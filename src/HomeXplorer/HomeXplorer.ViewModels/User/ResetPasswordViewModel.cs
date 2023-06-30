@@ -5,18 +5,15 @@
     using static HomeXplorer.Common.ErrorConstants;
     using static HomeXplorer.Common.DataConstants.ApplicationUserConstants;
 
-    public class LoginViewModel
+    public class ResetPasswordViewModel
     {
-        [Required(ErrorMessage = FieldRequired)]
-        [RegularExpression(EmailRegex)]
-        public string Email { get; set; } = null!;
+        public string UserId { get; set; } = null!;
 
         [Required(ErrorMessage = FieldRequired)]
-        public string Password { get; set; } = null!;
+        [StringLength(PasswordMaxLength, MinimumLength = PasswordMinLength,
+            ErrorMessage = PasswordRequirements)]
+        public string NewPassword { get; set; } = null!;
 
-        [Required]
         public string Token { get; set; } = null!;
-
-        public string? ErrorMessage { get; set; }
     }
 }

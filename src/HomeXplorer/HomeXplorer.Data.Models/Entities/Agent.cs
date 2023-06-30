@@ -20,6 +20,8 @@
         [ForeignKey(nameof(User))]
         public string UserId { get; set; } = null!;
 
+        //TODO: Add city
+
         [Comment("The associated IdentityUser")]
         public virtual ApplicationUser User { get; set; } = null!;
 

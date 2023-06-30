@@ -70,6 +70,7 @@
 
             var lastThreeProperties = await this.repo
                 .AllReadonly<Property>()
+                .Where(p => p.AgentId == currentAgent.Id)
                 .OrderByDescending(p => p.AddedOn)
                 .Select(p => new IndexAgentPropertiesViewModel()
                 {

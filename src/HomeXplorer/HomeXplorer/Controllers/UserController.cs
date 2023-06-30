@@ -8,9 +8,15 @@
     using HomeXplorer.Config.Google;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.ViewModels.User;
-    using HomeXplorer.Services.Contracts;
     using HomeXplorer.Core.Repositories;
+    using HomeXplorer.Services.Contracts;
+    using HomeXplorer.Services.Exceptions;
+    using HomeXplorer.Services.Exceptions.Contracts;
     using Microsoft.AspNetCore.Identity.UI.Services;
+
+    using static HomeXplorer.Config.SMTP.SmtpConstants;
+    using Microsoft.AspNetCore.WebUtilities;
+    using System.Text;
 
     public class UserController : BaseController
     {
@@ -22,6 +28,7 @@
         private readonly ICityService cityService;
         private readonly GoogleCaptchaConfig googleCaptchaService;
         private readonly IEmailSender emailSender;
+        private readonly IGuard guard;
 
         public UserController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
@@ -30,7 +37,8 @@
             ICountryService countryService,
             ICityService cityService,
             GoogleCaptchaConfig googleCaptchaService,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IGuard guard)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -40,6 +48,7 @@
             this.cityService = cityService;
             this.googleCaptchaService = googleCaptchaService;
             this.emailSender = emailSender;
+            this.guard = guard;
         }
 
         [HttpGet]
@@ -69,7 +78,7 @@
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                PhoneNumber = model.PhoneNumber
+                PhoneNumber = model.PhoneNumber,
             };
 
             //TODO : check if there is user with same email address
@@ -133,30 +142,22 @@
                 if (result.Succeeded)
                 {
                     string userEmail = model.Email;
-                    this.TempData["SuccessLogin"] = $"Welcome {userEmail}";
 
-                    //Uncomment when areas are ready
+                    var roles = new[] { UserRoleConstants.Renter, UserRoleConstants.Agent, UserRoleConstants.Administrator };
+                    var role = roles
+                        .FirstOrDefault(r => this.userManager.IsInRoleAsync(user, r).Result);
 
-                    //var roles = new[] { UserRoleConstants.Renter, UserRoleConstants.Agent, UserRoleConstants.Administrator };
-                    //var role = roles.FirstOrDefault(r => this.userManager.IsInRoleAsync(user, r).Result);
+                    //this.TempData["SuccessLogin"] = $"Welcome {userEmail}";
 
-                    //switch (role)
-                    //{
-                    //    case UserRoleConstants.Renter:
-                    //        return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Renter });
-
-                    //    case UserRoleConstants.Agent:
-                    //        return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent });
-
-                    //    case UserRoleConstants.Administrator:
-                    //        return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Administrator });
-                    //}
-
-                    return this.RedirectToAction("Index", "Home");
+                    return this.RedirectToAction("Index", "Home", new { area = role });
                 }
             }
 
-            this.ModelState.AddModelError(string.Empty, "Invalid login");
+            this.ModelState.AddModelError("InvalidLogin", "Wrong email and/or password");
+
+            string? errorMessage = this.ModelState["InvalidLogin"]?.Errors[0]?.ErrorMessage;
+            model.ErrorMessage = errorMessage ?? string.Empty;
+
             return this.View(model);
         }
 
@@ -167,7 +168,107 @@
             return this.RedirectToAction(nameof(Login));
         }
 
-        //TODO: Add forgotten password actions
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgottenPassword()
+        {
+            //1)View for entering email
+            //2)By entering email, click on button ->
+            //send email with link for view which resets pass, save pass and redirect to login
+            return this.View(new ForgottenPasswordViewModel());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgottenPassword(ForgottenPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                ApplicationUser user = await userManager.FindByEmailAsync(model.Email);
+
+                guard.AgainstNull(user, "The user was not found by this email");
+
+                if (user != null)
+                {
+                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                    var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+                    var userId = user.Id;
+
+                    var callbackUrl = $"{Request.Scheme}://{Request.Host}/User/ResetPassword?userId={userId}&token={encodedToken}";
+
+                    await emailSender.SendEmailAsync(user.Email, "Password reset", string.Format(ForgottenPasswordTemplate, callbackUrl));
+
+                    TempData["SuccessResetRequest"] = "Please check your email in order to reset your password";
+                }
+
+                return RedirectToAction(nameof(ForgottenPassword));
+            }
+            catch (HomeXplorerException he)
+            {
+                ModelState.AddModelError("InvalidEmail", he.Message);
+
+                string? errorMessage = ModelState["InvalidEmail"]?.Errors[0]?.ErrorMessage;
+                model.ErrorMessage = errorMessage ?? string.Empty;
+
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid password reset token");
+                return View("NotFound");
+            }
+
+            var model = new ResetPasswordViewModel
+            {
+                UserId = userId,
+                Token = token
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await userManager.FindByIdAsync(model.UserId);
+
+            if (user != null)
+            {
+                var tokenBytes = WebEncoders.Base64UrlDecode(model.Token);
+                var token = Encoding.UTF8.GetString(tokenBytes);
+
+                var result = await userManager.ResetPasswordAsync(user, token, model.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View(model);
+        }
 
         private async Task CreateUserTypeAsync(RegisterViewModel model, ApplicationUser user)
         {

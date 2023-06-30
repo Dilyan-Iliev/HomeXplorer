@@ -46,6 +46,11 @@ namespace HomeXplorer
             app.UseAuthentication();
             app.UseAuthorization();
 
+            //app.MapControllerRoute(
+            //    name: "ResetPassword",
+            //    pattern: "User/ResetPassword/{userId}/{token}",
+            //    defaults: new { controller = "User", action = "ResetPassword" });
+
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");

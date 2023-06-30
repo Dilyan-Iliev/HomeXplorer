@@ -5,17 +5,11 @@
     using static HomeXplorer.Common.ErrorConstants;
     using static HomeXplorer.Common.DataConstants.ApplicationUserConstants;
 
-    public class LoginViewModel
+    public class ForgottenPasswordViewModel
     {
         [Required(ErrorMessage = FieldRequired)]
-        [RegularExpression(EmailRegex)]
+        [RegularExpression(EmailRegex, ErrorMessage = EmailError)]
         public string Email { get; set; } = null!;
-
-        [Required(ErrorMessage = FieldRequired)]
-        public string Password { get; set; } = null!;
-
-        [Required]
-        public string Token { get; set; } = null!;
 
         public string? ErrorMessage { get; set; }
     }
