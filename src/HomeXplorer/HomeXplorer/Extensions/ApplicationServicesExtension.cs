@@ -1,20 +1,23 @@
 ﻿namespace HomeXplorer.Extensions
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.AspNetCore.Identity.UI.Services;
+
     using CloudinaryDotNet;
-    using HomeXplorer.Config.Cloudinary;
-    using HomeXplorer.Config.Google;
+
+    using HomeXplorer.Filters;
     using HomeXplorer.Config.SMTP;
+    using HomeXplorer.Config.Google;
     using HomeXplorer.Core.Contexts;
-    using HomeXplorer.Core.Repositories;
     using HomeXplorer.Data.Entities;
+    using HomeXplorer.Config.Cloudinary;
+    using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Exceptions;
-    using HomeXplorer.Services.Exceptions.Contracts;
     using HomeXplorer.Services.Interfaces;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI.Services;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.DependencyInjection;
+    using HomeXplorer.Services.Exceptions.Contracts;
 
     public static class ApplicationServicesExtension
     {
@@ -60,6 +63,7 @@
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                options.Filters.Add(typeof(PageVisitCountFilter));
             });
 
             services.Configure<CookiePolicyOptions>(options =>
