@@ -25,6 +25,13 @@
         [Comment("The associated IdentityUser")]
         public ApplicationUser User { get; set; } = null!;
 
+        [Comment("The associated City")]
+        [ForeignKey(nameof(City))]
+        public int CityId { get; set; }
+
+        [Comment("City of the renter")]
+        public City City { get; set; } = null!;
+
         [Comment("Rented properties")]
         public virtual ICollection<Property> RentedProperties { get; set; }
 

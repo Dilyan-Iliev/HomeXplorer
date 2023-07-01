@@ -26,11 +26,11 @@
             //    .HasForeignKey(x => x.CountryId)
             //    .OnDelete(DeleteBehavior.NoAction);
 
-            //builder
-            //    .HasOne(x => x.City)
-            //    .WithMany(x => x.Properties)
-            //    .HasForeignKey(x => x.CityId)
-            //    .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .HasOne(x => x.City)
+                .WithMany(x => x.Properties)
+                .HasForeignKey(x => x.CityId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -9,13 +9,15 @@
     using HomeXplorer.Services.Exceptions;
     using HomeXplorer.ViewModels.Property.Agent;
 
+    using static HomeXplorer.Common.UserRoleConstants;
+
     public class PropertyController : BaseAgentController
     {
         private readonly IPropertyTypeService propertyTypeService;
         private readonly ICountryService countryService;
         private readonly IBuildingTypeService buildingTypeService;
         private readonly Cloudinary cloudinary;
-        private readonly IPropertyService propertyService;
+        private readonly IAgentPropertyService propertyService;
         private readonly ICloudinaryService cloudinaryService;
 
         public PropertyController(
@@ -24,7 +26,7 @@
             IBuildingTypeService buildingTypeService,
             ICloudinaryService cloudinaryService,
             Cloudinary cloudinary,
-            IPropertyService propertyService)
+            IAgentPropertyService propertyService)
         {
             this.propertyTypeService = propertyTypeService;
             this.countryService = countryService;
@@ -38,6 +40,8 @@
         [HttpGet]
         public async Task<IActionResult> Add()
         {
+            //Check if renter user can access this view and others
+
             var model = new AddPropertyViewModel()
             {
                 Countries = await this.countryService.GetCountriesAsync(),
@@ -65,11 +69,15 @@
                 var modelImages = model.Images;
                 var imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, modelImages);
 
-                string userId = this.User.GetUserId();
+                string userId = this.User.GetId();
+
+                //TODO: check if some of the dropdowns are valid : (existsById)
+
+
 
                 await this.propertyService.AddAsync(model, imagesUrls, userId);
 
-                return this.RedirectToAction("Index", "Home", new { area = "Agent" });
+                return this.RedirectToAction("Index", "Home", new { area = Agent });
             }
             catch (InvalidFileExtensionException ife)
             {
@@ -81,6 +89,30 @@
 
                 return this.View(model);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var property = await this.propertyService
+                .GetDetailsAsync(id);
+
+            if (property == null)
+            {
+                this.TempData["DetailsError"] = "Can not show the details of the property";
+
+                return this.RedirectToAction("Index", "Home", new { area = Agent });
+            }
+
+            return this.View(property);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await this.propertyService.DeleteAsync(id);
+
+            return this.RedirectToAction("Index", "Home", new { area = Agent });
         }
     }
 }

@@ -10,6 +10,7 @@
         public City()
         {
             this.Properties = new HashSet<Property>();
+            this.Renters = new HashSet<Renter>();
             this.Agents = new HashSet<Agent>();
         }
 
@@ -32,6 +33,9 @@
         public virtual ICollection<Property> Properties { get; set; }
 
         [Comment("Agents in the city")]
+        public virtual ICollection<Renter> Renters { get; set; }
+
+        [Comment("Renters in the city")]
         public virtual ICollection<Agent> Agents { get; set; }
     }
 }

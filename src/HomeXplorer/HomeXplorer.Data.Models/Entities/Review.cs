@@ -15,6 +15,9 @@
         [Required]
         public string Description { get; set; } = null!;
 
+        [Comment("Date and time when the review was added")]
+        public DateTime AddedOn { get; set; } = DateTime.UtcNow;
+
         [Comment("Reviewer ID")]
         [Required]
         [ForeignKey(nameof(Reviewer))]

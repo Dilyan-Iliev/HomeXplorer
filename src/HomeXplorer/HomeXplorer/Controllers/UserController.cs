@@ -1,8 +1,12 @@
 ﻿namespace HomeXplorer.Controllers
 {
+    using System.Text;
+
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.WebUtilities;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity.UI.Services;
 
     using HomeXplorer.Common;
     using HomeXplorer.Config.Google;
@@ -12,11 +16,8 @@
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Exceptions;
     using HomeXplorer.Services.Exceptions.Contracts;
-    using Microsoft.AspNetCore.Identity.UI.Services;
 
     using static HomeXplorer.Config.SMTP.SmtpConstants;
-    using Microsoft.AspNetCore.WebUtilities;
-    using System.Text;
 
     public class UserController : BaseController
     {
@@ -30,7 +31,8 @@
         private readonly IEmailSender emailSender;
         private readonly IGuard guard;
 
-        public UserController(SignInManager<ApplicationUser> signInManager,
+        public UserController(
+            SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IRepository repo,
@@ -78,7 +80,7 @@
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                PhoneNumber = model.PhoneNumber,
+                PhoneNumber = model.PhoneNumber
             };
 
             //TODO : check if there is user with same email address
@@ -172,9 +174,6 @@
         [AllowAnonymous]
         public IActionResult ForgottenPassword()
         {
-            //1)View for entering email
-            //2)By entering email, click on button ->
-            //send email with link for view which resets pass, save pass and redirect to login
             return this.View(new ForgottenPasswordViewModel());
         }
 
@@ -201,7 +200,8 @@
 
                     var callbackUrl = $"{Request.Scheme}://{Request.Host}/User/ResetPassword?userId={userId}&token={encodedToken}";
 
-                    await emailSender.SendEmailAsync(user.Email, "Password reset", string.Format(ForgottenPasswordTemplate, callbackUrl));
+                    await emailSender.SendEmailAsync(user.Email, "Password reset",
+                        string.Format(ForgottenPasswordTemplate, callbackUrl));
 
                     TempData["SuccessResetRequest"] = "Please check your email in order to reset your password";
                 }
@@ -258,6 +258,7 @@
 
                 if (result.Succeeded)
                 {
+                    //Add to tempdata - Successfully reset your password
                     return RedirectToAction(nameof(Login));
                 }
 
@@ -277,6 +278,7 @@
                 Agent agent = new Agent()
                 {
                     UserId = user.Id,
+                    CityId = model.CityId
                 };
 
                 await this.repo.AddAsync<Agent>(agent);
@@ -286,6 +288,7 @@
                 Renter renter = new Renter()
                 {
                     UserId = user.Id,
+                    CityId = model.CityId
                 };
 
                 await this.repo.AddAsync<Renter>(renter);

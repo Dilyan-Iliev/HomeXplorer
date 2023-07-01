@@ -23,7 +23,7 @@
 
         [Comment("Desription of the property")]
         [Required]
-        public string Description = null!;
+        public string Description { get; set; } = null!;
 
         [Comment("Price of the property")]
         public decimal Price { get; set; }

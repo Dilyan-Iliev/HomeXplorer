@@ -18,6 +18,7 @@
     using HomeXplorer.Services.Exceptions;
     using HomeXplorer.Services.Interfaces;
     using HomeXplorer.Services.Exceptions.Contracts;
+    using HomeXplorer.ModelBinders;
 
     public static class ApplicationServicesExtension
     {
@@ -62,8 +63,10 @@
 
             services.AddMvc(options =>
             {
-                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.Filters.Add(typeof(PageVisitCountFilter));
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+
+                options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
             });
 
             services.Configure<CookiePolicyOptions>(options =>
@@ -81,10 +84,11 @@
             services.AddSingleton(cloudinaryInstance);
             services.AddSingleton(typeof(CloudinaryConfig));
             services.AddSingleton<IEmailSender, SmtpEmailSender>();
+            services.AddScoped<PageVisitCountFilter>();
             services.AddScoped(typeof(GoogleCaptchaConfig));
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
-            services.AddScoped<IPropertyService, PropertyService>();
+            services.AddScoped<IAgentPropertyService, AgentPropertyService>();
             services.AddScoped<IBuildingTypeService, BuildingTypeService>();
             services.AddScoped<IPropertyTypeService, PropertyTypeService>();
             services.AddScoped<IRepository, Repository>();

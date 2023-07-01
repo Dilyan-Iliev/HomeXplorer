@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeXplorer.Data.Migrations
 {
     [DbContext(typeof(HomeXplorerDbContext))]
-    [Migration("20230627155304_Seed")]
-    partial class Seed
+    [Migration("20230701114623_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,7 +33,7 @@ namespace HomeXplorer.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CityId")
+                    b.Property<int>("CityId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -105,7 +105,8 @@ namespace HomeXplorer.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("RegisteredOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the user is being registered");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -128,6 +129,8 @@ namespace HomeXplorer.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasComment("Extended Identity User");
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.BuildingType", b =>
@@ -1736,22 +1739,27 @@ namespace HomeXplorer.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasComment("Primary key");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<Guid>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Property Id of the Image");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("Url to the cloudinary");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyId");
 
                     b.ToTable("CloudImages");
+
+                    b.HasComment("Image of the property");
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Country", b =>
@@ -1839,6 +1847,11 @@ namespace HomeXplorer.Data.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int")
                         .HasComment("City ID of the property");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("Desription of the property");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit")
@@ -2000,19 +2013,28 @@ namespace HomeXplorer.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasComment("Primary key");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasComment("Refference to the Identity User");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Renters");
+
+                    b.HasComment("Renter of the property");
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Review", b =>
@@ -2023,6 +2045,10 @@ namespace HomeXplorer.Data.Migrations
                         .HasComment("Primary key");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the review was added");
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
@@ -2186,15 +2212,19 @@ namespace HomeXplorer.Data.Migrations
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Agent", b =>
                 {
-                    b.HasOne("HomeXplorer.Data.Entities.City", null)
+                    b.HasOne("HomeXplorer.Data.Entities.City", "City")
                         .WithMany("Agents")
-                        .HasForeignKey("CityId");
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HomeXplorer.Data.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("City");
 
                     b.Navigation("User");
                 });
@@ -2238,7 +2268,7 @@ namespace HomeXplorer.Data.Migrations
                     b.HasOne("HomeXplorer.Data.Entities.City", "City")
                         .WithMany("Properties")
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("HomeXplorer.Data.Entities.PropertyStatus", "PropertyStatus")
@@ -2277,11 +2307,19 @@ namespace HomeXplorer.Data.Migrations
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Renter", b =>
                 {
+                    b.HasOne("HomeXplorer.Data.Entities.City", "City")
+                        .WithMany("Renters")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HomeXplorer.Data.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("City");
 
                     b.Navigation("User");
                 });
@@ -2367,6 +2405,8 @@ namespace HomeXplorer.Data.Migrations
                     b.Navigation("Agents");
 
                     b.Navigation("Properties");
+
+                    b.Navigation("Renters");
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Country", b =>

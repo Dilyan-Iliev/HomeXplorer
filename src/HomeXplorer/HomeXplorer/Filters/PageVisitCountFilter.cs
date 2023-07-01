@@ -1,14 +1,15 @@
 ﻿namespace HomeXplorer.Filters
 {
-    using HomeXplorer.Core.Repositories;
-    using HomeXplorer.Data.Entities;
-    using Microsoft.AspNetCore.Http.Extensions;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.EntityFrameworkCore;
     using System.Net;
-    using System.Security.Cryptography;
     using System.Text;
-    using System.Threading.Tasks;
+    using System.Security.Cryptography;
+
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.AspNetCore.Http.Extensions;
+
+    using HomeXplorer.Data.Entities;
+    using HomeXplorer.Core.Repositories;
 
     public class PageVisitCountFilter
         : ActionFilterAttribute
@@ -20,13 +21,14 @@
             this.repo = repo;
         }
 
-        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
+            base.OnActionExecuted(context);
+
             //get current url from request
             string url = context.HttpContext.Request.GetDisplayUrl();
             string encodedUrl = WebUtility.UrlEncode(url);
 
-            //track only unique visits:
             bool hasVisitCookie = context.HttpContext.Request.Cookies
                 .TryGetValue(encodedUrl, out string? visitCookieValue);
 
@@ -51,7 +53,9 @@
                         HashedVisitCookie = hashedVisitCookieValue,
                     };
 
-                    await repo.AddAsync(currentPage);
+                    repo.AddAsync(currentPage)
+                        .GetAwaiter()
+                        .GetResult();
                 }
                 else
                 {
@@ -59,10 +63,8 @@
                     repo.Update(currentPage);
                 }
 
-                await repo.SaveChangesAsync();
+                    repo.SaveChangesAsync().GetAwaiter().GetResult();
             }
-
-            await next();
         }
 
         private string CookiHash(string cookieValue)

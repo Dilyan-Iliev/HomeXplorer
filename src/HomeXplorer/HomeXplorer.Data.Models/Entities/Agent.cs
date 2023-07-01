@@ -20,7 +20,12 @@
         [ForeignKey(nameof(User))]
         public string UserId { get; set; } = null!;
 
-        //TODO: Add city
+        [Comment("Reference to the City")]
+        [ForeignKey(nameof(City))]
+        public int CityId { get; set; }
+
+        [Comment("City of the agent")]
+        public City City { get; set; } = null!;
 
         [Comment("The associated IdentityUser")]
         public virtual ApplicationUser User { get; set; } = null!;

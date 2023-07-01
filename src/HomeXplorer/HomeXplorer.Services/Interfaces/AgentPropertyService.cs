@@ -9,13 +9,13 @@
     using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.Services.Exceptions.Contracts;
 
-    public class PropertyService
-        : IPropertyService
+    public class AgentPropertyService
+        : IAgentPropertyService
     {
         private readonly IRepository repo;
         private readonly IGuard guard;
 
-        public PropertyService(
+        public AgentPropertyService(
             IRepository repo, IGuard guard)
         {
             this.repo = repo;
@@ -60,6 +60,57 @@
             await this.repo.SaveChangesAsync();
         }
 
+        public async Task DeleteAsync(Guid id)
+        {
+            var property = await this.repo
+                .All<Property>()
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (property != null)
+            {
+                property.IsActive = false;
+                await this.repo.SaveChangesAsync();
+            }
+        }
+
+        public async Task<DetailsPropertyViewModel?> GetDetailsAsync(Guid id)
+        {
+            var currentProperty = await this.repo
+                .AllReadonly<Property>()
+                .Where(p => p.Id == id)
+                .Select(p => new DetailsPropertyViewModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Price = p.Price,
+                    Size = p.Size,
+                    Address = p.Address,
+                    City = p.City.Name,
+                    Country = p.City.Country.Name,
+                    AddedOd = p.AddedOn.ToString("MM/dd/yyyy"),
+                    PropertyStatus = p.PropertyStatus.Name,
+                    PropertyType = p.PropertyType.Name,
+                    BuildingType = p.BuildingType.Name,
+                    Images = p.Images
+                        .Select(i => new PropertyImagesViewModel()
+                        {
+                            Id = i.Id,
+                            Url = i.Url
+                        })
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            if (currentProperty != null)
+            {
+                return currentProperty;
+            }
+
+            return null;
+        }
+
         public async Task<IEnumerable<IndexAgentPropertiesViewModel>> GetLastThreeAsync(string userId)
         {
             var currentAgent = await this.repo
@@ -70,7 +121,8 @@
 
             var lastThreeProperties = await this.repo
                 .AllReadonly<Property>()
-                .Where(p => p.AgentId == currentAgent.Id)
+                .Where(p => p.AgentId == currentAgent!.Id)
+                .Where(p => p.IsActive)
                 .OrderByDescending(p => p.AddedOn)
                 .Select(p => new IndexAgentPropertiesViewModel()
                 {

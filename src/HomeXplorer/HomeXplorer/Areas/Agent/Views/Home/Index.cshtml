@@ -8,6 +8,11 @@
 }
 else
 {
+    @if (this.TempData.ContainsKey("DetailsError"))
+    {
+        <div class="text-danger text-center">@this.TempData["DetailsError"]</div>
+    }
+
     <!-- ======= Latest Properties Section ======= -->
     <section class="section-property section-t8">
         <div class="container">
