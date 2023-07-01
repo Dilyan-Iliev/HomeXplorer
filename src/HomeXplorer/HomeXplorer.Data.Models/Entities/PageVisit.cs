@@ -15,8 +15,5 @@
 
         [Comment("Count of visits")]
         public int VisitsCount { get; set; }
-
-        [Comment("Hashed value of the cookie")]
-        public string HashedVisitCookie { get; set; } = null!;
     }
 }

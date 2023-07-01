@@ -43,8 +43,11 @@ namespace HomeXplorer
 
             app.UseRouting();
 
+            app.UseSession();
+
             app.UseAuthentication();
             app.UseAuthorization();
+
 
             //app.MapControllerRoute(
             //    name: "ResetPassword",
