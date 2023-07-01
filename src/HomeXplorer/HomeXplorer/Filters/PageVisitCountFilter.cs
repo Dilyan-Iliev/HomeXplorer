@@ -1,12 +1,9 @@
 ﻿namespace HomeXplorer.Filters
 {
-    using System.Net;
     using System.Text;
-    using System.Security.Cryptography;
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.AspNetCore.Http.Extensions;
 
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Repositories;
@@ -23,15 +20,19 @@
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var pageUrl = context.HttpContext.Request.Path;
-            var sessionKey = "UniqueVisit_" + pageUrl;
+            PathString pageUrl = context.HttpContext.Request.Path;
+            string sessionKey = "UniqueVisit_" + pageUrl;
 
-            // Check if the unique visit cookie exists
+            // Check if the unique visit flag is set in the session for the specific page
             if (context.HttpContext.Session.GetString(sessionKey) == null)
             {
-                // Unique visit cookie doesn't exist, increment the visit count
-                var page = await repo.All<PageVisit>().ToListAsync();
-                var existingPage = page.FirstOrDefault(v => (string)v.Url == pageUrl);
+                // Unique visit flag doesn't exist for the page, increment the visit count
+                IEnumerable<PageVisit>? pages = await this.repo
+                    .All<PageVisit>()
+                    .ToListAsync();
+
+                PageVisit? existingPage = pages
+                    .FirstOrDefault(v => (string)v.Url == pageUrl);
 
                 if (existingPage == null)
                 {
@@ -40,6 +41,7 @@
                         Url = pageUrl,
                         VisitsCount = 1
                     };
+
                     await this.repo.AddAsync(existingPage);
                 }
                 else
@@ -47,6 +49,7 @@
                     existingPage.VisitsCount++;
                 }
 
+                // Set the unique visit flag in the session for the specific page
                 context.HttpContext.Session.SetString(sessionKey, "true");
 
                 await repo.SaveChangesAsync();
