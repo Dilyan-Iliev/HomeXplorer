@@ -8,5 +8,10 @@
         {
             return user.FindFirstValue(ClaimTypes.NameIdentifier);
         }
+
+        public static string GetName(this ClaimsPrincipal user)
+        {
+            return user.FindFirstValue(ClaimTypes.Email);
+        }
     }
 }

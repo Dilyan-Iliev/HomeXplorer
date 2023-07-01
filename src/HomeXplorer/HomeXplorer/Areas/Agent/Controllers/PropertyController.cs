@@ -110,9 +110,20 @@
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await this.propertyService.DeleteAsync(id);
+            try
+            {
+                await this.propertyService.DeleteAsync(id);
 
-            return this.RedirectToAction("Index", "Home", new { area = Agent });
+                this.TempData["SuccessDelete"] = "You removed successfuly a property";
+
+                return this.RedirectToAction("Index", "Home", new { area = Agent });
+            }
+            catch (Exception)
+            {
+                this.TempData["FailedDelete"] = "Something went wrong, try again";
+                return this.RedirectToAction("Details", "Home", new { area = Agent, id });
+            }
+
         }
     }
 }

@@ -1,5 +1,10 @@
 ﻿@model DetailsPropertyViewModel
 
+@if (this.TempData.ContainsKey("FailedDelete"))
+{
+    <div class="text-danger text-center">@this.TempData["FailedDelete"]</div>
+}
+
 <!-- ======= Intro Single ======= -->
 <section class="intro-single">
     <div class="container">

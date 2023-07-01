@@ -1,6 +1,7 @@
 ﻿@using HomeXplorer.Common;
 @using HomeXplorer.Data.Entities;
 @using System.Security.Claims;
+@using HomeXplorer.Extensions;
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
@@ -21,11 +22,7 @@
     else if (this.SignInManager.IsSignedIn(User) && await this.UserManager.IsInRoleAsync(user, UserRoleConstants.Agent))
     {
         <li class="nav-item">
-            <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link " href="about.html">My Properties</a>
+            <a class="nav-link active" asp-area="Agent" asp-controller="Home" asp-action="Index">Home</a>
         </li>
 
         <li class="nav-item">
@@ -35,9 +32,8 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="property-single.html">Property Single</a>
-                <a class="dropdown-item" href="blog-single.html">Blog Single</a>
-                <a class="dropdown-item" href="agents-grid.html">Agents Grid</a>
+                <a class="dropdown-item" href="property-single.html">@this.User.GetName()</a>
+                <a class="dropdown-item" href="blog-single.html">My Properties</a>
                 <form class="dropdown-item" asp-area="" asp-controller="User" asp-action="Logout" asp-route-id="@UserManager.GetUserId(User)">
                     <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
                 </form>

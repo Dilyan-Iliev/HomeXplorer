@@ -34,7 +34,7 @@ namespace HomeXplorer
                 app.UseHsts();
             }
 
-            app.UseStatusCodePagesWithRedirects("/Home/Error?error={0}");
+            app.UseStatusCodePagesWithReExecute("/Home/Error?error={0}");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
