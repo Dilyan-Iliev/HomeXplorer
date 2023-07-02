@@ -17,9 +17,11 @@
         //TODO: file extension
         [Comment("Property Id of the Image")]
         [ForeignKey(nameof(Property))]
-        public Guid PropertyId { get; set; }
+        public Guid? PropertyId { get; set; }
 
         [Comment("Property on the images")]
-        public virtual Property Property { get; set; } = null!;
+        public virtual Property? Property { get; set; }
+
+        
     }
 }

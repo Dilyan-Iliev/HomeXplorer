@@ -39,6 +39,7 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new CloudImageConfiguration());
             builder.ApplyConfiguration(new PropertyTypeConfiguration());
             builder.ApplyConfiguration(new PropertyStatusConfiguration());
             builder.ApplyConfiguration(new BuildingTypeConfiguration());

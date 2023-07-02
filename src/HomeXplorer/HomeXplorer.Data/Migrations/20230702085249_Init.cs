@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HomeXplorer.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -87,8 +87,7 @@ namespace HomeXplorer.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false, comment: "Primary key")
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "URL that is being visited"),
-                    VisitsCount = table.Column<int>(type: "int", nullable: false, comment: "Count of visits"),
-                    HashedVisitCookie = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Hashed value of the cookie")
+                    VisitsCount = table.Column<int>(type: "int", nullable: false, comment: "Count of visits")
                 },
                 constraints: table =>
                 {
@@ -252,40 +251,13 @@ namespace HomeXplorer.Data.Migrations
                 comment: "City where the property is");
 
             migrationBuilder.CreateTable(
-                name: "Agents",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false, comment: "Primary key")
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false, comment: "Reference to the IdentityUser"),
-                    CityId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Agents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Agents_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Agents_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                },
-                comment: "Agent who offers the property");
-
-            migrationBuilder.CreateTable(
                 name: "Renters",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, comment: "Primary key")
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false, comment: "Refference to the Identity User"),
-                    CityId = table.Column<int>(type: "int", nullable: false)
+                    CityId = table.Column<int>(type: "int", nullable: false, comment: "The associated City")
                 },
                 constraints: table =>
                 {
@@ -304,6 +276,62 @@ namespace HomeXplorer.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Renter of the property");
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "Primary key")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Review description"),
+                    AddedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date and time when the review was added"),
+                    ReviewerId = table.Column<int>(type: "int", nullable: false, comment: "Reviewer ID"),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reviews_Renters_ReviewerId",
+                        column: x => x.ReviewerId,
+                        principalTable: "Renters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                },
+                comment: "Review of a renter");
+
+            migrationBuilder.CreateTable(
+                name: "Agents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "Primary key")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false, comment: "Reference to the IdentityUser"),
+                    CityId = table.Column<int>(type: "int", nullable: false, comment: "Reference to the City"),
+                    CloudImageId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Agents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Agents_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Agents_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                },
+                comment: "Agent who offers the property");
 
             migrationBuilder.CreateTable(
                 name: "Properties",
@@ -373,41 +401,13 @@ namespace HomeXplorer.Data.Migrations
                 comment: "Offered property");
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false, comment: "Primary key")
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Review description"),
-                    AddedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date and time when the review was added"),
-                    ReviewerId = table.Column<int>(type: "int", nullable: false, comment: "Reviewer ID"),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Reviews_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reviews_Renters_ReviewerId",
-                        column: x => x.ReviewerId,
-                        principalTable: "Renters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                },
-                comment: "Review of a renter");
-
-            migrationBuilder.CreateTable(
                 name: "CloudImages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, comment: "Primary key")
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Url to the cloudinary"),
-                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Property Id of the Image")
+                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true, comment: "Property Id of the Image")
                 },
                 constraints: table =>
                 {
@@ -416,8 +416,7 @@ namespace HomeXplorer.Data.Migrations
                         name: "FK_CloudImages_Properties_PropertyId",
                         column: x => x.PropertyId,
                         principalTable: "Properties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 },
                 comment: "Image of the property");
 
@@ -430,6 +429,11 @@ namespace HomeXplorer.Data.Migrations
                     { 2, "Average" },
                     { 3, "Ordinary" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "CloudImages",
+                columns: new[] { "Id", "PropertyId", "Url" },
+                values: new object[] { 1, null, "https://res.cloudinary.com/degtesnvc/image/upload/v1688283726/default-avatar-profile-icon-of-social-media-user-vector_lcoi8s.jpg" });
 
             migrationBuilder.InsertData(
                 table: "Countries",
@@ -771,6 +775,11 @@ namespace HomeXplorer.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Agents_CloudImageId",
+                table: "Agents",
+                column: "CloudImageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Agents_UserId",
                 table: "Agents",
                 column: "UserId");
@@ -878,10 +887,41 @@ namespace HomeXplorer.Data.Migrations
                 name: "IX_Reviews_ReviewerId",
                 table: "Reviews",
                 column: "ReviewerId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Agents_CloudImages_CloudImageId",
+                table: "Agents",
+                column: "CloudImageId",
+                principalTable: "CloudImages",
+                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Agents_AspNetUsers_UserId",
+                table: "Agents");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Renters_AspNetUsers_UserId",
+                table: "Renters");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Agents_Cities_CityId",
+                table: "Agents");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Properties_Cities_CityId",
+                table: "Properties");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Renters_Cities_CityId",
+                table: "Renters");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Agents_CloudImages_CloudImageId",
+                table: "Agents");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -898,9 +938,6 @@ namespace HomeXplorer.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CloudImages");
-
-            migrationBuilder.DropTable(
                 name: "PageVisits");
 
             migrationBuilder.DropTable(
@@ -908,6 +945,18 @@ namespace HomeXplorer.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
+
+            migrationBuilder.DropTable(
+                name: "CloudImages");
 
             migrationBuilder.DropTable(
                 name: "Properties");
@@ -926,15 +975,6 @@ namespace HomeXplorer.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Renters");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Cities");
-
-            migrationBuilder.DropTable(
-                name: "Countries");
         }
     }
 }

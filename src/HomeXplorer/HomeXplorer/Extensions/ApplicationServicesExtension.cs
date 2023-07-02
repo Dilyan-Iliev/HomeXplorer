@@ -93,6 +93,7 @@
             services.AddScoped<IAgentPropertyService, AgentPropertyService>();
             services.AddScoped<IBuildingTypeService, BuildingTypeService>();
             services.AddScoped<IPropertyTypeService, PropertyTypeService>();
+            services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IGuard, Guard>();

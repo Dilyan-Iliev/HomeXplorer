@@ -32,6 +32,10 @@
         [Comment("City of the renter")]
         public City City { get; set; } = null!;
 
+        public int? CloudImageId { get; set; }
+
+        public CloudImage? CloudImage { get; set; }
+
         [Comment("Rented properties")]
         public virtual ICollection<Property> RentedProperties { get; set; }
 

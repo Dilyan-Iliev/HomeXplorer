@@ -30,6 +30,10 @@
         [Comment("The associated IdentityUser")]
         public virtual ApplicationUser User { get; set; } = null!;
 
+        public int? CloudImageId { get; set; }
+
+        public CloudImage? CloudImage { get; set; }
+
         [Comment("Properties offered by the agent")]
         public virtual ICollection<Property> Properties { get; set; }
     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeXplorer.Data.Migrations
 {
     [DbContext(typeof(HomeXplorerDbContext))]
-    [Migration("20230701134754_ChangedPageVisitTable")]
-    partial class ChangedPageVisitTable
+    [Migration("20230702085249_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,6 +37,9 @@ namespace HomeXplorer.Data.Migrations
                         .HasColumnType("int")
                         .HasComment("Reference to the City");
 
+                    b.Property<int?>("CloudImageId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
@@ -45,6 +48,8 @@ namespace HomeXplorer.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
+
+                    b.HasIndex("CloudImageId");
 
                     b.HasIndex("UserId");
 
@@ -1745,7 +1750,7 @@ namespace HomeXplorer.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<Guid>("PropertyId")
+                    b.Property<Guid?>("PropertyId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Property Id of the Image");
 
@@ -1761,6 +1766,13 @@ namespace HomeXplorer.Data.Migrations
                     b.ToTable("CloudImages");
 
                     b.HasComment("Image of the property");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1688283726/default-avatar-profile-icon-of-social-media-user-vector_lcoi8s.jpg"
+                        });
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Country", b =>
@@ -2215,6 +2227,10 @@ namespace HomeXplorer.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HomeXplorer.Data.Entities.CloudImage", "CloudImage")
+                        .WithMany()
+                        .HasForeignKey("CloudImageId");
+
                     b.HasOne("HomeXplorer.Data.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -2222,6 +2238,8 @@ namespace HomeXplorer.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("City");
+
+                    b.Navigation("CloudImage");
 
                     b.Navigation("User");
                 });
@@ -2241,9 +2259,7 @@ namespace HomeXplorer.Data.Migrations
                 {
                     b.HasOne("HomeXplorer.Data.Entities.Property", "Property")
                         .WithMany("Images")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PropertyId");
 
                     b.Navigation("Property");
                 });

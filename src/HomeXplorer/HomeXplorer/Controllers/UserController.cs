@@ -278,7 +278,8 @@
                 Agent agent = new Agent()
                 {
                     UserId = user.Id,
-                    CityId = model.CityId
+                    CityId = model.CityId,
+                    CloudImageId = 1
                 };
 
                 await this.repo.AddAsync<Agent>(agent);
@@ -288,7 +289,8 @@
                 Renter renter = new Renter()
                 {
                     UserId = user.Id,
-                    CityId = model.CityId
+                    CityId = model.CityId,
+                    CloudImageId = 1
                 };
 
                 await this.repo.AddAsync<Renter>(renter);
