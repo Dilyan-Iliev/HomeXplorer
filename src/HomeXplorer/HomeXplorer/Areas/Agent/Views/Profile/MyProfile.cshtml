@@ -20,10 +20,11 @@
                     <div class="card-body text-center">
                         <img src="@Model.PersonalImage" alt="avatar"
                              class="rounded-circle img-fluid" style="width: 150px;">
-                        @*<h5 class="my-3">@Model.FullName</h5>*@
+                        <input type="file" name="profilePicture" id="profilePictureInput" accept="image/*" style="display: none;">
                         <p class="text-muted mb-4">@Model.Country, @Model.City</p>
                         <div class="d-flex justify-content-center mb-2">
-                            <button type="button" class="btn btn-outline-primary ms-1">Edit</button>
+                            <a asp-area="Agent" asp-controller="Profile"
+                               asp-action="UpdateProfilePicture" class="btn btn-outline-primary ms-1">Edit Picture</a>
                         </div>
                     </div>
                 </div>

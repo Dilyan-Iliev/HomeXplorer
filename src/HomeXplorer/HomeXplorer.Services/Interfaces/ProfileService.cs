@@ -48,7 +48,7 @@
                     TotalRentedProperties = a.Properties
                         .Where(p => p.Renter != null)
                         .Count(),
-                    PersonalImage = a.CloudImage.Url,
+                    PersonalImage = a.ProfilePictureUrl,
                     PropertyImages = a.Properties
                         .SelectMany(p => p.Images)
                             .Select(i => new PropertyImagesViewModel()
@@ -61,6 +61,17 @@
                 .FirstOrDefaultAsync();
 
             return model;
+        }
+
+        public async Task UpdateProfilePicture(string userId, string profilePictureUrl)
+        {
+            var agent = await this.repo
+                .All<Agent>()
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+
+            agent.ProfilePictureUrl = profilePictureUrl;
+
+            await this.repo.SaveChangesAsync();
         }
     }
 }

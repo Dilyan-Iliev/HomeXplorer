@@ -54,12 +54,21 @@
         {
             string resultURI = string.Empty;
 
+            string[] allowedFileExtensions = new string[] { "jpg", "png", "jpeg" };
+
             if (file.Length > 0)
             {
                 byte[] imageBytes;
 
                 using (var memoryStream = new MemoryStream())
                 {
+                    var extension = Path.GetExtension(file.FileName)?.ToLower().Substring(1);
+
+                    if (!allowedFileExtensions.Contains(extension))
+                    {
+                        throw new InvalidFileExtensionException("Not allowed file extension");
+                    }
+
                     await file.CopyToAsync(memoryStream);
                     imageBytes = memoryStream.ToArray();
                 }

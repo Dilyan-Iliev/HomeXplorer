@@ -18,6 +18,7 @@
     using HomeXplorer.Services.Exceptions.Contracts;
 
     using static HomeXplorer.Config.SMTP.SmtpConstants;
+    using static HomeXplorer.Common.DataConstants.ApplicationUserConstants;
 
     public class UserController : BaseController
     {
@@ -279,7 +280,7 @@
                 {
                     UserId = user.Id,
                     CityId = model.CityId,
-                    CloudImageId = 1
+                    ProfilePictureUrl = DefaultUserProfilePictureUrl
                 };
 
                 await this.repo.AddAsync<Agent>(agent);
@@ -290,7 +291,7 @@
                 {
                     UserId = user.Id,
                     CityId = model.CityId,
-                    CloudImageId = 1
+                    ProfilePictureUrl = DefaultUserProfilePictureUrl
                 };
 
                 await this.repo.AddAsync<Renter>(renter);

@@ -14,10 +14,10 @@
         [Comment("Url to the cloudinary")]
         public string Url { get; set; } = null!;
 
-        //TODO: file extension
+      
         [Comment("Property Id of the Image")]
         [ForeignKey(nameof(Property))]
-        public Guid? PropertyId { get; set; }
+        public Guid? PropertyId { get; set; } //todo: make not nullable
 
         [Comment("Property on the images")]
         public virtual Property? Property { get; set; }
