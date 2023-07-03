@@ -15,6 +15,13 @@
             ICollection<string> resultURIs = new List<string>();
 
             string[] allowedFileExtensions = new string[] { "jpg", "png", "jpeg" };
+            
+            //TODO: Add where this method is used a check if result is null or no
+
+            if (!files.Any())
+            {
+                return null;
+            }
 
             foreach (var file in files
                 .Where(f => f.Length > 0))
@@ -48,6 +55,7 @@
             }
 
             return resultURIs;
+
         }
 
         public async Task<string> UploadSingle(Cloudinary cloudinary, IFormFile file)

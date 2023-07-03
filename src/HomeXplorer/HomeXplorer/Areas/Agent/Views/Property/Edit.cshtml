@@ -1,5 +1,9 @@
 ﻿@model EditPropertyViewModel
 
+<div class="my-4">
+    <h3 class="text-center">Form for editing your property offer</h3>
+</div>
+
 <form method="post" enctype="multipart/form-data" style="max-width: 500px; margin: 0 auto;">
     <!-- -->
     <div class="row mb-4">
@@ -45,7 +49,7 @@
             <div class="form-outline">
                 <label asp-for="@Model.CityId" class="form-label">City</label>
                 <select asp-for="@Model.CityId" class="form-control" aria-required="true" id="cityDropdown">
-                    <option value="">Select City</option>
+                    <option value="@Model.CityId">Select City</option>
                 </select>
             </div>
         </div>
@@ -106,17 +110,39 @@
     <div class="row mb-4">
         <div class="col">
             <div class="form-outline">
-                <label class="form-label" asp-for="@Model.NewImages">Default file input example</label>
+                <label class="form-label" asp-for="@Model.NewImages">Choose if you want to upload additional images</label>
                 <input asp-for="@Model.NewImages" type="file" class="form-control" id="customFile" />
             </div>
         </div>
     </div>
 
-    <!-- Submit button -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Photo №</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 1;
+                foreach (var img in Model.AddedImages)
+                {
+                    <tr>
+                        <td><a href="@img.Url">Photo @count</a></td>
+                        <td><span style="cursor:pointer;" class="badge bg-danger delete-photo" data-photo-id="@img.Id">&times;</span></td>
+                    </tr>
+                    count++;
+                }
+            }
+        </tbody>
+    </table>
+
     <button type="submit" class="btn btn-primary btn-block mb-4">Edit property</button>
 </form>
 
 <script src="~/js/register/loadCities.js"></script>
+<script src="~/js/property/delete-image-from-details.js"></script>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />

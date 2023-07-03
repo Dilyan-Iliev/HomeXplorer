@@ -75,8 +75,9 @@
             }
         }
 
-        public async Task EditAsync(EditPropertyViewModel model, Guid propertyId, ICollection<string>? imageUrls,
-            IEnumerable<CloudImage> oldImages)
+        public async Task EditAsync(EditPropertyViewModel model, Guid propertyId,
+            ICollection<string>? imageUrls, ICollection<CloudImage> oldImages,
+            ICollection<int>? deletedPhotosIds)
         {
             var property = await this.repo
                 .GetByIdAsync<Property>(propertyId);
@@ -89,17 +90,35 @@
             property.BuildingTypeId = model.BuildingTypeId;
             property.PropertyTypeId = model.PropertyTypeId;
             property.PropertyStatusId = model.PropertyStatusId;
-            property.Images = images;
+            property.Images = oldImages;
 
-            foreach (var url in imageUrls)
+            if (imageUrls != null && imageUrls.Any())
             {
-                CloudImage cloudImage = new CloudImage()
+                foreach (var url in imageUrls)
                 {
-                    Url = url,
-                    PropertyId = property.Id
-                };
+                    CloudImage cloudImage = new CloudImage()
+                    {
+                        Url = url,
+                        PropertyId = property.Id
+                    };
 
-                property.Images.Add(cloudImage);
+                    property.Images.Add(cloudImage);
+                }
+            }
+
+            if (deletedPhotosIds.Any())
+            {
+                foreach (var photoId in deletedPhotosIds)
+                {
+                    var deletedImage = oldImages.
+                        FirstOrDefault(i => i.Id == photoId);
+
+                    if (deletedImage!= null)
+                    {
+                        property.Images.Remove(deletedImage);
+                        this.repo.Delete<CloudImage>(deletedImage);
+                    }
+                }
             }
 
             this.repo.Update<Property>(property);
@@ -124,8 +143,28 @@
                     PropertyTypeId = p.PropertyTypeId,
                     PropertyStatusId = p.PropertyStatusId,
 
+                    AddedImages = p.Images
+                        .Select(i => new PropertyImagesViewModel()
+                        {
+                            Id = i.Id,
+                            Url = i.Url
+                        })
+                        .ToList()
                 })
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<PropertyImagesViewModel>> GetAllImageUrlsForPropertyAsync(Guid propertyId)
+        {
+            return await this.repo
+                .AllReadonly<CloudImage>()
+                .Where(ci => ci.PropertyId == propertyId)
+                .Select(ci => new PropertyImagesViewModel()
+                {
+                    Id = ci.Id,
+                    Url = ci.Url
+                })
+                .ToListAsync();
         }
 
         public async Task<DetailsPropertyViewModel?> GetDetailsAsync(Guid id)

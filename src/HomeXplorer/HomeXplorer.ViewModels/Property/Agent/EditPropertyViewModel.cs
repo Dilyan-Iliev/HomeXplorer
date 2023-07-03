@@ -22,6 +22,9 @@
             this.PropertyTypes = new List<SelectPropertyTypeViewModel>();
             this.BuildingTypes = new List<SelectBuildingTypeViewModel>();
             this.PropertyStatuses = new List<SelectPropertyStatusViewModel>();
+
+            this.AddedImages = new List<PropertyImagesViewModel>();
+            this.DeletedPhotosIds = new List<int>();
         }
 
         [Required(ErrorMessage = FieldRequired)]
@@ -74,8 +77,10 @@
 
         public IEnumerable<SelectBuildingTypeViewModel> BuildingTypes { get; set; }
 
-        public ICollection<IFormFile> NewImages { get; set; }
+        public ICollection<IFormFile>? NewImages { get; set; }
 
-        //public ICollection<>
+        public IEnumerable<PropertyImagesViewModel> AddedImages { get; set; }
+
+        public ICollection<int>? DeletedPhotosIds { get; set; }
     }
 }

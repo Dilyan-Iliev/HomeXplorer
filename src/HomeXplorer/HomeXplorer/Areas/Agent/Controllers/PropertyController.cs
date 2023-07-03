@@ -156,6 +156,9 @@
                     CityId = model.CityId,
                     PropertyTypeId = model.PropertyTypeId,
                     PropertyStatusId = model.PropertyStatusId,
+
+                    AddedImages = await this.propertyService.GetAllImageUrlsForPropertyAsync(id),
+
                     BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync(),
                     Countries = await this.countryService.GetCountriesAsync(),
                     PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync(),
@@ -187,12 +190,16 @@
                 .Where(p => p.PropertyId == id)
                 .ToListAsync();
 
+            ICollection<string>? imagesUrls = null;
+
             if (newImages.Any())
             {
-                var imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, newImages);
+                imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, newImages);
             }
 
-            await this.propertyService.EditAsync(model, id, imagesUrls, oldPropertyImages);
+            var deletedPhotos = model.DeletedPhotosIds;
+
+            await this.propertyService.EditAsync(model, id, imagesUrls, oldPropertyImages, deletedPhotos);
 
             return this.RedirectToAction("Details", "Property", new { area = UserRoleConstants.Agent, id });
         }

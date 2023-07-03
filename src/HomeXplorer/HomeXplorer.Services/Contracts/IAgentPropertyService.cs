@@ -13,8 +13,11 @@
 
         Task DeleteAsync(Guid id);
 
-        Task EditAsync(EditPropertyViewModel model, Guid propertyId, ICollection<string>? imageUrls, ICollection<CloudImage> oldImages);
+        Task EditAsync(EditPropertyViewModel model, Guid propertyId,
+            ICollection<string>? imageUrls, ICollection<CloudImage> oldImages, ICollection<int> deletedPhotosIds);
 
         Task<EditPropertyViewModel?> FindByIdAsync(Guid propertyId);
+
+        Task<IEnumerable<PropertyImagesViewModel>> GetAllImageUrlsForPropertyAsync(Guid propertyId);
     }
 }
