@@ -6,7 +6,7 @@
     {
         public AgentProfileViewModel()
         {
-            this.PropertyImages = new List<PropertyImagesViewModel>();
+            this.PropertyImages = new List<ProfilePropertiesViewModel>();
         }
 
         public string FullName { get; set; } = null!;
@@ -27,6 +27,6 @@
 
         public string DownloadPersonalInfoUrl { get; set; }
 
-        public IEnumerable<PropertyImagesViewModel> PropertyImages { get; set; }
+        public IEnumerable<ProfilePropertiesViewModel> PropertyImages { get; set; }
     }
 }

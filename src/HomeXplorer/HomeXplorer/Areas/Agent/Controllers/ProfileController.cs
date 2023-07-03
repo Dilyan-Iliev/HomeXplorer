@@ -37,9 +37,9 @@
             {
                 var downloadUrl = Url.Action(nameof(DownloadProfileInfo), "Profile", new { userId });
 
-                var agent = await this.profileService.GetAgentProfileInfo(userId);
+                var agent = await this.profileService.GetAgentProfileInfoAsync(userId);
                 agent.DownloadPersonalInfoUrl = downloadUrl!;
-                
+
                 return this.View(agent);
 
             }
@@ -64,7 +64,7 @@
                 //return view for unauthorized
             }
 
-            var agentProfile = await profileService.GetAgentProfileInfo(userId);
+            var agentProfile = await profileService.GetAgentProfileInfoAsync(userId);
 
             // Serialize the agent profile to JSON
             var json = JsonConvert.SerializeObject(agentProfile, Formatting.Indented);
@@ -91,11 +91,20 @@
                 return this.RedirectToAction(nameof(MyProfile));
             }
 
-            string userId = this.User.GetId();
-            var imageUrl = await this.cloudinaryService.UploadSingle(this.cloudinary, profilePicture);
-            await this.profileService.UpdateProfilePicture(userId, imageUrl);
+            try
+            {
+                string userId = this.User.GetId();
+                var imageUrl = await this.cloudinaryService.UploadSingle(this.cloudinary, profilePicture);
+                await this.profileService.UpdateProfilePictureAsync(userId, imageUrl);
 
-            return this.RedirectToAction(nameof(MyProfile));
+                return this.RedirectToAction(nameof(MyProfile));
+            }
+            catch (Exception)
+            {
+                this.TempData["ProfileError"] = "Something went wrong, try again";
+                //TODO add this tempdata to the redirected view
+                return this.RedirectToAction("MyProfie", "Profile", new { area = Agent });
+            }
         }
     }
 }

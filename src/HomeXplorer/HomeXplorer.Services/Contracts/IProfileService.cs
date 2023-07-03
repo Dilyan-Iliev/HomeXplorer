@@ -4,8 +4,10 @@
 
     public interface IProfileService
     {
-        Task<AgentProfileViewModel> GetAgentProfileInfo(string userId);
+        Task<AgentProfileViewModel> GetAgentProfileInfoAsync(string userId);
 
-        Task UpdateProfilePicture(string userId, string profilePictureUrl);
+        Task UpdateProfilePictureAsync(string userId, string profilePictureUrl);
+
+        //Task<IEnumerable<ProfilePropertiesViewModel>> GetAgentLastFourProperties(string userId);
     }
 }

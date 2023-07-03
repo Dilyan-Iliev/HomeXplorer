@@ -17,7 +17,8 @@
             public const int PasswordMinLength = 6;
             public const int PasswordMaxLength = 12;
 
-            public const string DefaultUserProfilePictureUrl = "https://res.cloudinary.com/degtesnvc/image/upload/v1688283726/default-avatar-profile-icon-of-social-media-user-vector_lcoi8s.jpg";
+            public const string DefaultUserProfilePictureUrl =
+                "https://res.cloudinary.com/degtesnvc/image/upload/v1688283726/default-avatar-profile-icon-of-social-media-user-vector_lcoi8s.jpg";
         }
 
         public static class PropertyConstants

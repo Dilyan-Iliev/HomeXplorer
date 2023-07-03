@@ -118,26 +118,22 @@
                     <p class="mb-0"><a href="#!" class="text-muted">Show all</a></p>
                 </div>
                 <div class="row g-2">
-                    <div class="col mb-2">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
-                             alt="image 1" class="w-100 rounded-3">
-                    </div>
-                    <div class="col mb-2">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
-                             alt="image 1" class="w-100 rounded-3" style="height:240px; width:200px">
-                    </div>
-                </div>
-                <div class="row g-2">
-                    <div class="col">
-                        <img src="https://res.cloudinary.com/degtesnvc/image/upload/v1688053045/mlnrdobmrujqe0lc5eby.jpg"
-                             alt="image 1" class="w-100 rounded-3" style="height:240px; width:200px">
-                    </div>
-                    <div class="col">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(114).webp"
-                             alt="image 1" class="w-100 rounded-3">
-                    </div>
+                    @if (Model.PropertyImages.Any())
+                    {
+                        foreach (var propertyImage in Model.PropertyImages)
+                        {
+                            <div class="col-md-6 mb-2">
+                                <a asp-area="Agent" asp-controller="Property" asp-action="Details" asp-route-id="@propertyImage.PropertyId">
+                                    <img src="@propertyImage.Url" alt="Property Image" class="w-100 rounded-3" style="max-height: 240px; object-fit: cover;">
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <h4>No uploads</h4>
+                    }
                 </div>
             </div>
         </div>
-    </div>
 </section>

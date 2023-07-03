@@ -24,15 +24,33 @@
             this.guard = guard;
         }
 
-        public async Task<AgentProfileViewModel> GetAgentProfileInfo(string userId)
+        //public async Task<IEnumerable<ProfilePropertiesViewModel>> GetAgentLastFourProperties(string userId)
+        //{
+        //    Agent? agent = await FindAgentAsync(userId);
+
+        //    this.guard.AgainstNull(agent, "No agent was found");
+
+        //    var properties = await this.repo
+        //        .AllReadonly<Property>()
+        //        .Where(p => p.AgentId == agent.Id)
+        //        .Select(p => new ProfilePropertiesViewModel()
+        //        {
+        //            Id = p.Id,
+        //            CoverPhotoUrl = p.Images
+        //                .Where(i => i.PropertyId == p.Id)
+        //                .Select(i => i.Url)
+        //                .FirstOrDefault()!
+        //        })
+        //        .ToListAsync();
+
+        //    return properties;
+        //}
+
+        public async Task<AgentProfileViewModel> GetAgentProfileInfoAsync(string userId)
         {
-            Agent? agent = await this.repo
-                .AllReadonly<Agent>()
-                .FirstOrDefaultAsync(a => a.UserId == userId);
+            Agent? agent = await FindAgentAsync(userId);
 
             this.guard.AgainstNull(agent, "No agent was found");
-
-
 
             var model = await this.repo
                 .AllReadonly<Agent>()
@@ -50,11 +68,14 @@
                         .Count(),
                     PersonalImage = a.ProfilePictureUrl,
                     PropertyImages = a.Properties
+                        .OrderByDescending(p => p.AddedOn)
+                        .Take(4)
                         .SelectMany(p => p.Images)
-                            .Select(i => new PropertyImagesViewModel()
+                            .Select(i => new ProfilePropertiesViewModel()
                             {
                                 Id = i.Id,
                                 Url = i.Url,
+                                PropertyId = i.PropertyId.Value
                             })
                         .ToList()
                 })
@@ -63,15 +84,22 @@
             return model;
         }
 
-        public async Task UpdateProfilePicture(string userId, string profilePictureUrl)
+        public async Task UpdateProfilePictureAsync(string userId, string profilePictureUrl)
         {
-            var agent = await this.repo
-                .All<Agent>()
-                .FirstOrDefaultAsync(a => a.UserId == userId);
+            Agent? agent = await FindAgentAsync(userId);
 
-            agent.ProfilePictureUrl = profilePictureUrl;
+            this.guard.AgainstNull(agent, "No agent was found");
+
+            agent!.ProfilePictureUrl = profilePictureUrl;
 
             await this.repo.SaveChangesAsync();
+        }
+
+        private async Task<Agent?> FindAgentAsync(string userId)
+        {
+            return await this.repo
+                            .All<Agent>()
+                            .FirstOrDefaultAsync(a => a.UserId == userId);
         }
     }
 }
