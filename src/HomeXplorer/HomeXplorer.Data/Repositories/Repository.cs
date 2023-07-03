@@ -5,6 +5,7 @@
 
     using System.Linq.Expressions;
     using HomeXplorer.Core.Contexts;
+    using HomeXplorer.Data.Entities;
 
     /// <summary>
     /// Implementation of repository access methods
@@ -180,6 +181,30 @@
         {
             var entities = All<T>(deleteWhereClause);
             DeleteRange(entities);
+        }
+
+        public async Task<string> RetrieveAgentImage(string userId)
+        {
+            var agent = await DbSet<Agent>().FirstOrDefaultAsync(a => a.UserId == userId);
+
+            if (agent != null)
+            {
+                return agent.ProfilePictureUrl;
+            }
+
+            return null;
+        }
+
+        public async Task<string> RetrieveRenterImage(string userId)
+        {
+            var agent = await DbSet<Renter>().FirstOrDefaultAsync(a => a.UserId == userId);
+
+            if (agent != null)
+            {
+                return agent.ProfilePictureUrl;
+            }
+
+            return null;
         }
     }
 }

@@ -92,5 +92,9 @@
         /// </summary>
         /// <returns>Error code</returns>
         Task<int> SaveChangesAsync();
+
+        Task<string> RetrieveAgentImage(string userId);
+
+        Task<string> RetrieveRenterImage(string userId);
     }
 }
