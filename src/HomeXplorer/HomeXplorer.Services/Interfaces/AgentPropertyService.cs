@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.Services.Interfaces
 {
     using System.Threading.Tasks;
+
     using Microsoft.EntityFrameworkCore;
 
     using HomeXplorer.Data.Entities;
@@ -72,6 +73,59 @@
                 property.IsActive = false;
                 await this.repo.SaveChangesAsync();
             }
+        }
+
+        public async Task EditAsync(EditPropertyViewModel model, Guid propertyId, ICollection<string>? imageUrls,
+            IEnumerable<CloudImage> oldImages)
+        {
+            var property = await this.repo
+                .GetByIdAsync<Property>(propertyId);
+
+            property.Name = model.Name;
+            property.Description = model.Description;
+            property.Price = model.Price;
+            property.Size = model.Size;
+            property.CityId = model.CityId;
+            property.BuildingTypeId = model.BuildingTypeId;
+            property.PropertyTypeId = model.PropertyTypeId;
+            property.PropertyStatusId = model.PropertyStatusId;
+            property.Images = images;
+
+            foreach (var url in imageUrls)
+            {
+                CloudImage cloudImage = new CloudImage()
+                {
+                    Url = url,
+                    PropertyId = property.Id
+                };
+
+                property.Images.Add(cloudImage);
+            }
+
+            this.repo.Update<Property>(property);
+            await this.repo.SaveChangesAsync();
+        }
+
+        public Task<EditPropertyViewModel?> FindByIdAsync(Guid propertyId)
+        {
+            return this.repo
+                .All<Property>()
+                .Where(p => p.Id == propertyId)
+                .Select(p => new EditPropertyViewModel()
+                {
+                    Name = p.Name,
+                    Description = p.Description,
+                    Address = p.Address,
+                    Price = p.Price,
+                    Size = p.Size,
+                    CountryId = p.City.CountryId,
+                    CityId = p.CityId,
+                    BuildingTypeId = p.BuildingTypeId,
+                    PropertyTypeId = p.PropertyTypeId,
+                    PropertyStatusId = p.PropertyStatusId,
+
+                })
+                .FirstOrDefaultAsync();
         }
 
         public async Task<DetailsPropertyViewModel?> GetDetailsAsync(Guid id)

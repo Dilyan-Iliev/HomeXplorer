@@ -1,5 +1,6 @@
 ﻿namespace HomeXplorer.Services.Contracts
 {
+    using HomeXplorer.Data.Entities;
     using HomeXplorer.ViewModels.Property.Agent;
 
     public interface IAgentPropertyService
@@ -11,5 +12,9 @@
         Task<DetailsPropertyViewModel?> GetDetailsAsync(Guid id);
 
         Task DeleteAsync(Guid id);
+
+        Task EditAsync(EditPropertyViewModel model, Guid propertyId, ICollection<string>? imageUrls, ICollection<CloudImage> oldImages);
+
+        Task<EditPropertyViewModel?> FindByIdAsync(Guid propertyId);
     }
 }

@@ -1,0 +1,123 @@
+﻿@model EditPropertyViewModel
+
+<form method="post" enctype="multipart/form-data" style="max-width: 500px; margin: 0 auto;">
+    <!-- -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="form-outline">
+                <label asp-for="@Model.Name" class="form-label">Name</label>
+                <input asp-for="@Model.Name" type="text" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <!-- -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="form-outline">
+                <label asp-for="@Model.Price" class="form-label">Price</label>
+                <input asp-for="@Model.Price" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-outline">
+                <label asp-for="@Model.Size" class="form-label">Size</label>
+                <input asp-for="@Model.Size" type="text" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <!-- -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="form-outline">
+                <label asp-for="@Model.CountryId" class="form-label">Country</label>
+                <select asp-for="@Model.CountryId" class="form-control" aria-required="true" id="countryDropdown">
+                    <option value="" selected>Select a country</option>
+                    @foreach (var country in Model.Countries)
+                    {
+                        <option value="@country.Id">@country.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-outline">
+                <label asp-for="@Model.CityId" class="form-label">City</label>
+                <select asp-for="@Model.CityId" class="form-control" aria-required="true" id="cityDropdown">
+                    <option value="">Select City</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- -->
+    <div class="form-outline mb-4">
+        <label asp-for="@Model.Address" class="form-label">Address</label>
+        <input asp-for="@Model.Address" type="text" class="form-control" />
+    </div>
+
+    <!-- -->
+    <div class="form-outline mb-4">
+        <label asp-for="@Model.Description" class="form-label">Description</label>
+        <textarea asp-for="@Model.Description" class="form-control" rows="4"></textarea>
+    </div>
+
+    <!-- -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="form-outline">
+                <label asp-for="@Model.PropertyTypeId" class="form-label">Property type</label>
+                <select asp-for="@Model.PropertyTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
+                    <option value="@Model.PropertyTypeId" selected>Select a property type</option>
+                    @foreach (var t in Model.PropertyTypes)
+                    {
+                        <option value="@t.Id">@t.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-outline">
+                <label asp-for="@Model.BuildingTypeId" class="form-label">Building type</label>
+                <select asp-for="@Model.BuildingTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
+                    <option value="@Model.BuildingTypeId" selected>Select a building type</option>
+                    @foreach (var t in Model.BuildingTypes)
+                    {
+                        <option value="@t.Id">@t.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-outline">
+                <label asp-for="@Model.PropertyStatusId" class="form-label">Property status</label>
+                <select asp-for="@Model.PropertyStatusId" class="form-control" aria-required="true" id="propertyTypeDropdown">
+                    <option value="@Model.PropertyStatusId" selected>Select a property status</option>
+                    @foreach (var ps in Model.PropertyStatuses)
+                    {
+                        <option value="@ps.Id">@ps.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col">
+            <div class="form-outline">
+                <label class="form-label" asp-for="@Model.NewImages">Default file input example</label>
+                <input asp-for="@Model.NewImages" type="file" class="form-control" id="customFile" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mb-4">Edit property</button>
+</form>
+
+<script src="~/js/register/loadCities.js"></script>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

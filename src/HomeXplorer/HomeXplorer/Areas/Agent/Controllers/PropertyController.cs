@@ -3,8 +3,12 @@
     using Microsoft.AspNetCore.Mvc;
 
     using CloudinaryDotNet;
+    using Microsoft.EntityFrameworkCore;
 
+    using HomeXplorer.Common;
     using HomeXplorer.Extensions;
+    using HomeXplorer.Data.Entities;
+    using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Exceptions;
     using HomeXplorer.ViewModels.Property.Agent;
@@ -19,6 +23,9 @@
         private readonly Cloudinary cloudinary;
         private readonly IAgentPropertyService propertyService;
         private readonly ICloudinaryService cloudinaryService;
+        private readonly IPropertyStatusService propertyStatusService;
+
+        private readonly IRepository repo;
 
         public PropertyController(
             IPropertyTypeService propertyTypeService,
@@ -26,7 +33,9 @@
             IBuildingTypeService buildingTypeService,
             ICloudinaryService cloudinaryService,
             Cloudinary cloudinary,
-            IAgentPropertyService propertyService)
+            IAgentPropertyService propertyService,
+            IPropertyStatusService propertyStatusService,
+            IRepository repo)
         {
             this.propertyTypeService = propertyTypeService;
             this.countryService = countryService;
@@ -34,6 +43,8 @@
             this.cloudinary = cloudinary;
             this.propertyService = propertyService;
             this.cloudinaryService = cloudinaryService;
+            this.propertyStatusService = propertyStatusService;
+            this.repo = repo;
         }
 
 
@@ -77,7 +88,7 @@
 
                 await this.propertyService.AddAsync(model, imagesUrls, userId);
 
-                return this.RedirectToAction("Index", "Home", new { area = Agent });
+                return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent });
             }
             catch (InvalidFileExtensionException ife)
             {
@@ -101,7 +112,7 @@
             {
                 this.TempData["DetailsError"] = "Can not show the details of the property";
 
-                return this.RedirectToAction("Index", "Home", new { area = Agent });
+                return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent });
             }
 
             return this.View(property);
@@ -116,14 +127,74 @@
 
                 this.TempData["SuccessDelete"] = "You removed successfuly a property";
 
-                return this.RedirectToAction("Index", "Home", new { area = Agent });
+                return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent });
             }
             catch (Exception)
             {
                 this.TempData["FailedDelete"] = "Something went wrong, try again";
-                return this.RedirectToAction("Details", "Home", new { area = Agent, id });
+                return this.RedirectToAction("Details", "Home", new { area = UserRoleConstants.Agent, id });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            EditPropertyViewModel? model = await this.propertyService
+                .FindByIdAsync(id);
+
+            if (model != null)
+            {
+                var editModel = new EditPropertyViewModel()
+                {
+                    Name = model.Name,
+                    Address = model.Address,
+                    Price = model.Price,
+                    Size = model.Size,
+                    Description = model.Description,
+                    BuildingTypeId = model.BuildingTypeId,
+                    CountryId = model.CountryId,
+                    CityId = model.CityId,
+                    PropertyTypeId = model.PropertyTypeId,
+                    PropertyStatusId = model.PropertyStatusId,
+                    BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync(),
+                    Countries = await this.countryService.GetCountriesAsync(),
+                    PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync(),
+                    PropertyStatuses = await this.propertyStatusService.GetPropertyStatusesAsync()
+                };
+
+                return this.View(editModel);
+            }
+            return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditPropertyViewModel model, Guid id)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
+                model.Countries = await this.countryService.GetCountriesAsync();
+                model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
+                model.PropertyStatuses = await this.propertyStatusService.GetPropertyStatusesAsync();
+
+                return this.View(model);
             }
 
+            var newImages = model.NewImages;
+
+            var oldPropertyImages = await this.repo
+                .AllReadonly<CloudImage>()
+                .Where(p => p.PropertyId == id)
+                .ToListAsync();
+
+            if (newImages.Any())
+            {
+                var imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, newImages);
+            }
+
+            await this.propertyService.EditAsync(model, id, imagesUrls, oldPropertyImages);
+
+            return this.RedirectToAction("Details", "Property", new { area = UserRoleConstants.Agent, id });
         }
     }
 }
