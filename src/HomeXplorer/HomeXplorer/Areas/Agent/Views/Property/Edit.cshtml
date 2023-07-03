@@ -120,6 +120,7 @@
         <thead>
             <tr>
                 <th>Photo №</th>
+                <th></th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -129,7 +130,8 @@
                 foreach (var img in Model.AddedImages)
                 {
                     <tr>
-                        <td><a href="@img.Url">Photo @count</a></td>
+                        <td>Photo @count</td>
+                        <td><a href="@img.Url">See photo</a></td>
                         <td><span style="cursor:pointer;" class="badge bg-danger delete-photo" data-photo-id="@img.Id">&times;</span></td>
                     </tr>
                     count++;
