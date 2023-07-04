@@ -9,6 +9,7 @@
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.Services.Exceptions.Contracts;
+    using HomeXplorer.ViewModels.Property.Agent.Enums;
 
     public class AgentPropertyService
         : IAgentPropertyService
@@ -60,6 +61,62 @@
             await this.repo.AddAsync<Property>(property);
             await this.repo.SaveChangesAsync();
         }
+
+        public async Task<AllPropertiesViewModel> AllAsync(PropertySorting propertySorting)
+        {
+            var properties = this.repo
+                .AllReadonly<Property>();
+
+            switch (propertySorting)
+            {
+                case PropertySorting.Cheapest:
+                    properties = properties.OrderBy(p => p.Price);
+                    break;
+
+                case PropertySorting.MostExpensive:
+                    properties = properties.OrderByDescending(p => p.Price);
+                    break;
+
+                case PropertySorting.Oldest:
+                    properties = properties.OrderBy(p => p.AddedOn);
+                    break;
+
+                case PropertySorting.Newest:
+                    properties = properties.OrderByDescending(p => p.AddedOn);
+                    break;
+                default:
+                    properties = properties;
+                    break;
+            }
+
+            var mappedModel = await properties
+                .Select(p => new IndexAgentPropertiesViewModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Size = p.Size,
+                    City = p.City.Name,
+                    Status = p.PropertyStatus.Name,
+                    CoverPhotoUrl = p.Images
+                        .Where(i => i.PropertyId == p.Id)
+                        .Select(i => i.Url)
+                        .FirstOrDefault()!,
+                    AddedOn = p.AddedOn.ToString("MM/dd/yyyy"),
+                    //Visits
+
+                })
+                .ToListAsync();
+
+            var model = new AllPropertiesViewModel()
+            {
+                PropertySorting = propertySorting,
+                Properties = mappedModel
+            };
+
+            return model;
+        }
+
 
         public async Task DeleteAsync(Guid id)
         {
@@ -113,7 +170,7 @@
                     var deletedImage = oldImages.
                         FirstOrDefault(i => i.Id == photoId);
 
-                    if (deletedImage!= null)
+                    if (deletedImage != null)
                     {
                         property.Images.Remove(deletedImage);
                         this.repo.Delete<CloudImage>(deletedImage);
@@ -230,6 +287,7 @@
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
                     City = p.City.Name,
+                    //Visits
                 })
                 .Take(3)
                 .ToListAsync();

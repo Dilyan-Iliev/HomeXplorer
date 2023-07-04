@@ -2,6 +2,7 @@
 {
     using HomeXplorer.Data.Entities;
     using HomeXplorer.ViewModels.Property.Agent;
+    using HomeXplorer.ViewModels.Property.Agent.Enums;
 
     public interface IAgentPropertyService
     {
@@ -19,5 +20,7 @@
         Task<EditPropertyViewModel?> FindByIdAsync(Guid propertyId);
 
         Task<IEnumerable<PropertyImagesViewModel>> GetAllImageUrlsForPropertyAsync(Guid propertyId);
+
+        Task<AllPropertiesViewModel> AllAsync(PropertySorting propertySorting);
     }
 }

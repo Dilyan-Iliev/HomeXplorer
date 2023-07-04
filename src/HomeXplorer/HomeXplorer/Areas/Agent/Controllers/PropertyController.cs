@@ -14,6 +14,7 @@
     using HomeXplorer.ViewModels.Property.Agent;
 
     using static HomeXplorer.Common.UserRoleConstants;
+    using HomeXplorer.ViewModels.Property.Agent.Enums;
 
     public class PropertyController : BaseAgentController
     {
@@ -47,6 +48,12 @@
             this.repo = repo;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> All(PropertySorting propertySorting = PropertySorting.Default)
+        {
+            var model = await this.propertyService.AllAsync(propertySorting);
+            return View(model);
+        }
 
         [HttpGet]
         public async Task<IActionResult> Add()
