@@ -49,9 +49,9 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(PropertySorting propertySorting = PropertySorting.Default)
+        public async Task<IActionResult> All(int pageNumber = 1, int pageSize = 3, PropertySorting propertySorting = PropertySorting.Default)
         {
-            var model = await this.propertyService.AllAsync(propertySorting);
+            var model = await this.propertyService.AllAsync(pageNumber, pageSize, propertySorting);
             return View(model);
         }
 

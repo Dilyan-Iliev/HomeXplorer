@@ -62,34 +62,34 @@
             await this.repo.SaveChangesAsync();
         }
 
-        public async Task<AllPropertiesViewModel> AllAsync(PropertySorting propertySorting)
+        public async Task<AllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting)
         {
             var properties = this.repo
                 .AllReadonly<Property>();
 
-            switch (propertySorting)
+            properties = propertySorting switch
             {
-                case PropertySorting.Cheapest:
-                    properties = properties.OrderBy(p => p.Price);
-                    break;
+                PropertySorting.Cheapest => properties.OrderBy(p => p.Price),
+                PropertySorting.MostExpensive => properties.OrderByDescending(p => p.Price),
+                PropertySorting.Oldest => properties.OrderBy(p => p.AddedOn),
+                PropertySorting.Newest => properties.OrderByDescending(p => p.AddedOn),
+                _ => properties
+            };
 
-                case PropertySorting.MostExpensive:
-                    properties = properties.OrderByDescending(p => p.Price);
-                    break;
+            int totalProperties = await properties.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalProperties / (double)pageSize);
+            var currentPage = pageNumber;
 
-                case PropertySorting.Oldest:
-                    properties = properties.OrderBy(p => p.AddedOn);
-                    break;
-
-                case PropertySorting.Newest:
-                    properties = properties.OrderByDescending(p => p.AddedOn);
-                    break;
-                default:
-                    properties = properties;
-                    break;
+            if (totalPages > 0 && currentPage > totalPages)
+            {
+                currentPage = totalPages; // Adjust the current page if it exceeds the total pages
             }
 
-            var mappedModel = await properties
+            var propertiesForPage = properties
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize);
+
+            var mappedModel = await propertiesForPage
                 .Select(p => new IndexAgentPropertiesViewModel()
                 {
                     Id = p.Id,
@@ -111,7 +111,10 @@
             var model = new AllPropertiesViewModel()
             {
                 PropertySorting = propertySorting,
-                Properties = mappedModel
+                Properties = mappedModel,
+                PageNumber = currentPage,
+                PageSize = pageSize,
+                TotalPages = totalPages
             };
 
             return model;

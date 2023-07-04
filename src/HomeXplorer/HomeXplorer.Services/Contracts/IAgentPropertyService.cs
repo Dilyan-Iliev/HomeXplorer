@@ -21,6 +21,6 @@
 
         Task<IEnumerable<PropertyImagesViewModel>> GetAllImageUrlsForPropertyAsync(Guid propertyId);
 
-        Task<AllPropertiesViewModel> AllAsync(PropertySorting propertySorting);
+        Task<AllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting);
     }
 }
