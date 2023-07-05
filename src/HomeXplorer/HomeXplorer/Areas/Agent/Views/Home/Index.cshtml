@@ -16,6 +16,10 @@ else
     {
         <div class="text-success text-center">@this.TempData["SuccessDelete"]</div>
     }
+    @if (this.TempData.ContainsKey("ProfileError"))
+    {
+        <div class="text-danger text-center">@this.TempData["ProfileError"]</div>
+    }
 
     <!-- ======= Latest Properties Section ======= -->
     <section class="section-property section-t8">

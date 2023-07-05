@@ -61,7 +61,7 @@
     else if (this.SignInManager.IsSignedIn(User) && await this.UserManager.IsInRoleAsync(user, UserRoleConstants.Renter))
     {
         <li class="nav-item">
-            <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            <a class="nav-link active" asp-area="Renter" asp-controller="Home" asp-action="Index">Home</a>
         </li>
 
         <li class="nav-item">

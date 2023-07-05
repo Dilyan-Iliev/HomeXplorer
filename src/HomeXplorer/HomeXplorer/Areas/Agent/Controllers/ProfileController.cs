@@ -46,7 +46,6 @@
             catch (Exception)
             {
                 this.TempData["ProfileError"] = "Something went wrong, try again";
-                //TODO add this tempdata to the redirected view
                 return this.RedirectToAction("Index", "Home", new { area = Agent });
             }
 
@@ -102,7 +101,6 @@
             catch (Exception)
             {
                 this.TempData["ProfileError"] = "Something went wrong, try again";
-                //TODO add this tempdata to the redirected view
                 return this.RedirectToAction("MyProfie", "Profile", new { area = Agent });
             }
         }
