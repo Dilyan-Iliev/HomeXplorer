@@ -32,10 +32,7 @@
         [Comment("City of the renter")]
         public City City { get; set; } = null!;
 
-        //public int? CloudImageId { get; set; }
-
-        //public CloudImage? CloudImage { get; set; }
-
+        [Comment("Profile picture of the renter")]
         [Required]
         public string ProfilePictureUrl { get; set; } = null!;
 

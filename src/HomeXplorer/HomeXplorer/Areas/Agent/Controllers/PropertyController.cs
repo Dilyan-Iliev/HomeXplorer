@@ -49,7 +49,8 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(int pageNumber = 1, int pageSize = 3, PropertySorting propertySorting = PropertySorting.Default)
+        public async Task<IActionResult> All(int pageNumber = 1, int pageSize = 3,
+            PropertySorting propertySorting = PropertySorting.Default)
         {
             var model = await this.propertyService.AllAsync(pageNumber, pageSize, propertySorting);
             return View(model);
@@ -84,14 +85,26 @@
 
             try
             {
+                //Check if some of the selected options from dropdowns are valid
+                bool selectedCountryIdExists = await this.propertyService.ExistByIdAsync<Country>(model.CountryId);
+                bool selectedCityIdExists = await this.propertyService.ExistByIdAsync<City>(model.CityId);
+                bool selectedPropertyTypeIdExists = await this.propertyService.ExistByIdAsync<PropertyType>(model.PropertyTypeId);
+                bool selectedBuildingTypeIdExists = await this.propertyService.ExistByIdAsync<BuildingType>(model.BuildingTypeId);
+
+                if (!selectedCountryIdExists || !selectedCityIdExists
+                    || !selectedPropertyTypeIdExists || !selectedBuildingTypeIdExists)
+                {
+                    this.TempData["InvalidDropdownOption"] = "You must choose a valid option from the dropdowns";
+                    model.Countries = await this.countryService.GetCountriesAsync();
+                    model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
+                    model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
+                    return this.View(model);
+                }
+
                 var modelImages = model.Images;
                 var imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, modelImages);
 
                 string userId = this.User.GetId();
-
-                //TODO: check if some of the dropdowns are valid : (existsById)
-
-
 
                 await this.propertyService.AddAsync(model, imagesUrls, userId);
 
@@ -101,7 +114,7 @@
             {
                 model?.Errors?.Add(ife.Message);
 
-                model.Countries = await this.countryService.GetCountriesAsync();
+                model!.Countries = await this.countryService.GetCountriesAsync();
                 model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
                 model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
 

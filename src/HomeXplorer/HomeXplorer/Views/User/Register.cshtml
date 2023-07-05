@@ -7,6 +7,12 @@
 <h3 style="text-align:center">Welcome to HomeXplorer</h3>
 
 <form id="signUpForm" method="post">
+
+    @if (this.TempData.ContainsKey("TakenEmail"))
+    {
+        <div class="alert alert-danger text-center">@this.TempData["TakenEmail"]</div>
+    }
+
     <!-- start step indicators -->
     <div class="form-header d-flex mb-4">
         <span class="stepIndicator">Account Setup</span>

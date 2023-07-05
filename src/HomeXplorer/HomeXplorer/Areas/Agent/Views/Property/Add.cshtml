@@ -2,14 +2,19 @@
 @model AddPropertyViewModel
 
 @section Styles {
-        <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
 }
 
 <form id="signUpForm" method="post" enctype="multipart/form-data">
 
     @if (Model?.Errors?.Any() ?? false)
     {
-            <div class="text-danger">Allowed file types: jpg, jpeg, png</div>
+        <div class="text-danger">Allowed file types: jpg, jpeg, png</div>
+    }
+
+    @if (this.TempData.ContainsKey("InvalidDropdownOption"))
+    {
+        <div class="text-danger">@this.TempData["InvalidDropdownOption"]</div>
     }
 
     <!-- start step indicators -->
@@ -20,31 +25,29 @@
     </div>
     <!-- end step indicators -->
     <!-- step one -->
-
     <div class="step">
         <p class="text-center mb-4">Add basic info about the property</p>
 
         <div class="mb-3">
-            <label asp-for="@Model.Name">Property Name</label>
+            <label asp-for="@Model.Name">Property Name *</label>
             <input asp-for="@Model.Name" type="text" placeholder="Property Name" oninput="this.className = ''">
             <span asp-validation-for="@Model.Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="@Model.Description">Property Description</label>
-            @*switch input for textarea*@
+            <label asp-for="@Model.Description">Property Description *</label>
             <input asp-for="@Model.Description" type="text" placeholder="Property Description" oninput="this.className = ''" name="Description" />
             <span asp-validation-for="@Model.Description" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="@Model.Price"></label>
+            <label asp-for="@Model.Price">Property Price *</label>
             <input asp-for="@Model.Price" placeholder="Property Price" oninput="this.className = ''" name="Price">
             <span asp-validation-for="@Model.Price" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="@Model.Size">Property Size</label>
+            <label asp-for="@Model.Size">Property Size *</label>
             <input asp-for="@Model.Size" placeholder="Property Size" oninput="this.className = ''" name="Size">
             <span asp-validation-for="@Model.Size" class="text-danger"></span>
         </div>
@@ -55,51 +58,55 @@
         <p class="text-center mb-4">Add more info about the property</p>
 
         <div class="mb-3">
-            <label asp-for="@Model.PropertyTypeId" class="form-label-add-edit">Choose a property type</label>
+            <label asp-for="@Model.PropertyTypeId" class="form-label-add-edit">Choose a property type *</label>
             <select asp-for="@Model.PropertyTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
                 <option value="" selected>Select a property type</option>
                 @foreach (var t in Model.PropertyTypes)
                 {
-                        <option value="@t.Id">@t.Name</option>
+                    <option value="@t.Id">@t.Name</option>
                 }
             </select>
             <span asp-validation-for="@Model.PropertyTypeId" class="text-danger"></span>
+            <span class="required-text">This field is required</span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="@Model.BuildingTypeId" class="form-label-add-edit">Choose a building type</label>
-            <select asp-for="@Model.BuildingTypeId" class="form-control" aria-required="true" id="propertyTypeDropdown">
-                <option value="" selected>Select a property type</option>
+            <label asp-for="@Model.BuildingTypeId" class="form-label-add-edit">Choose a building type *</label>
+            <select asp-for="@Model.BuildingTypeId" class="form-control" aria-required="true" id="buildingTypeDropdown">
+                <option value="" selected>Select a building type</option>
                 @foreach (var t in Model.BuildingTypes)
                 {
-                        <option value="@t.Id">@t.Name</option>
+                    <option value="@t.Id">@t.Name</option>
                 }
             </select>
             <span asp-validation-for="@Model.BuildingTypeId" class="text-danger"></span>
+            <span class="required-text">This field is required</span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="@Model.CountryId" class="form-label-add-edit">Choose a country</label>
+            <label asp-for="@Model.CountryId" class="form-label-add-edit">Choose a country *</label>
             <select asp-for="@Model.CountryId" class="form-control" aria-required="true" id="countryDropdown">
                 <option value="" selected>Select a country</option>
                 @foreach (var country in Model.Countries)
                 {
-                        <option value="@country.Id">@country.Name</option>
+                    <option value="@country.Id">@country.Name</option>
                 }
             </select>
             <span asp-validation-for="@Model.CountryId" class="text-danger"></span>
+            <span class="required-text">This field is required</span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="@Model.CityId" class="form-label-add-edit">Choose a city</label>
+            <label asp-for="@Model.CityId" class="form-label-add-edit">Choose a city *</label>
             <select asp-for="@Model.CityId" class="form-control" aria-required="true" id="cityDropdown" disabled>
-                <option value="">Select City</option>
+                <option value="">Select a city</option>
             </select>
             <span asp-validation-for="@Model.CityId" class="text-danger"></span>
+            <span class="required-text">This field is required</span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="@Model.Address">Address</label>
+            <label asp-for="@Model.Address">Address *</label>
             <input asp-for="@Model.Address" type="text" placeholder="Address" oninput="this.className = ''" name="Address">
             <span asp-validation-for="@Model.Address" class="text-danger"></span>
         </div>
@@ -110,10 +117,11 @@
     <div class="step">
         <p class="text-center mb-4">Add property pictures</p>
 
-        <label class="form-label" for="customFile">Upload property images</label>
+        <label class="form-label" for="customFile">Upload property images *</label>
         <input type="file" class="form-control" id="customFile" name="Images" multiple asp-for="@Model.Images" />
         <span asp-validation-for="@Model.Images" class="text-danger"></span>
-        <p class="text-center mb-2 small">Note: The first added photo will be visualised as cover photo</p>
+        <span class="required-text">This field is required</span>
+        <p class="text-center mb-2 small">Note: The first added photo will be visualized as the cover photo</p>
 
     </div>
 
@@ -125,9 +133,9 @@
     <!-- end previous / next buttons -->
 </form>
 
-<script src="~/js/property/add.js"></script>
-<script src="~/js/register/loadCities.js"></script>
-
 @section Scripts{
-        <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/property/add.js"></script>
+    <script src="~/js/register/loadCities.js"></script>
 }
+

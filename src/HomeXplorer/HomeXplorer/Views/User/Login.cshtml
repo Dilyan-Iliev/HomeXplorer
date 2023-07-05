@@ -36,18 +36,24 @@
                                     <div class="alert alert-danger text-center">@Model.ErrorMessage</div>
                                 }
 
+                                @if (this.TempData.ContainsKey("SuccessReset"))
+                                {
+                                    <div class="alert alert-success text-center">@this.TempData["SuccessReset"]</div>
+                                }
+
                             </div>
                             <form method="post">
                                 <input type="hidden" asp-for="@Model.Token" id="ModelToken" />
                                 <div class="form-group first">
                                     <label asp-for="@Model.Email">Email</label>
                                     <input asp-for="@Model.Email" type="text" class="form-control" id="username">
+                                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
 
                                 </div>
                                 <div class="form-group last mb-4">
                                     <label asp-for="@Model.Password">Password</label>
                                     <input asp-for="@Model.Password" type="password" class="form-control" id="password">
-
+                                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
                                 </div>
 
                                 <div class="d-flex mb-5 align-items-center">

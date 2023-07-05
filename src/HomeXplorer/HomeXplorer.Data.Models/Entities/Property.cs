@@ -31,9 +31,6 @@
         [Comment("Size of the property (square meters)")]
         public int Size { get; set; }
 
-        [Comment("Allowed/not allowed pets in the property")]
-        public bool PetsAllowed { get; set; }
-
         [Comment("Address of the property")]
         [Required]
         public string Address { get; set; } = null!;
@@ -91,6 +88,7 @@
         [Comment("Property renter")]
         public virtual Renter? Renter { get; set; }
 
+        [Comment("Images of the property")]
         public virtual ICollection<CloudImage> Images { get; set; }
     }
 }

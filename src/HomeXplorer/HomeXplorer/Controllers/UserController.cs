@@ -84,9 +84,16 @@
                 PhoneNumber = model.PhoneNumber
             };
 
-            //TODO : check if there is user with same email address
-
             await this.CheckForRoleAsync(model.Role);
+
+            ApplicationUser? userWithSameEmail = await userManager.FindByEmailAsync(user.Email);
+
+            if (userWithSameEmail != null)
+            {
+                this.TempData["TakenEmail"] = "User with this email already exists";
+                model.Countries = await this.countryService.GetCountriesAsync();
+                return this.View(model);
+            }
 
             var result = await this.userManager.CreateAsync(user, model.Password);
 
@@ -259,7 +266,7 @@
 
                 if (result.Succeeded)
                 {
-                    //Add to tempdata - Successfully reset your password
+                    this.TempData["SuccessReset"] = "You have successfully changed your password";
                     return RedirectToAction(nameof(Login));
                 }
 

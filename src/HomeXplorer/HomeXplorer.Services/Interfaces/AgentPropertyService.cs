@@ -11,6 +11,8 @@
     using HomeXplorer.Services.Exceptions.Contracts;
     using HomeXplorer.ViewModels.Property.Agent.Enums;
 
+    //TODO: add visits count
+
     public class AgentPropertyService
         : IAgentPropertyService
     {
@@ -42,7 +44,6 @@
                 PropertyStatusId = model.PropertyStatusId,
                 BuildingTypeId = model.BuildingTypeId,
                 AgentId = currentAgent!.Id,
-                PetsAllowed = false,
                 AddedOn = DateTime.UtcNow,
                 ModifiedOn = DateTime.UtcNow
             };
@@ -183,6 +184,12 @@
 
             this.repo.Update<Property>(property);
             await this.repo.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistByIdAsync<T>(object id) where T : class
+        {
+            T entity = await this.repo.GetByIdAsync<T>(id);
+            return entity != null;
         }
 
         public Task<EditPropertyViewModel?> FindByIdAsync(Guid propertyId)

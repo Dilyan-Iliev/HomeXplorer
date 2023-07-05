@@ -30,10 +30,7 @@
         [Comment("The associated IdentityUser")]
         public virtual ApplicationUser User { get; set; } = null!;
 
-        //public int? CloudImageId { get; set; }
-
-        //public CloudImage? CloudImage { get; set; }
-
+        [Comment("The profile picture of the agent")]
         [Required]
         public string ProfilePictureUrl { get; set; } = null!;
 

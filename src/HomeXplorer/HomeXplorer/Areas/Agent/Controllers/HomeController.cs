@@ -16,10 +16,19 @@
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            string userId = this.User.GetId();
+            try
+            {
+                string userId = this.User.GetId();
 
-            var properties = await this.propertyService.GetLastThreeAsync(userId);
-            return View(properties);
+                var properties = await this.propertyService.GetLastThreeAsync(userId);
+                return View(properties);
+
+            }
+            catch (Exception)
+            {
+                //TODO decide what to happens in case of an error
+                throw;
+            }
         }
     }
 }

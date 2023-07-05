@@ -13,7 +13,6 @@
 
         [Comment("Url to the cloudinary")]
         public string Url { get; set; } = null!;
-
       
         [Comment("Property Id of the Image")]
         [ForeignKey(nameof(Property))]

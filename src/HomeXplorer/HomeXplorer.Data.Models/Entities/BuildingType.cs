@@ -12,6 +12,5 @@
         [Comment("Name of the building type")]
         [Required]
         public string Name { get; set; } = null!;
-
     }
 }
