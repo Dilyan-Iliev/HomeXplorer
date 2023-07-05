@@ -22,9 +22,9 @@
             this.PropertyTypes = new List<SelectPropertyTypeViewModel>();
             this.BuildingTypes = new List<SelectBuildingTypeViewModel>();
             this.PropertyStatuses = new List<SelectPropertyStatusViewModel>();
-
             this.AddedImages = new List<PropertyImagesViewModel>();
             this.DeletedPhotosIds = new List<int>();
+            this.Errors = new List<string>();
         }
 
         [Required(ErrorMessage = FieldRequired)]
@@ -82,5 +82,7 @@
         public IEnumerable<PropertyImagesViewModel> AddedImages { get; set; }
 
         public ICollection<int>? DeletedPhotosIds { get; set; }
+
+        public ICollection<string>? Errors { get; set; }
     }
 }

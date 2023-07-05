@@ -203,25 +203,53 @@
                 return this.View(model);
             }
 
-            var newImages = model.NewImages;
-
-            var oldPropertyImages = await this.repo
-                .AllReadonly<CloudImage>()
-                .Where(p => p.PropertyId == id)
-                .ToListAsync();
-
-            ICollection<string>? imagesUrls = null;
-
-            if (newImages.Any())
+            try
             {
-                imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, newImages);
+                bool selectedCountryIdExists = await this.propertyService.ExistByIdAsync<Country>(model.CountryId);
+                bool selectedCityIdExists = await this.propertyService.ExistByIdAsync<City>(model.CityId);
+                bool selectedPropertyTypeIdExists = await this.propertyService.ExistByIdAsync<PropertyType>(model.PropertyTypeId);
+                bool selectedBuildingTypeIdExists = await this.propertyService.ExistByIdAsync<BuildingType>(model.BuildingTypeId);
+
+                if (!selectedCountryIdExists || !selectedCityIdExists
+                    || !selectedPropertyTypeIdExists || !selectedBuildingTypeIdExists)
+                {
+                    this.TempData["InvalidDropdownOption"] = "You must choose a valid option from the dropdowns";
+                    model.Countries = await this.countryService.GetCountriesAsync();
+                    model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
+                    model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
+                    return this.View(model);
+                }
+
+                var newImages = model.NewImages;
+
+                var oldPropertyImages = await this.repo
+                    .AllReadonly<CloudImage>()
+                    .Where(p => p.PropertyId == id)
+                    .ToListAsync();
+
+                ICollection<string>? imagesUrls = null;
+
+                if (newImages.Any())
+                {
+                    imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, newImages);
+                }
+
+                var deletedPhotos = model.DeletedPhotosIds;
+
+                await this.propertyService.EditAsync(model, id, imagesUrls, oldPropertyImages, deletedPhotos);
+
+                return this.RedirectToAction("Details", "Property", new { area = UserRoleConstants.Agent, id });
             }
+            catch (InvalidFileExtensionException ife)
+            {
+                model?.Errors?.Add(ife.Message);
 
-            var deletedPhotos = model.DeletedPhotosIds;
+                model!.Countries = await this.countryService.GetCountriesAsync();
+                model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
+                model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
 
-            await this.propertyService.EditAsync(model, id, imagesUrls, oldPropertyImages, deletedPhotos);
-
-            return this.RedirectToAction("Details", "Property", new { area = UserRoleConstants.Agent, id });
+                return this.View(model);
+            }
         }
     }
 }

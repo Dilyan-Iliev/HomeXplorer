@@ -6,6 +6,16 @@
     <h3 class="text-center">Form for editing your property offer</h3>
 </div>
 
+@if (Model?.Errors?.Any() ?? false)
+{
+    <div class="text-danger">Allowed file types: jpg, jpeg, png</div>
+}
+
+@if (this.TempData.ContainsKey("InvalidDropdownOption"))
+{
+    <div class="text-danger">@this.TempData["InvalidDropdownOption"]</div>
+}
+
 <form method="post" enctype="multipart/form-data" style="max-width: 500px; margin: 0 auto;">
     <!-- -->
     <div class="row mb-4">
