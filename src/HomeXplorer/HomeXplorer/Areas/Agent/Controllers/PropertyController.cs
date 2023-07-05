@@ -52,7 +52,9 @@
         public async Task<IActionResult> All(int pageNumber = 1, int pageSize = 3,
             PropertySorting propertySorting = PropertySorting.Default)
         {
-            var model = await this.propertyService.AllAsync(pageNumber, pageSize, propertySorting);
+            string userId = this.User.GetId();
+
+            var model = await this.propertyService.AllAsync(pageNumber, pageSize, propertySorting, userId);
             return View(model);
         }
 

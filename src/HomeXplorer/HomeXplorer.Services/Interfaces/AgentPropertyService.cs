@@ -63,10 +63,11 @@
             await this.repo.SaveChangesAsync();
         }
 
-        public async Task<AllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting)
+        public async Task<AllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting, string userId)
         {
             var properties = this.repo
-                .AllReadonly<Property>();
+                .AllReadonly<Property>()
+                .Where(p => p.Agent.UserId == userId);
 
             properties = propertySorting switch
             {
@@ -167,7 +168,7 @@
                 }
             }
 
-            if (deletedPhotosIds.Any())
+            if (deletedPhotosIds?.Any() ?? false)
             {
                 foreach (var photoId in deletedPhotosIds)
                 {

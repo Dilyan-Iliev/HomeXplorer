@@ -24,28 +24,6 @@
             this.guard = guard;
         }
 
-        //public async Task<IEnumerable<ProfilePropertiesViewModel>> GetAgentLastFourProperties(string userId)
-        //{
-        //    Agent? agent = await FindAgentAsync(userId);
-
-        //    this.guard.AgainstNull(agent, "No agent was found");
-
-        //    var properties = await this.repo
-        //        .AllReadonly<Property>()
-        //        .Where(p => p.AgentId == agent.Id)
-        //        .Select(p => new ProfilePropertiesViewModel()
-        //        {
-        //            Id = p.Id,
-        //            CoverPhotoUrl = p.Images
-        //                .Where(i => i.PropertyId == p.Id)
-        //                .Select(i => i.Url)
-        //                .FirstOrDefault()!
-        //        })
-        //        .ToListAsync();
-
-        //    return properties;
-        //}
-
         public async Task<AgentProfileViewModel> GetAgentProfileInfoAsync(string userId)
         {
             Agent? agent = await FindAgentAsync(userId);
