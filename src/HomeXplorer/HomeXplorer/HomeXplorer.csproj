@@ -23,4 +23,9 @@
     <ProjectReference Include="..\HomeXplorer.Services\HomeXplorer.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Renter\Controllers\" />
+    <Folder Include="Areas\Renter\Views\" />
+  </ItemGroup>
+
 </Project>
