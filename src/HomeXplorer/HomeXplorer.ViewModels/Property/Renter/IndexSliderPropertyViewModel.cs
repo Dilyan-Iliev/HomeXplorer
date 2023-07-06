@@ -6,10 +6,14 @@
 
         public string Name { get; set; } = null!;
 
+        public string Country { get; set; } = null!;
+
+        public string City { get; set; } = null!;
+
         public string Address { get; set; } = null!;
 
         public decimal Price { get; set; }
 
-        public int CoverImageUrl { get; set; }
+        public string CoverImageUrl { get; set; } = null!;
     }
 }

@@ -1,1 +1,10 @@
-﻿
+﻿@model IEnumerable<IndexSliderPropertyViewModel>
+
+<div class="swiper-wrapper">
+
+    @foreach (var property in Model)
+    {
+        <partial name="_PropertyIndexPartial" model="@property" />
+    }
+</div>
+

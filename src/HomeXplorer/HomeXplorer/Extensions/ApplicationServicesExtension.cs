@@ -59,6 +59,9 @@
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/User/Login";
+
+                //options.Cookie.HttpOnly = true;
+                //options.Cookie.SameSite = SameSiteMode.Strict;
             });
 
             services.AddMvc(options =>
@@ -86,6 +89,7 @@
             services.AddSingleton(cloudinaryInstance);
             services.AddSingleton(typeof(CloudinaryConfig));
             services.AddSingleton<IEmailSender, SmtpEmailSender>();
+
             services.AddScoped<PageVisitCountFilter>();
             services.AddScoped(typeof(GoogleCaptchaConfig));
             services.AddScoped<ICountryService, CountryService>();
@@ -98,6 +102,7 @@
             services.AddScoped<IRepository, Repository>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IGuard, Guard>();
+            services.AddScoped<IAgentPropertyService, AgentPropertyService>();
 
             return services;
         }
