@@ -1,5 +1,6 @@
 ﻿namespace HomeXplorer.Data.Entities
 {
+    using HomeXplorer.Data.Models.Entities;
     using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -11,6 +12,7 @@
         {
             this.Id = Guid.NewGuid();
             this.Images = new HashSet<CloudImage>();
+            this.AddedToFavourites = new HashSet<RenterPropertyFavorite>();
         }
 
         [Key]
@@ -90,5 +92,7 @@
 
         [Comment("Images of the property")]
         public virtual ICollection<CloudImage> Images { get; set; }
+
+        public virtual ICollection<RenterPropertyFavorite>? AddedToFavourites { get; set; }
     }
 }

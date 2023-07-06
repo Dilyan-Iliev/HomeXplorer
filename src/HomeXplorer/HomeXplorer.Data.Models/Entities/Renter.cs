@@ -4,19 +4,21 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    using HomeXplorer.Data.Models.Entities;
+
     [Comment("Renter of the property")]
     public class Renter
     {
         public Renter()
         {
             this.RentedProperties = new HashSet<Property>();
-            this.FavouriteProperties = new HashSet<Property>();
+            this.FavouriteProperties = new HashSet<RenterPropertyFavorite>();
             this.Reviews = new HashSet<Review>();
         }
 
         [Comment("Primary key")]
         [Key]
-        public int Id { get; set; } //TODO: Switch with Guid
+        public int Id { get; set; }
 
         [Comment("Refference to the Identity User")]
         [ForeignKey(nameof(User))]
@@ -37,10 +39,11 @@
         public string ProfilePictureUrl { get; set; } = null!;
 
         [Comment("Rented properties")]
-        public virtual ICollection<Property> RentedProperties { get; set; }
+        //[InverseProperty(nameof(Property.Renter))]
+        public virtual ICollection<Property>? RentedProperties { get; set; }
 
         [Comment("Favourite properties")]
-        public virtual ICollection<Property> FavouriteProperties { get; set; }
+        public virtual ICollection<RenterPropertyFavorite>? FavouriteProperties { get; set; }
 
         [Comment("Renter reviews")]
         public virtual ICollection<Review> Reviews { get; set; }

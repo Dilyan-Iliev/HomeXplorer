@@ -18,6 +18,9 @@
         [AllowAnonymous]
         public IActionResult Index()
         {
+            //TODO:
+            //based on use role index should redirect to different Index page;
+            //if no user - redirect to default Index
             return View();
         }
 

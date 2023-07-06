@@ -6,6 +6,7 @@
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Data.Entities.Configuration;
     using HomeXplorer.Data.Models.Entities.Configuration;
+    using HomeXplorer.Data.Models.Entities;
 
     public class HomeXplorerDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -36,15 +37,19 @@
 
         public DbSet<Review> Reviews { get; set; } = null!;
 
+        public DbSet<RenterPropertyFavorite> RentersPropertiesFavorites { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new RenterConfiguration());
             builder.ApplyConfiguration(new PropertyTypeConfiguration());
             builder.ApplyConfiguration(new PropertyStatusConfiguration());
             builder.ApplyConfiguration(new BuildingTypeConfiguration());
             builder.ApplyConfiguration(new CountryConfiguration());
             builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new PropertyConfiguration());
+            builder.ApplyConfiguration(new RenterPropertyFavoriteConfiguration());
 
             base.OnModelCreating(builder);
         }

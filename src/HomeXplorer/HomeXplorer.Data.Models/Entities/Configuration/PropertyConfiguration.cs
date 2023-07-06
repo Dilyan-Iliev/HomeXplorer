@@ -14,22 +14,16 @@
                 .HasForeignKey(a => a.RenterId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            //builder
-            //    .HasOne(x => x.Agent)
-            //    .WithMany(x => x.Properties)
-            //    .HasForeignKey(x => x.AgentId)
-            //    .OnDelete(DeleteBehavior.NoAction);
-
-            //builder
-            //    .HasOne(x => x.Country)
-            //    .WithMany(x => x.Properties)
-            //    .HasForeignKey(x => x.CountryId)
-            //    .OnDelete(DeleteBehavior.NoAction);
-
             builder
                 .HasOne(x => x.City)
                 .WithMany(x => x.Properties)
                 .HasForeignKey(x => x.CityId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .HasMany(x => x.AddedToFavourites)
+                .WithOne(x => x.Property)
+                .HasForeignKey(x => x.PropertyId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

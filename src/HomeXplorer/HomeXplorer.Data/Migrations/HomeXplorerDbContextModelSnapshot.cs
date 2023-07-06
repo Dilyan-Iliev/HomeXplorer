@@ -37,7 +37,8 @@ namespace HomeXplorer.Data.Migrations
 
                     b.Property<string>("ProfilePictureUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("The profile picture of the agent");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -1864,10 +1865,6 @@ namespace HomeXplorer.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasComment("Name of the property");
 
-                    b.Property<bool>("PetsAllowed")
-                        .HasColumnType("bit")
-                        .HasComment("Allowed/not allowed pets in the property");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)")
                         .HasComment("Price of the property");
@@ -1883,9 +1880,6 @@ namespace HomeXplorer.Data.Migrations
                     b.Property<int?>("RenterId")
                         .HasColumnType("int")
                         .HasComment("Property renter ID");
-
-                    b.Property<int?>("RenterId1")
-                        .HasColumnType("int");
 
                     b.Property<int>("Size")
                         .HasColumnType("int")
@@ -1904,8 +1898,6 @@ namespace HomeXplorer.Data.Migrations
                     b.HasIndex("PropertyTypeId");
 
                     b.HasIndex("RenterId");
-
-                    b.HasIndex("RenterId1");
 
                     b.ToTable("Properties");
 
@@ -2022,7 +2014,8 @@ namespace HomeXplorer.Data.Migrations
 
                     b.Property<string>("ProfilePictureUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("Profile picture of the renter");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -2074,6 +2067,23 @@ namespace HomeXplorer.Data.Migrations
                     b.ToTable("Reviews");
 
                     b.HasComment("Review of a renter");
+                });
+
+            modelBuilder.Entity("HomeXplorer.Data.Models.Entities.RenterPropertyFavorite", b =>
+                {
+                    b.Property<Guid?>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("RenterId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PropertyId", "RenterId");
+
+                    b.HasIndex("RenterId");
+
+                    b.ToTable("RentersPropertiesFavorites");
+
+                    b.HasComment("Linking table representing favorite properties for renters");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -2289,10 +2299,6 @@ namespace HomeXplorer.Data.Migrations
                         .HasForeignKey("RenterId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("HomeXplorer.Data.Entities.Renter", null)
-                        .WithMany("FavouriteProperties")
-                        .HasForeignKey("RenterId1");
-
                     b.Navigation("Agent");
 
                     b.Navigation("BuildingType");
@@ -2338,6 +2344,25 @@ namespace HomeXplorer.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Reviewer");
+                });
+
+            modelBuilder.Entity("HomeXplorer.Data.Models.Entities.RenterPropertyFavorite", b =>
+                {
+                    b.HasOne("HomeXplorer.Data.Entities.Property", "Property")
+                        .WithMany("AddedToFavourites")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("HomeXplorer.Data.Entities.Renter", "Renter")
+                        .WithMany("FavouriteProperties")
+                        .HasForeignKey("RenterId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+
+                    b.Navigation("Renter");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -2417,6 +2442,8 @@ namespace HomeXplorer.Data.Migrations
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Property", b =>
                 {
+                    b.Navigation("AddedToFavourites");
+
                     b.Navigation("Images");
                 });
 
