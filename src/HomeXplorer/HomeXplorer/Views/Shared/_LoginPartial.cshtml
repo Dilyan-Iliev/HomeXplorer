@@ -77,7 +77,7 @@
                 Profile
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" asp-area="Agent" asp-controller="Profile" asp-action="MyProfile">
+                <a class="dropdown-item" asp-area="Renter" asp-controller="Profile" asp-action="MyProfile">
                     <span>@this.User.GetSubstringedName()</span>
                     <img src="@(await Repository.RetrieveRenterImage(User.GetId()))" width="40" height="40" class="rounded-circle float-right">
                 </a>

@@ -6,22 +6,37 @@
     using HomeXplorer.ViewModels;
     using Microsoft.AspNetCore.Authorization;
 
+    using static HomeXplorer.Common.UserRoleConstants;
+    using HomeXplorer.Services.Contracts;
+
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IRenterPropertyService renterPropertyService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+            IRenterPropertyService renterPropertyService)
         {
             _logger = logger;
+            this.renterPropertyService = renterPropertyService;
         }
 
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            //TODO:
-            //based on use role index should redirect to different Index page;
-            //if no user - redirect to default Index
-            return View();
+            bool hasLoggedInUser = this.User?.Identity?.IsAuthenticated ?? false;
+
+            if (hasLoggedInUser && this.User!.IsInRole(Agent))
+            {
+                return this.RedirectToAction("Index", "Home", new { area = Agent });
+            }
+            else if (hasLoggedInUser && this.User!.IsInRole(Renter))
+            {
+                return this.RedirectToAction("Index", "Home", new { area = Renter });
+            }
+
+            var model = await this.renterPropertyService.GetLastThreeAddedForSliderAsync();
+            return View(model);
         }
 
         [AllowAnonymous]

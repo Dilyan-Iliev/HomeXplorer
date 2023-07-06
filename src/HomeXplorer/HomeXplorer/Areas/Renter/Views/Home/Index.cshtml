@@ -1,10 +1,99 @@
-﻿@model IEnumerable<IndexSliderPropertyViewModel>
+﻿@model MainPageViewModel
 
-<div class="swiper-wrapper">
+@{
+    bool hasUser = this.User?.Identity?.IsAuthenticated ?? false;
+}
 
-    @foreach (var property in Model)
-    {
-        <partial name="_PropertyIndexPartial" model="@property" />
-    }
-</div>
+@if (Model.SliderProperties.Any())
+{
+    <div class="swiper-wrapper">
 
+        @foreach (var property in Model.SliderProperties)
+        {
+            <partial name="_PropertyIndexPartial" model="@property" />
+        }
+    </div>
+}
+else
+{
+    <h3 class="text-center">No available properties yet</h3>
+}
+
+@if (hasUser)
+{
+    <section class="section-property section-t8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="title-wrap d-flex justify-content-between">
+                        <div class="title-box">
+                            <h2 class="title-a">Properties nearby</h2>
+                        </div>
+                        <div class="title-link">
+                            <a asp-area="Renter" asp-controller="Property" asp-action="All">
+                                All Nearby
+                                <span class="bi bi-chevron-right"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (!Model.LastThreePropertiesNearby!.Any())
+            {
+                <h3 class="text-center">No nearby properties</h3>
+            }
+            else
+            {
+                <div id="property-carousel" class="swiper">
+                    <div class="swiper-wrapper">
+
+                        @foreach (var property in Model.LastThreePropertiesNearby!)
+                        {
+                            <partial name="_LatestPropertiesPartial" model="@property" />
+                        }
+                    </div>
+                </div>
+                <div class="propery-carousel-pagination carousel-pagination"></div>
+            }
+        </div>
+    </section>
+}
+
+<section class="section-property section-t8">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="title-wrap d-flex justify-content-between">
+                    <div class="title-box">
+                        <h2 class="title-a">Latest Properties</h2>
+                    </div>
+                    <div class="title-link">
+                        <a asp-area="" asp-controller="Property" asp-action="All">
+                            All Properties
+                            <span class="bi bi-chevron-right"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.LatestProperties!.Any())
+        {
+            <h3 class="text-center">No properties found</h3>
+        }
+        else
+        {
+            <div id="property-carousel" class="swiper">
+                <div class="swiper-wrapper">
+
+                    @foreach (var property in Model.LatestProperties!)
+                    {
+                        <partial name="_LatestPropertiesPartial" model="@property" />
+                    }
+                </div>
+            </div>
+            <div class="propery-carousel-pagination carousel-pagination"></div>
+        }
+    </div>
+</section>
