@@ -39,7 +39,7 @@
                         @foreach (var photo in Model.Images)
                         {
                             <div class="carousel-item-b swiper-slide">
-                                <img src="@photo.Url" alt="">
+                                <img src="@photo.Url" alt="" style="max-height: 960px; width: auto;">
                             </div>
                         }
                     </div>
@@ -133,54 +133,68 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <div class="d-flex justify-content-start">
-                                    <a asp-area="Agent" asp-controller="Property" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mb-2 mr-3">Edit</a>
-                                    <form asp-area="Agent" asp-controller="Property" asp-action="Delete" asp-route-id="@Model.Id">
-                                        <input class="btn btn-danger mb-2" type="submit" value="Delete"
-                                               onclick="return confirm('Are you sure you want to delete post: @Model.Name')" />
-                                    </form>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="d-flex justify-content-start">
+                                        <form asp-area="Renter" asp-controller="Property" asp-action="AddFavorite" asp-route-id="@Model.Id">
+                                            <button class="btn @(Model.IsAddedToFavs ? "btn-success" : "btn-danger") mb-2 mr-2" style="margin-right: 10px;" type="submit" @(Model.IsAddedToFavs ? "disabled" : "")>
+                                                <i class="bi @(Model.IsAddedToFavs ? "bi-check" : "bi-heart")"></i> @(Model.IsAddedToFavs ? "Added to Favorites" : "Add To Favorites")
+                                            </button>
+                                        </form>
+
+                                        @if (!Model.IsRented)
+                                        {
+                                            <form asp-area="Renter" asp-controller="Property" asp-action="Rent" asp-route-id="@Model.Id">
+                                                <button class="btn btn-primary mb-2" type="submit">
+                                                    <i class="bi bi-house"></i> Rent
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-12">
-                <div class="row section-t3">
-                    <div class="col-sm-12">
-                        <div class="title-box-d">
-                            <h3 class="title-d">Contact Agent</h3>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-lg-4">
-                        <img src="@Model.AgentProfilePicture" alt="" class="img-fluid">
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="property-agent">
-                            <h4 class="title-agent">@Model.AgentFullName</h4>
-                            @*<p class="color-text-a">
-                                Nulla porttitor accumsan tincidunt. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet
-                                dui. Quisque velit nisi,
-                                pretium ut lacinia in, elementum id enim.
-                            </p>*@
-                            <ul class="list-unstyled">
-                                <li class="d-flex justify-content-between">
-                                    <strong>Phone:</strong>
-                                    <span class="color-text-a">@Model.AgentPhone</span>
-                                </li>
-                                <li class="d-flex justify-content-between">
-                                    <strong>Email:</strong>
-                                    <span class="color-text-a">@Model.AgentEmail</span>
-                                </li>
-                            </ul>
-                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-12">
+            <div class="row section-t3">
+                <div class="col-sm-12">
+                    <div class="title-box-d">
+                        <h3 class="title-d">Contact Agent</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4">
+                    <img src="@Model.AgentProfilePicture" alt="" class="img-fluid">
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="property-agent">
+                        <h4 class="title-agent">@Model.AgentFullName</h4>
+                        @*<p class="color-text-a">
+                        Nulla porttitor accumsan tincidunt. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet
+                        dui. Quisque velit nisi,
+                        pretium ut lacinia in, elementum id enim.
+                        </p>*@
+                        <ul class="list-unstyled">
+                            <li class="d-flex justify-content-between">
+                                <strong>Phone:</strong>
+                                <span class="color-text-a">@Model.AgentPhone</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <strong>Email:</strong>
+                                <span class="color-text-a">@Model.AgentEmail</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 </section><!-- End Property Single-->

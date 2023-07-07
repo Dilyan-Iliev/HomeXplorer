@@ -12,5 +12,9 @@
         public string AgentEmail { get; set; } = null!;
 
         public string AgentPhone { get; set; } = null!;
+
+        public bool IsRented { get; set; }
+
+        public bool IsAddedToFavs { get; set; }
     }
 }

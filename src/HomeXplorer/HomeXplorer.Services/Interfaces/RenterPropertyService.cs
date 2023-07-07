@@ -1,5 +1,6 @@
 ﻿namespace HomeXplorer.Services.Interfaces
 {
+    using System;
     using System.Threading.Tasks;
     using System.Collections.Generic;
 
@@ -10,8 +11,8 @@
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property.Renter;
     using HomeXplorer.Services.Exceptions.Contracts;
-    using System;
     using HomeXplorer.ViewModels.Property.Agent;
+    using HomeXplorer.Data.Models.Entities;
 
     public class RenterPropertyService
         : IRenterPropertyService
@@ -26,10 +27,42 @@
             this.repo = repo;
         }
 
+        public async Task AddToFavoritesAsync(Guid propertyId, string userId)
+        {
+            var renter = await this.repo
+                .AllReadonly<Renter>()
+                .FirstOrDefaultAsync(r => r.UserId == userId);
+
+            if (renter != null)
+            {
+                //If != null -> this property is already added to favorites
+                RenterPropertyFavorite? favProperty = await this.repo
+                    .All<RenterPropertyFavorite>()
+                    .FirstOrDefaultAsync(rpf => rpf.RenterId == renter.Id
+                        && rpf.PropertyId == propertyId);
+
+                if (favProperty == null)
+                {
+                    favProperty = new RenterPropertyFavorite()
+                    {
+                        RenterId = renter.Id,
+                        PropertyId = propertyId
+                    };
+
+                    renter.FavouriteProperties.Add(favProperty);
+
+                    await this.repo.AddAsync<RenterPropertyFavorite>(favProperty);
+
+                    await this.repo.SaveChangesAsync();
+                }
+            }
+        }
+
         public async Task<IEnumerable<IndexSliderPropertyViewModel>> GetLastThreeAddedForSliderAsync()
         {
             var model = await this.repo
                 .AllReadonly<Property>()
+                .Where(p => p.IsActive && p.PropertyStatus.Name == "Free")
                 .OrderByDescending(p => p.AddedOn)
                 .Select(p => new IndexSliderPropertyViewModel()
                 {
@@ -54,6 +87,7 @@
         {
             var model = await this.repo
                 .AllReadonly<Property>()
+                .Where(p => p.IsActive && p.PropertyStatus.Name == "Free")
                 .Select(p => new LatestPropertiesViewModel()
                 {
                     Id = p.Id,
@@ -87,6 +121,7 @@
                 .AllReadonly<Property>()
                 .OrderByDescending(p => p.AddedOn)
                 .Where(p => p.CityId == renterCityId)
+                .Where(p => p.IsActive && p.PropertyStatus.Name == "Free")
                 .Select(p => new LatestPropertiesViewModel()
                 {
                     Id = p.Id,
@@ -108,7 +143,7 @@
             return model;
         }
 
-        public async Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id)
+        public async Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id, string userId)
         {
             var currentProperty = await this.repo
                 .AllReadonly<Property>()
@@ -127,6 +162,7 @@
                     PropertyType = p.PropertyType.Name,
                     PropertyStatus = p.PropertyStatus.Name,
                     BuildingType = p.BuildingType.Name,
+                    IsRented = p.RenterId != null,
                     Images = p.Images
                         .Select(i => new PropertyImagesViewModel()
                         {
@@ -137,12 +173,25 @@
                     AgentEmail = p.Agent.User.Email,
                     AgentPhone = p.Agent.User.PhoneNumber,
                     AgentFullName = $"{p.Agent.User.FirstName} {p.Agent.User.LastName}",
-                    AgentProfilePicture = p.Agent.ProfilePictureUrl
+                    AgentProfilePicture = p.Agent.ProfilePictureUrl,
+                    
                 })
                 .FirstOrDefaultAsync();
 
             if (currentProperty != null)
             {
+                var renterId = await this.repo
+                    .AllReadonly<Renter>()
+                    .Where(r => r.UserId == userId)
+                    .Select(r => r.Id)
+                    .FirstOrDefaultAsync();
+
+                bool isPropertyAddedToFav = await this.repo
+                    .AllReadonly<RenterPropertyFavorite>()
+                    .AnyAsync(rpf => rpf.PropertyId == id && rpf.RenterId == renterId);
+
+                currentProperty.IsAddedToFavs = isPropertyAddedToFav;
+
                 return currentProperty;
             }
 

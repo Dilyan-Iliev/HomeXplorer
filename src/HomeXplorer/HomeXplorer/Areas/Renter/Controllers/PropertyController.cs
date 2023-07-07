@@ -5,6 +5,7 @@
     using HomeXplorer.Services.Contracts;
 
     using static HomeXplorer.Common.UserRoleConstants;
+    using HomeXplorer.Extensions;
 
     public class PropertyController : BaseRenterController
     {
@@ -17,7 +18,8 @@
 
         public async Task<IActionResult> Details(Guid id)
         {
-            var property = await this.renterPropertyService.GetPropertyDetailsAsync(id);
+            string userId = this.User.GetId();
+            var property = await this.renterPropertyService.GetPropertyDetailsAsync(id, userId);
 
             if (property == null)
             {
@@ -26,6 +28,15 @@
             }
 
             return this.View(property);
+        }
+
+        public async Task<IActionResult> AddFavorite(Guid id)
+        {
+            string userId = this.User.GetId();
+
+            await this.renterPropertyService.AddToFavoritesAsync(id, userId);
+
+            return Ok(); //switch to redirect to action to MyFavorites
         }
     }
 }
