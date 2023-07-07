@@ -32,10 +32,5 @@
         public string AddedOd { get; set; } = null!;
 
         public IEnumerable<PropertyImagesViewModel> Images { get; set; }
-
-        //something for google maps
-
-        //TODO:
-        //renter and not loged-in user must see agent details
     }
 }

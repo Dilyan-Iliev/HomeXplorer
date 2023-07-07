@@ -9,5 +9,7 @@
         Task<IEnumerable<LatestPropertiesViewModel>> GetLastThreePropertiesNearbyAsync(string userId);
 
         Task<IEnumerable<LatestPropertiesViewModel>> GetLastThreeAddedPropertiesAsync();
+
+        Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id);
     }
 }

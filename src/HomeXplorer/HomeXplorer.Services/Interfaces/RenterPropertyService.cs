@@ -1,13 +1,17 @@
 ﻿namespace HomeXplorer.Services.Interfaces
 {
-    using HomeXplorer.Core.Repositories;
-    using HomeXplorer.Data.Entities;
-    using HomeXplorer.Services.Contracts;
-    using HomeXplorer.Services.Exceptions.Contracts;
-    using HomeXplorer.ViewModels.Property.Renter;
-    using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
+
+    using Microsoft.EntityFrameworkCore;
+
+    using HomeXplorer.Data.Entities;
+    using HomeXplorer.Core.Repositories;
+    using HomeXplorer.Services.Contracts;
+    using HomeXplorer.ViewModels.Property.Renter;
+    using HomeXplorer.Services.Exceptions.Contracts;
+    using System;
+    using HomeXplorer.ViewModels.Property.Agent;
 
     public class RenterPropertyService
         : IRenterPropertyService
@@ -24,7 +28,6 @@
 
         public async Task<IEnumerable<IndexSliderPropertyViewModel>> GetLastThreeAddedForSliderAsync()
         {
-
             var model = await this.repo
                 .AllReadonly<Property>()
                 .OrderByDescending(p => p.AddedOn)
@@ -49,14 +52,27 @@
 
         public async Task<IEnumerable<LatestPropertiesViewModel>> GetLastThreeAddedPropertiesAsync()
         {
-            return await this.repo
+            var model = await this.repo
                 .AllReadonly<Property>()
-                .OrderByDescending(p => p.AddedOn)
                 .Select(p => new LatestPropertiesViewModel()
                 {
-
+                    Id = p.Id,
+                    City = p.City.Name,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Size = p.Size,
+                    Status = p.PropertyStatus.Name,
+                    AddedOn = p.AddedOn.ToString("MM/dd/yyyy"),
+                    CoverImageUrl = p.Images
+                        .Where(i => i.PropertyId == p.Id)
+                        .Select(i => i.Url)
+                        .FirstOrDefault()!,
+                    //Visits
                 })
+                .Take(3)
                 .ToListAsync();
+
+            return model;
         }
 
         public async Task<IEnumerable<LatestPropertiesViewModel>> GetLastThreePropertiesNearbyAsync(string userId)
@@ -73,11 +89,64 @@
                 .Where(p => p.CityId == renterCityId)
                 .Select(p => new LatestPropertiesViewModel()
                 {
-
+                    Id = p.Id,
+                    Name = p.Name,
+                    City = p.City.Name,
+                    Price = p.Price,
+                    Size = p.Size,
+                    Status = p.PropertyStatus.Name,
+                    AddedOn = p.AddedOn.ToString("MM/dd/yyyy"),
+                    CoverImageUrl = p.Images
+                        .Where(i => i.PropertyId == p.Id)
+                        .Select(i => i.Url).
+                        FirstOrDefault()!,
+                    //Visits
                 })
+                .Take(3)
                 .ToListAsync();
 
             return model;
+        }
+
+        public async Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id)
+        {
+            var currentProperty = await this.repo
+                .AllReadonly<Property>()
+                .Where(p => p.Id == id)
+                .Select(p => new RenterDetailsPropertyViewModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Address = p.Address,
+                    City = p.City.Name,
+                    Country = p.City.Country.Name,
+                    Size = p.Size,
+                    Price = p.Price,
+                    AddedOd = p.AddedOn.ToString("MM/dd/yyyy"),
+                    PropertyType = p.PropertyType.Name,
+                    PropertyStatus = p.PropertyStatus.Name,
+                    BuildingType = p.BuildingType.Name,
+                    Images = p.Images
+                        .Select(i => new PropertyImagesViewModel()
+                        {
+                            Id = i.Id,
+                            Url = i.Url
+                        })
+                        .ToList(),
+                    AgentEmail = p.Agent.User.Email,
+                    AgentPhone = p.Agent.User.PhoneNumber,
+                    AgentFullName = $"{p.Agent.User.FirstName} {p.Agent.User.LastName}",
+                    AgentProfilePicture = p.Agent.ProfilePictureUrl
+                })
+                .FirstOrDefaultAsync();
+
+            if (currentProperty != null)
+            {
+                return currentProperty;
+            }
+
+            return null!;
         }
     }
 }
