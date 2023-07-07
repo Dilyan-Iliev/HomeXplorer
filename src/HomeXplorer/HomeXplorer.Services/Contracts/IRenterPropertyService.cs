@@ -14,6 +14,6 @@
 
         Task AddToFavoritesAsync(Guid propertyId, string userId);
 
-        Task RentAsync(Guid propertyId);
+        Task RentAsync(Guid propertyId, string userId);
     }
 }

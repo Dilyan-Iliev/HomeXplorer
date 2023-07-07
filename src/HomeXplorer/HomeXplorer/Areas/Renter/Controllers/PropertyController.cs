@@ -38,5 +38,14 @@
 
             return Ok(); //switch to redirect to action to MyFavorites
         }
+
+        public async Task<IActionResult> Rent(Guid id)
+        {
+            string userId = this.User.GetId();
+
+            await this.renterPropertyService.RentAsync(id, userId);
+
+            return this.Ok();
+        }
     }
 }

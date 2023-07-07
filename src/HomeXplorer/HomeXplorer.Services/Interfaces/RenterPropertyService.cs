@@ -29,9 +29,7 @@
 
         public async Task AddToFavoritesAsync(Guid propertyId, string userId)
         {
-            var renter = await this.repo
-                .AllReadonly<Renter>()
-                .FirstOrDefaultAsync(r => r.UserId == userId);
+            Renter? renter = await RetrieveRenterAsync(userId);
 
             if (renter != null)
             {
@@ -57,6 +55,7 @@
                 }
             }
         }
+
 
         public async Task<IEnumerable<IndexSliderPropertyViewModel>> GetLastThreeAddedForSliderAsync()
         {
@@ -198,9 +197,28 @@
             return null!;
         }
 
-        public Task RentAsync(Guid propertyId)
+        public async Task RentAsync(Guid propertyId, string userId)
         {
-            throw new NotImplementedException();
+            Renter? renter = await RetrieveRenterAsync(userId);
+
+            if (renter != null)
+            {
+                var rentedProperty = await this.repo
+                    .GetByIdAsync<Property>(propertyId);
+
+                renter.RentedProperties.Add(rentedProperty);
+
+                rentedProperty.RenterId = renter.Id;
+
+                await this.repo.SaveChangesAsync();
+            }
+        }
+
+        private async Task<Renter?> RetrieveRenterAsync(string userId)
+        {
+            return await this.repo
+                            .AllReadonly<Renter>()
+                            .FirstOrDefaultAsync(r => r.UserId == userId);
         }
     }
 }
