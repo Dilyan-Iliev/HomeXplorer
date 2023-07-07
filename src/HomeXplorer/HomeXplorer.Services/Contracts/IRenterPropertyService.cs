@@ -13,5 +13,7 @@
         Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id, string userId);
 
         Task AddToFavoritesAsync(Guid propertyId, string userId);
+
+        Task RentAsync(Guid propertyId);
     }
 }

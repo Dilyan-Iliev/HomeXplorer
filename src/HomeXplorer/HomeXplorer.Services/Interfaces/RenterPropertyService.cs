@@ -62,7 +62,7 @@
         {
             var model = await this.repo
                 .AllReadonly<Property>()
-                .Where(p => p.IsActive && p.PropertyStatus.Name == "Free")
+                .Where(p => p.IsActive && p.RenterId == null)
                 .OrderByDescending(p => p.AddedOn)
                 .Select(p => new IndexSliderPropertyViewModel()
                 {
@@ -87,7 +87,7 @@
         {
             var model = await this.repo
                 .AllReadonly<Property>()
-                .Where(p => p.IsActive && p.PropertyStatus.Name == "Free")
+                .Where(p => p.IsActive && p.RenterId == null)
                 .Select(p => new LatestPropertiesViewModel()
                 {
                     Id = p.Id,
@@ -121,7 +121,7 @@
                 .AllReadonly<Property>()
                 .OrderByDescending(p => p.AddedOn)
                 .Where(p => p.CityId == renterCityId)
-                .Where(p => p.IsActive && p.PropertyStatus.Name == "Free")
+                .Where(p => p.IsActive && p.RenterId == null)
                 .Select(p => new LatestPropertiesViewModel()
                 {
                     Id = p.Id,
@@ -196,6 +196,11 @@
             }
 
             return null!;
+        }
+
+        public Task RentAsync(Guid propertyId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
