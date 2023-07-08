@@ -24,7 +24,17 @@
             var model = await this.renterPropertyService.AllAsync(pageNumber, pageSize, propertySorting);
 
             return this.View(model);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> AllNearby(int pageNumber = 1, int pageSize = 3,
+            PropertySorting propertySorting = PropertySorting.Default)
+        {
+            string userId = this.User.GetId();
+
+            var model = await this.renterPropertyService.AllNearbyAsync(pageNumber, pageSize, propertySorting, userId);
+
+            return this.View(model);
         }
 
         [HttpGet]

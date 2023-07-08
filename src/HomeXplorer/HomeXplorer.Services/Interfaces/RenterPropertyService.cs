@@ -115,6 +115,67 @@
             return returnedModel;
         }
 
+        public async Task<RenterAllPropertiesViewModel> AllNearbyAsync(int pageNumber, int pageSize, PropertySorting propertySorting, string userId)
+        {
+            Renter? renter = await this.RetrieveRenterAsync(userId);
+
+            IQueryable<Property> propertiesQuery = this.repo
+                .AllReadonly<Property>()
+                .Where(p => p.RenterId == null && p.IsActive)
+                .Where(p => p.CityId == renter!.CityId);
+
+            propertiesQuery = propertySorting switch
+            {
+                PropertySorting.Cheapest => propertiesQuery.OrderBy(p => p.Price),
+                PropertySorting.MostExpensive => propertiesQuery.OrderByDescending(p => p.Price),
+                PropertySorting.Oldest => propertiesQuery.OrderBy(p => p.AddedOn),
+                PropertySorting.Newest => propertiesQuery.OrderByDescending(p => p.AddedOn),
+                _ => propertiesQuery
+            };
+
+            int totalProperties = await propertiesQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalProperties / (double)pageSize);
+            var currentPage = pageNumber;
+
+            if (totalPages > 0 && currentPage > totalPages)
+            {
+                currentPage = totalPages; // Adjust the current page if it exceeds the total pages
+            }
+
+            var propertiesForPage = propertiesQuery
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize);
+
+            var mappedModel = await propertiesForPage
+                .Select(p => new LatestPropertiesViewModel()
+                {
+                    Id = p.Id,
+                    City = p.City.Name,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Size = p.Size,
+                    Status = p.PropertyStatus.Name,
+                    AddedOn = p.AddedOn.ToString("MM/dd/yyyy"),
+                    CoverImageUrl = p.Images
+                        .Where(i => i.PropertyId == p.Id)
+                        .Select(i => i.Url)
+                        .FirstOrDefault()!,
+                    //Visits
+                })
+                .ToListAsync();
+
+            var returnedModel = new RenterAllPropertiesViewModel()
+            {
+                Properties = mappedModel,
+                PropertySorting = propertySorting,
+                PageNumber = currentPage,
+                PageSize = pageSize,
+                TotalPages = totalPages
+            };
+
+            return returnedModel;
+        }
+
         public async Task<IEnumerable<IndexSliderPropertyViewModel>> GetLastThreeAddedForSliderAsync()
         {
             var model = await this.repo
