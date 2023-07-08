@@ -65,11 +65,11 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link " href="about.html">My Favourites</a>
+            <a class="nav-link " asp-area="Renter" asp-controller="Review" asp-action="AddReview">Add Review</a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link " href="property-grid.html">My Rented</a>
+            <a class="nav-link " href="about.html">My Favourites</a>
         </li>
 
         <li class="nav-item dropdown">
@@ -81,7 +81,7 @@
                     <span>@this.User.GetSubstringedName()</span>
                     <img src="@(await Repository.RetrieveRenterImage(User.GetId()))" width="40" height="40" class="rounded-circle float-right">
                 </a>
-                <a class="dropdown-item" href="blog-single.html">My Properties</a>
+                <a class="dropdown-item " asp-area="Renter" asp-controller="Property" asp-action="MyRented">My Rented</a>
                 <form class="dropdown-item" asp-area="" asp-controller="User" asp-action="Logout" asp-route-id="@UserManager.GetUserId(User)">
                     <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
                 </form>

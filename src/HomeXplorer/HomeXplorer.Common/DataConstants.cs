@@ -38,5 +38,11 @@
             public const int MinSize = 40;
             public const int MaxSize = 500;
         }
+
+        public static class ReviewConstants
+        {
+            public const int DescriptionMinlength = 15;
+            public const int DescriptionMaxLength = 120;
+        }
     }
 }

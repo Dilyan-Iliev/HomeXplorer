@@ -104,6 +104,7 @@
             services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IGuard, Guard>();
             services.AddScoped<IAgentPropertyService, AgentPropertyService>();
+            services.AddScoped<IReviewService, ReviewService>();
 
             return services;
         }
