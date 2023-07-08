@@ -8,10 +8,13 @@
     public class HomeController : BaseRenterController
     {
         private readonly IRenterPropertyService renterPropertyService;
+        private readonly IReviewService reviewService;
 
-        public HomeController(IRenterPropertyService renterPropertyService)
+        public HomeController(IRenterPropertyService renterPropertyService,
+            IReviewService reviewService)
         {
             this.renterPropertyService = renterPropertyService;
+            this.reviewService = reviewService;
         }
 
         public async Task<IActionResult> Index()
@@ -30,11 +33,14 @@
 
             var slider = await this.renterPropertyService.GetLastThreeAddedForSliderAsync();
 
+            var approvedReviews = await this.reviewService.GetAllReviewsAsync();
+
             var model = new MainPageViewModel()
             {
                 SliderProperties = slider,
                 LastThreePropertiesNearby = nearbys,
-                LatestProperties = latest
+                LatestProperties = latest,
+                ApprovedReviews = approvedReviews
             };
 
             return View(model);

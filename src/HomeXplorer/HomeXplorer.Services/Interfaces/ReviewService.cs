@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.Services.Interfaces
 {
     using System.Threading.Tasks;
+    using System.Collections.Generic;
 
     using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,7 @@
 
             Review review = new Review()
             {
-                ReviewCreatorrId = renter!.Id,
+                ReviewCreatorId = renter!.Id,
                 AddedOn = DateTime.UtcNow,
                 Description = model.Description,
                 ReviewCreator = renter,
@@ -41,6 +42,20 @@
             {
                 throw;
             }
+        }
+
+        public async Task<IEnumerable<IndexReviewViewModel>> GetAllReviewsAsync()
+        {
+            return await this.repo
+                .AllReadonly<Review>()
+                //add where for only approved reviews
+                .Select(r => new IndexReviewViewModel()
+                {
+                    Description = r.Description,
+                    ReviewCreatorName = $"{r.ReviewCreator.User.FirstName} {r.ReviewCreator.User.LastName}",
+                    ReviewCreatorAvatarUrl = r.ReviewCreator.ProfilePictureUrl
+                })
+                .ToListAsync();
         }
 
         private async Task<Renter?> RetrieveRenterAsync(string userId)
