@@ -1,5 +1,6 @@
 ﻿namespace HomeXplorer.Services.Contracts
 {
+    using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Renter;
 
     public interface IRenterPropertyService
@@ -15,5 +16,7 @@
         Task AddToFavoritesAsync(Guid propertyId, string userId);
 
         Task RentAsync(Guid propertyId, string userId);
+
+        Task<RenterAllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting);
     }
 }

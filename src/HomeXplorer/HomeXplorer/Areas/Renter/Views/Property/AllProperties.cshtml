@@ -1,4 +1,4 @@
-﻿@model AgentAllPropertiesViewModel
+﻿@model RenterAllPropertiesViewModel
 @{
     ViewData["Heading"] = "All properties";
 }
@@ -60,7 +60,7 @@
                     <div class="col-md-4">
                         <div class="card-box-a card-shadow">
                             <div class="img-box-a">
-                                <img src="@property.CoverPhotoUrl" alt="" class="img-a img-fluid">
+                                <img src="@property.CoverImageUrl" alt="" class="img-a img-fluid">
                             </div>
                             <div class="card-overlay">
                                 <div class="card-overlay-a-content">
@@ -149,7 +149,7 @@
 
         function handleSortingChange() {
             var sortingValue = propertySortingSelect.value;
-            var url = '/Agent/Property/All?propertySorting=' + sortingValue;
+            var url = '/Renter/Property/AllProperties?propertySorting=' + sortingValue;
 
             window.location.href = url;
         }

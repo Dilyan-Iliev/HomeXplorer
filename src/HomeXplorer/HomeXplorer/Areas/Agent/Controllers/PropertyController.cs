@@ -14,7 +14,7 @@
     using HomeXplorer.ViewModels.Property.Agent;
 
     using static HomeXplorer.Common.UserRoleConstants;
-    using HomeXplorer.ViewModels.Property.Agent.Enums;
+    using HomeXplorer.ViewModels.Property.Enums;
 
     public class PropertyController : BaseAgentController
     {

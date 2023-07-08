@@ -9,7 +9,7 @@
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.Services.Exceptions.Contracts;
-    using HomeXplorer.ViewModels.Property.Agent.Enums;
+    using HomeXplorer.ViewModels.Property.Enums;
 
     //TODO: add visits count
 
@@ -63,7 +63,7 @@
             await this.repo.SaveChangesAsync();
         }
 
-        public async Task<AllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting, string userId)
+        public async Task<AgentAllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting, string userId)
         {
             var properties = this.repo
                 .AllReadonly<Property>()
@@ -110,7 +110,7 @@
                 })
                 .ToListAsync();
 
-            var model = new AllPropertiesViewModel()
+            var model = new AgentAllPropertiesViewModel()
             {
                 PropertySorting = propertySorting,
                 Properties = mappedModel,

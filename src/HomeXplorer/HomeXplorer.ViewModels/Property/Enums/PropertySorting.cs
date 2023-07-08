@@ -1,4 +1,4 @@
-﻿namespace HomeXplorer.ViewModels.Property.Agent.Enums
+﻿namespace HomeXplorer.ViewModels.Property.Enums
 {
     public enum PropertySorting
     {

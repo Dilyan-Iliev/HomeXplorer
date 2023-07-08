@@ -9,10 +9,11 @@
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
+    using HomeXplorer.Data.Models.Entities;
+    using HomeXplorer.ViewModels.Property.Agent;
+    using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Renter;
     using HomeXplorer.Services.Exceptions.Contracts;
-    using HomeXplorer.ViewModels.Property.Agent;
-    using HomeXplorer.Data.Models.Entities;
 
     public class RenterPropertyService
         : IRenterPropertyService
@@ -56,6 +57,63 @@
             }
         }
 
+        public async Task<RenterAllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting)
+        {
+            IQueryable<Property> propertiesQuery = this.repo
+                .AllReadonly<Property>()
+                .Where(p => p.RenterId == null && p.IsActive);
+
+            propertiesQuery = propertySorting switch
+            {
+                PropertySorting.Cheapest => propertiesQuery.OrderBy(p => p.Price),
+                PropertySorting.MostExpensive => propertiesQuery.OrderByDescending(p => p.Price),
+                PropertySorting.Oldest => propertiesQuery.OrderBy(p => p.AddedOn),
+                PropertySorting.Newest => propertiesQuery.OrderByDescending(p => p.AddedOn),
+                _ => propertiesQuery
+            };
+
+            int totalProperties = await propertiesQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalProperties / (double)pageSize);
+            var currentPage = pageNumber;
+
+            if (totalPages > 0 && currentPage > totalPages)
+            {
+                currentPage = totalPages; // Adjust the current page if it exceeds the total pages
+            }
+
+            var propertiesForPage = propertiesQuery
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize);
+
+            var mappedModel = await propertiesForPage
+                .Select(p => new LatestPropertiesViewModel()
+                {
+                    Id = p.Id,
+                    City = p.City.Name,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Size = p.Size,
+                    Status = p.PropertyStatus.Name,
+                    AddedOn = p.AddedOn.ToString("MM/dd/yyyy"),
+                    CoverImageUrl = p.Images
+                        .Where(i => i.PropertyId == p.Id)
+                        .Select(i => i.Url)
+                        .FirstOrDefault()!,
+                    //Visits
+                })
+                .ToListAsync();
+
+            var returnedModel = new RenterAllPropertiesViewModel()
+            {
+                Properties = mappedModel,
+                PropertySorting = propertySorting,
+                PageNumber = currentPage,
+                PageSize = pageSize,
+                TotalPages = totalPages
+            };
+
+            return returnedModel;
+        }
 
         public async Task<IEnumerable<IndexSliderPropertyViewModel>> GetLastThreeAddedForSliderAsync()
         {
@@ -173,7 +231,7 @@
                     AgentPhone = p.Agent.User.PhoneNumber,
                     AgentFullName = $"{p.Agent.User.FirstName} {p.Agent.User.LastName}",
                     AgentProfilePicture = p.Agent.ProfilePictureUrl,
-                    
+
                 })
                 .FirstOrDefaultAsync();
 
@@ -206,9 +264,10 @@
                 var rentedProperty = await this.repo
                     .GetByIdAsync<Property>(propertyId);
 
-                renter.RentedProperties.Add(rentedProperty);
+                renter.RentedProperties!.Add(rentedProperty);
 
                 rentedProperty.RenterId = renter.Id;
+                rentedProperty.PropertyStatus.Name = ""; //TODO: add taken status
 
                 await this.repo.SaveChangesAsync();
             }

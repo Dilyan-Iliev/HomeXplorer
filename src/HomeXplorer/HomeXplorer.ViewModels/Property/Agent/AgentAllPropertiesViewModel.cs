@@ -1,10 +1,10 @@
 ﻿namespace HomeXplorer.ViewModels.Property.Agent
 {
-    using HomeXplorer.ViewModels.Property.Agent.Enums;
+    using HomeXplorer.ViewModels.Property.Enums;
 
-    public class AllPropertiesViewModel
+    public class AgentAllPropertiesViewModel
     {
-        public AllPropertiesViewModel()
+        public AgentAllPropertiesViewModel()
         {
             this.Properties = new List<IndexAgentPropertiesViewModel>();
         }

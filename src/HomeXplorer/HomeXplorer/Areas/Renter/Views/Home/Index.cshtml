@@ -35,8 +35,8 @@ else
                             <h2 class="title-a">Properties nearby</h2>
                         </div>
                         <div class="title-link">
-                            <a asp-area="Renter" asp-controller="Property" asp-action="All">
-                                All Properties
+                            <a asp-area="Renter" asp-controller="Property" asp-action="AllNearby">
+                                All Properties Nearby
                                 <span class="bi bi-chevron-right"></span>
                             </a>
                         </div>
@@ -64,8 +64,8 @@ else
         </div>
     </section>
 }
-else
-{
+@*else
+{*@
     <section class="section-property section-t8">
         <div class="container">
             <div class="row">
@@ -75,7 +75,7 @@ else
                             <h2 class="title-a">Latest Properties</h2>
                         </div>
                         <div class="title-link">
-                            <a asp-area="" asp-controller="Property" asp-action="All">
+                            <a asp-area="@(hasUser ? "Renter" : "")" asp-controller="Property" asp-action="AllProperties">
                                 All Properties
                                 <span class="bi bi-chevron-right"></span>
                             </a>
@@ -103,6 +103,6 @@ else
             }
         </div>
     </section>
-}
+@*}*@
 
 @*Add reviews section here:*@

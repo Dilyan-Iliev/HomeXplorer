@@ -6,6 +6,7 @@
 
     using static HomeXplorer.Common.UserRoleConstants;
     using HomeXplorer.Extensions;
+    using HomeXplorer.ViewModels.Property.Enums;
 
     public class PropertyController : BaseRenterController
     {
@@ -16,6 +17,17 @@
             this.renterPropertyService = renterPropertyService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AllProperties(int pageNumber = 1, int pageSize = 3,
+            PropertySorting propertySorting = PropertySorting.Default)
+        {
+            var model = await this.renterPropertyService.AllAsync(pageNumber, pageSize, propertySorting);
+
+            return this.View(model);
+
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
             string userId = this.User.GetId();
@@ -30,6 +42,7 @@
             return this.View(property);
         }
 
+        [HttpPost]
         public async Task<IActionResult> AddFavorite(Guid id)
         {
             string userId = this.User.GetId();
@@ -39,13 +52,14 @@
             return Ok(); //switch to redirect to action to MyFavorites
         }
 
+        [HttpPost]
         public async Task<IActionResult> Rent(Guid id)
         {
             string userId = this.User.GetId();
 
             await this.renterPropertyService.RentAsync(id, userId);
 
-            return this.Ok();
+            return this.Ok(); //switch to redirect to action to MyRented
         }
     }
 }
