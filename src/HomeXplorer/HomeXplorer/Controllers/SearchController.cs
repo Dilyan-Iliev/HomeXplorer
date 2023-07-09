@@ -2,10 +2,11 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
+    using HomeXplorer.ViewModels.Search;
 
     public class SearchController : BaseController
     {
-        [HttpPost]
+        [HttpGet]
         [AllowAnonymous]
         public IActionResult Result()
         {

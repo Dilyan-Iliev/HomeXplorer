@@ -12,82 +12,77 @@
     <span class="close-box-collapse right-boxed bi bi-x"></span>
     <div class="box-collapse-wrap form">
         <form method="get" asp-controller="Search" asp-action="Result" class="form-a">
+
             <div class="row">
                 <div class="col-md-12 mb-2">
                     <div class="form-group">
-                        <label class="pb-2" for="Type">Keyword</label>
-                        <input type="text" class="form-control form-control-lg form-control-a" placeholder="Keyword">
+                        <label asp-for="@Model.SearchTerm" class="pb-2">Keyword</label>
+                        <input asp-for="@Model.SearchTerm" type="text" class="form-control form-control-lg form-control-a" placeholder="Keyword">
                     </div>
                 </div>
+
                 <div class="col-md-6 mb-2">
                     <div class="form-group mt-3">
-                        <label class="pb-2" for="Type">Type</label>
-                        <select class="form-control form-select form-control-a" id="Type">
-                            <option>All Type</option>
-                            <option>For Rent</option>
-                            <option>For Sale</option>
-                            <option>Open House</option>
+                        <label asp-for="@Model.PropertyTypeId" class="pb-2">Property Type</label>
+                        <select asp-for="@Model.PropertyTypeId" class="form-control form-select form-control-a" id="Type">
+                            <option value="" selected>Select a property type</option>
+                            @foreach (var t in Model.PropertyTypes)
+                            {
+                                <option value="@t.Id">@t.Name</option>
+                            }
                         </select>
                     </div>
                 </div>
+
                 <div class="col-md-6 mb-2">
                     <div class="form-group mt-3">
-                        <label class="pb-2" for="city">City</label>
-                        <select class="form-control form-select form-control-a" id="city">
-                            <option>All City</option>
-                            <option>Alabama</option>
-                            <option>Arizona</option>
-                            <option>California</option>
-                            <option>Colorado</option>
+                        <label asp-for="@Model.BuildingTypeId" class="pb-2">Building Type</label>
+                        <select asp-for="@Model.BuildingTypeId" class="form-control form-select form-control-a">
+                            <option value="" selected>Select a building type</option>
+                            @foreach (var t in Model.BuildingTypes)
+                            {
+                                <option value="@t.Id">@t.Name</option>
+                            }
                         </select>
                     </div>
                 </div>
+
                 <div class="col-md-6 mb-2">
                     <div class="form-group mt-3">
-                        <label class="pb-2" for="bedrooms">Bedrooms</label>
-                        <select class="form-control form-select form-control-a" id="bedrooms">
-                            <option>Any</option>
-                            <option>01</option>
-                            <option>02</option>
-                            <option>03</option>
+                        <label asp-for="@Model.CountryId" class="pb-2">Country</label>
+                        <select asp-for="@Model.CountryId" class="form-control form-select form-control-a" id="countryDropdown">
+                            <option value="" selected>Select a country</option>
+                            @foreach (var country in Model.Countries)
+                            {
+                                <option value="@country.Id">@country.Name</option>
+                            }
                         </select>
                     </div>
                 </div>
+
                 <div class="col-md-6 mb-2">
                     <div class="form-group mt-3">
-                        <label class="pb-2" for="garages">Garages</label>
-                        <select class="form-control form-select form-control-a" id="garages">
-                            <option>Any</option>
-                            <option>01</option>
-                            <option>02</option>
-                            <option>03</option>
-                            <option>04</option>
+                        <label asp-for="@Model.CityId" class="pb-2">City</label>
+                        <select asp-for="@Model.CityId" class="form-control form-select form-control-a" id="cityDropdown" disabled>
+                            <option value="">Select a city</option>
                         </select>
                     </div>
                 </div>
+
                 <div class="col-md-6 mb-2">
                     <div class="form-group mt-3">
-                        <label class="pb-2" for="bathrooms">Bathrooms</label>
-                        <select class="form-control form-select form-control-a" id="bathrooms">
-                            <option>Any</option>
-                            <option>01</option>
-                            <option>02</option>
-                            <option>03</option>
-                        </select>
+                        <label asp-for="@Model.MinPrice" class="pb-2">Minimum Price</label>
+                        <input asp-for="@Model.MinPrice" class="form-control form-control-a" id="minPrice" />
                     </div>
                 </div>
+
                 <div class="col-md-6 mb-2">
                     <div class="form-group mt-3">
-                        <label class="pb-2" for="price">Min Price</label>
-                        <select class="form-control form-select form-control-a" id="price">
-                            <option>Unlimite</option>
-                            <option>$50,000</option>
-                            <option>$100,000</option>
-                            <option>$150,000</option>
-                            <option>$200,000</option>
-                        </select>
+                        <label asp-for="@Model.MinPrice" class="pb-2">Minimum Price</label>
+                        <input asp-for="@Model.MinPrice" class="form-control form-control-a" id="minPrice" />
                     </div>
                 </div>
+
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-b">Search Property</button>
                 </div>
@@ -124,3 +119,5 @@
 
     </div>
 </nav><!-- End Header/Navbar -->
+
+<script src="~/js/register/loadCities.js"></script>

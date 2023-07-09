@@ -1,9 +1,9 @@
 ﻿namespace HomeXplorer.Services.Interfaces
 {
-    using HomeXplorer.Core.Repositories;
-    using HomeXplorer.Services.Contracts;
-    using HomeXplorer.ViewModels.Search;
     using System.Threading.Tasks;
+
+    using HomeXplorer.ViewModels.Search;
+    using HomeXplorer.Services.Contracts;
 
     public class SearchService
         : ISearchService

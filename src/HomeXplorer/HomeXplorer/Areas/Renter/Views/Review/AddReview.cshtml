@@ -2,8 +2,9 @@
 
 
 <div>
-    <h3 class="text text-center">Add your honest review for this web platform</h3>
+    <h3 class="text text-center" style="margin-bottom: 20px;">Add your honest review for this web platform</h3>
 </div>
+
 <form method="post" style="max-width: 500px; margin: 0 auto;">
     <div class="form-outline mb-4">
         <label asp-for="@Model.Description" class="form-label">Description</label>
@@ -11,7 +12,7 @@
         <span asp-validation-for="@Model.Description" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-block mb-4">Edit property</button>
+    <button type="submit" class="btn btn-primary btn-block mb-4">Add review</button>
 </form>
 
 @section Scripts{
