@@ -23,6 +23,8 @@ namespace HomeXplorer
 
             var app = builder.Build();
 
+            app.UseStatusCodePagesWithRedirects("/Home/Error?error={0}");
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
@@ -34,7 +36,6 @@ namespace HomeXplorer
                 app.UseHsts();
             }
 
-            app.UseStatusCodePagesWithReExecute("/Home/Error?error={0}");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

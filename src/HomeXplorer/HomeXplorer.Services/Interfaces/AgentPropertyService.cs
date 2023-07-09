@@ -65,7 +65,7 @@
 
         public async Task<AgentAllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting, string userId)
         {
-            var properties = this.repo
+            IQueryable<Property> properties = this.repo
                 .AllReadonly<Property>()
                 .Where(p => p.Agent.UserId == userId);
 

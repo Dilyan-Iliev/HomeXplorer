@@ -1,9 +1,10 @@
 ﻿namespace HomeXplorer.Areas.Renter.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+
     using HomeXplorer.Extensions;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property.Renter;
-    using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseRenterController
     {
