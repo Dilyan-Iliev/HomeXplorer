@@ -9,6 +9,11 @@
             return user.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
+        public static string GetRole(this ClaimsPrincipal user)
+        {
+            return user.FindFirstValue(ClaimTypes.Role);
+        }
+
         public static string GetName(this ClaimsPrincipal user)
         {
             return user.FindFirstValue(ClaimTypes.Email);

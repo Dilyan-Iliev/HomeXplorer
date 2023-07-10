@@ -4,6 +4,7 @@
     using HomeXplorer.ViewModels.Country;
     using HomeXplorer.ViewModels.BuildingType;
     using HomeXplorer.ViewModels.PropertyType;
+    using System.ComponentModel.DataAnnotations;
 
     public class PropertySearchViewModel
     {

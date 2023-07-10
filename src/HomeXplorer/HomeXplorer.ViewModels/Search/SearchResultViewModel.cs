@@ -19,7 +19,5 @@
         public PropertySorting PropertySorting { get; set; }
 
         public IEnumerable<LatestPropertiesViewModel> Properties { get; set; }
-
-        //public PropertySearchViewModel PropertySearch { get; set; }
     }
 }
