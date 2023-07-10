@@ -1,13 +1,13 @@
 ﻿namespace HomeXplorer.Filters
 {
-    using System.Text;
+    using System.Text.RegularExpressions;
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.AspNetCore.Mvc.Filters;
 
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Repositories;
-    using System.Text.RegularExpressions;
+    using Microsoft.AspNetCore.Http.Extensions;
 
     public class PageVisitCountFilter
         : ActionFilterAttribute
@@ -21,7 +21,7 @@
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            PathString pageUrl = context.HttpContext.Request.Path;
+            string pageUrl = context.HttpContext.Request.GetDisplayUrl();
             string cookieKey = "UniqueVisit_" + SanitizeCookieName(pageUrl);
 
             // Check if the unique visit flag is set in the cookie for the specific page

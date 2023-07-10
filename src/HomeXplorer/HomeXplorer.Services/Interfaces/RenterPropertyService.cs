@@ -99,7 +99,11 @@
                         .Where(i => i.PropertyId == p.Id)
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
-                    //Visits
+                    Visits = this.repo
+                        .AllReadonly<PageVisit>()
+                        .Where(pv => pv.Url.Contains(p.Id.ToString()))
+                        .Select(pv => pv.VisitsCount)
+                        .Count()
                 })
                 .ToListAsync();
 
@@ -115,7 +119,8 @@
             return returnedModel;
         }
 
-        public async Task<RenterAllPropertiesViewModel> AllNearbyAsync(int pageNumber, int pageSize, PropertySorting propertySorting, string userId)
+        public async Task<RenterAllPropertiesViewModel> AllNearbyAsync(int pageNumber, int pageSize,
+            PropertySorting propertySorting, string userId)
         {
             Renter? renter = await this.RetrieveRenterAsync(userId);
 
@@ -160,7 +165,11 @@
                         .Where(i => i.PropertyId == p.Id)
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
-                    //Visits
+                    Visits = this.repo
+                        .AllReadonly<PageVisit>()
+                        .Where(pv => pv.Url.Contains(p.Id.ToString()))
+                        .Select(pv => pv.VisitsCount)
+                        .Count()
                 })
                 .ToListAsync();
 
@@ -198,7 +207,11 @@
                             .Where(i => i.PropertyId == p.PropertyId)
                             .Select(i => i.Url)
                             .FirstOrDefault()!,
-                        //Visits
+                        Visits = this.repo
+                        .AllReadonly<PageVisit>()
+                        .Where(pv => pv.Url.Contains(p.Id.ToString()))
+                        .Select(pv => pv.VisitsCount)
+                        .Count()
                     })
                     .ToListAsync();
 
@@ -230,7 +243,7 @@
                         .Where(i => i.PropertyId == p.Id)
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
-                    Price = p.Price
+                    Price = p.Price,
                 })
                 .Take(3)
                 .ToListAsync();
@@ -256,7 +269,11 @@
                         .Where(i => i.PropertyId == p.Id)
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
-                    //Visits
+                    Visits = this.repo
+                        .AllReadonly<PageVisit>()
+                        .Where(pv => pv.Url.Contains(p.Id.ToString()))
+                        .Select(pv => pv.VisitsCount)
+                        .Count()
                 })
                 .Take(3)
                 .ToListAsync();
@@ -290,7 +307,11 @@
                         .Where(i => i.PropertyId == p.Id)
                         .Select(i => i.Url).
                         FirstOrDefault()!,
-                    //Visits
+                    Visits = this.repo
+                        .AllReadonly<PageVisit>()
+                        .Where(pv => pv.Url.Contains(p.Id.ToString()))
+                        .Select(pv => pv.VisitsCount)
+                        .Count()
                 })
                 .Take(3)
                 .ToListAsync();
@@ -329,7 +350,7 @@
                     AgentPhone = p.Agent.User.PhoneNumber,
                     AgentFullName = $"{p.Agent.User.FirstName} {p.Agent.User.LastName}",
                     AgentProfilePicture = p.Agent.ProfilePictureUrl,
-
+                    //IsAddedToFavs
                 })
                 .FirstOrDefaultAsync();
 

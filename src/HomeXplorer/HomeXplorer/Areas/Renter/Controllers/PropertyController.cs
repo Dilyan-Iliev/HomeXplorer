@@ -4,9 +4,10 @@
 
     using HomeXplorer.Services.Contracts;
 
-    using static HomeXplorer.Common.UserRoleConstants;
     using HomeXplorer.Extensions;
     using HomeXplorer.ViewModels.Property.Enums;
+    using HomeXplorer.Core.Repositories;
+    using HomeXplorer.Common;
 
     public class PropertyController : BaseRenterController
     {
@@ -46,7 +47,7 @@
             if (property == null)
             {
                 this.TempData["DetailsError"] = "Can't show the details of the property";
-                return this.RedirectToAction("Index", "Home", new { area = Renter });
+                return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Renter });
             }
 
             return this.View(property);
@@ -59,7 +60,7 @@
 
             await this.renterPropertyService.AddToFavoritesAsync(id, userId);
             //add tempdata message
-            return this.RedirectToAction(nameof(Favorites), "Property", new { area = Renter });
+            return this.RedirectToAction(nameof(Favorites), "Property", new { area = UserRoleConstants.Renter });
         }
 
         [HttpPost]

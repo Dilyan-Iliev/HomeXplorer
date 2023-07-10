@@ -106,7 +106,11 @@
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
                     AddedOn = p.AddedOn.ToString("MM/dd/yyyy"),
-                    //Visits
+                    Visits = this.repo
+                        .AllReadonly<PageVisit>()
+                        .Where(pv => pv.Url.Contains(p.Id.ToString()))
+                        .Select(pv => pv.VisitsCount)
+                        .Count()
 
                 })
                 .ToListAsync();
