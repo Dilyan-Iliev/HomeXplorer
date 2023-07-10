@@ -16,7 +16,7 @@
         </div>
         <span class="close-box-collapse right-boxed bi bi-x"></span>
         <div class="box-collapse-wrap form">
-            <form method="get" asp-controller="Search" asp-action="Result" class="form-a">
+            <form id="searchForm" method="get" asp-controller="Search" asp-action="Result" class="form-a">
 
                 <div class="row">
                     <div class="col-md-12 mb-2">
@@ -29,7 +29,7 @@
                     <div class="col-md-6 mb-2">
                         <div class="form-group mt-3">
                             <label asp-for="@Model.PropertyTypeId" class="pb-2">Property Type</label>
-                            <select asp-for="@Model.PropertyTypeId" class="form-control form-select form-control-a" id="Type">
+                            <select asp-for="@Model.PropertyTypeId" class="form-control form-select form-control-a" id="propertyType">
                                 <option value="" selected>Select a property type</option>
                                 @foreach (var t in Model.PropertyTypes)
                                 {
@@ -42,7 +42,7 @@
                     <div class="col-md-6 mb-2">
                         <div class="form-group mt-3">
                             <label asp-for="@Model.BuildingTypeId" class="pb-2">Building Type</label>
-                            <select asp-for="@Model.BuildingTypeId" class="form-control form-select form-control-a">
+                            <select asp-for="@Model.BuildingTypeId" class="form-control form-select form-control-a" id="buildingType">
                                 <option value="" selected>Select a building type</option>
                                 @foreach (var t in Model.BuildingTypes)
                                 {

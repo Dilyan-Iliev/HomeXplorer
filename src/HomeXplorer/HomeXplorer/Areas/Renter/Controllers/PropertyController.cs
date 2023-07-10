@@ -58,8 +58,8 @@
             string userId = this.User.GetId();
 
             await this.renterPropertyService.AddToFavoritesAsync(id, userId);
-
-            return Ok(); //switch to redirect to action to MyFavorites
+            //add tempdata message
+            return this.RedirectToAction(nameof(Favorites), "Property", new { area = Renter });
         }
 
         [HttpPost]
@@ -68,8 +68,31 @@
             string userId = this.User.GetId();
 
             await this.renterPropertyService.RentAsync(id, userId);
-
+            //add tempdata message
             return this.Ok(); //switch to redirect to action to MyRented
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Favorites()
+        {
+            string userId = this.User.GetId();
+
+            var favProperties = await this.renterPropertyService.GetAllFavoritesAsync(userId);
+
+            if (favProperties == null)
+            {
+
+            }
+
+            return this.View(favProperties);
+        }
+
+        //[HttpGet]
+        //public async Task<IActionResult> Rented()
+        //{
+        //    string userId = this.User.GetId();
+
+
+        //}
     }
 }

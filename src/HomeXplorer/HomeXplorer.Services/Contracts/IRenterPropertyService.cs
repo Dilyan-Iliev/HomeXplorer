@@ -19,6 +19,11 @@
 
         Task<RenterAllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting);
 
-        Task<RenterAllPropertiesViewModel> AllNearbyAsync(int pageNumber, int pageSize, PropertySorting propertySorting, string userId);
+        Task<RenterAllPropertiesViewModel> AllNearbyAsync(int pageNumber, int pageSize,
+            PropertySorting propertySorting, string userId);
+
+        Task<IEnumerable<LatestPropertiesViewModel>> GetAllFavoritesAsync(string userId);
+
+        Task<IEnumerable<LatestPropertiesViewModel>> GetAllRentedAsync(string userId);
     }
 }

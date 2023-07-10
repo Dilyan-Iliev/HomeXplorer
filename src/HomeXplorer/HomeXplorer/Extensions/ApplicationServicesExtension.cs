@@ -9,6 +9,7 @@
 
     using HomeXplorer.Filters;
     using HomeXplorer.Config.SMTP;
+    using HomeXplorer.ModelBinders;
     using HomeXplorer.Config.Google;
     using HomeXplorer.Core.Contexts;
     using HomeXplorer.Data.Entities;
@@ -18,7 +19,6 @@
     using HomeXplorer.Services.Exceptions;
     using HomeXplorer.Services.Interfaces;
     using HomeXplorer.Services.Exceptions.Contracts;
-    using HomeXplorer.ModelBinders;
 
     public static class ApplicationServicesExtension
     {
@@ -72,11 +72,11 @@
                 options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
             });
 
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
 
             services.AddSession();
 
@@ -90,8 +90,8 @@
             services.AddSingleton(typeof(CloudinaryConfig));
             services.AddSingleton<IEmailSender, SmtpEmailSender>();
 
-            services.AddScoped<PageVisitCountFilter>();
             services.AddScoped(typeof(GoogleCaptchaConfig));
+            services.AddScoped<PageVisitCountFilter>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<IAgentPropertyService, AgentPropertyService>();

@@ -4,7 +4,7 @@
 
     countryDropdown.addEventListener('change', async function () {
         const selectedCountryId = this.value;
-        console.log(selectedCountryId);
+        
         if (selectedCountryId) {
             try {
                 const response = await fetch('/City/CityBasedOnCountry?countryId=' + selectedCountryId);

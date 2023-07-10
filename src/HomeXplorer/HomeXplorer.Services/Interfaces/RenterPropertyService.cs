@@ -176,6 +176,43 @@
             return returnedModel;
         }
 
+        public async Task<IEnumerable<LatestPropertiesViewModel>> GetAllFavoritesAsync(string userId)
+        {
+            Renter? renter = await this.RetrieveRenterAsync(userId);
+
+            if (renter != null)
+            {
+                var model = await this.repo
+                    .AllReadonly<RenterPropertyFavorite>()
+                    .Where(p => p.RenterId == renter.Id)
+                    .Select(p => new LatestPropertiesViewModel()
+                    {
+                        Id = p.Property.Id,
+                        Name = p.Property.Name,
+                        City = p.Property.City.Name,
+                        Size = p.Property.Size,
+                        Price = p.Property.Price,
+                        Status = p.Property.PropertyStatus.Name,
+                        AddedOn = p.Property.AddedOn.ToString("MM/dd/yyyy"),
+                        CoverImageUrl = p.Property.Images
+                            .Where(i => i.PropertyId == p.PropertyId)
+                            .Select(i => i.Url)
+                            .FirstOrDefault()!,
+                        //Visits
+                    })
+                    .ToListAsync();
+
+                return model;
+            }
+
+            return null;
+        }
+
+        public Task<IEnumerable<LatestPropertiesViewModel>> GetAllRentedAsync(string userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<IndexSliderPropertyViewModel>> GetLastThreeAddedForSliderAsync()
         {
             var model = await this.repo

@@ -10,6 +10,7 @@
     using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.Services.Exceptions.Contracts;
     using HomeXplorer.ViewModels.Property.Enums;
+    using Microsoft.AspNetCore.Http;
 
     //TODO: add visits count
 
@@ -154,6 +155,8 @@
             property.PropertyStatusId = model.PropertyStatusId;
             property.Images = oldImages;
 
+            property.ModifiedOn = DateTime.UtcNow;
+
             if (imageUrls != null && imageUrls.Any())
             {
                 foreach (var url in imageUrls)
@@ -260,7 +263,7 @@
                             Id = i.Id,
                             Url = i.Url
                         })
-                        .ToList()
+                        .ToList(),
                 })
                 .FirstOrDefaultAsync();
 
