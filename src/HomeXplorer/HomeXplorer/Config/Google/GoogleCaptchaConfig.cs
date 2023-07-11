@@ -32,10 +32,10 @@
 
                     var googleResult = JsonConvert.DeserializeObject<GoogleCaptchaResponse>(responseString);
 
-                    return googleResult.Success && googleResult.Score >= 0.5;
+                    return googleResult!.Success && googleResult.Score >= 0.5;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

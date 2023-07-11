@@ -2,12 +2,10 @@
 {
     using Microsoft.AspNetCore.Mvc;
 
-    using HomeXplorer.Services.Contracts;
-
-    using HomeXplorer.Extensions;
-    using HomeXplorer.ViewModels.Property.Enums;
-    using HomeXplorer.Core.Repositories;
     using HomeXplorer.Common;
+    using HomeXplorer.Extensions;
+    using HomeXplorer.Services.Contracts;
+    using HomeXplorer.ViewModels.Property.Enums;
 
     public class PropertyController : BaseRenterController
     {
@@ -70,7 +68,7 @@
 
             await this.renterPropertyService.RentAsync(id, userId);
             //add tempdata message
-            return this.Ok(); //switch to redirect to action to MyRented
+            return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter});
         }
 
         [HttpGet]
@@ -88,12 +86,19 @@
             return this.View(favProperties);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Rented()
-        //{
-        //    string userId = this.User.GetId();
+        [HttpGet]
+        public async Task<IActionResult> Rented()
+        {
+            string userId = this.User.GetId();
 
+            var rentedProperties = await this.renterPropertyService.GetAllRentedAsync(userId);
 
-        //}
+            if (rentedProperties == null)
+            {
+
+            }
+
+            return this.View(rentedProperties);
+        }
     }
 }

@@ -305,20 +305,24 @@
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
                     City = p.City.Name,
-                    //Visits
+                    Visits = this.repo
+                        .AllReadonly<PageVisit>()
+                        .Where(pv => pv.Url.Contains(p.Id.ToString()))
+                        .Select(pv => pv.VisitsCount)
+                        .Count()
                 })
                 .Take(3)
                 .ToListAsync();
 
-            var propertyIds = lastThreeProperties.Select(p => p.Id).ToList();
-            var propertyUrls = propertyIds.ToDictionary(id => id, GetPropertyUrl);
+            //var propertyIds = lastThreeProperties.Select(p => p.Id).ToList();
+            //var propertyUrls = propertyIds.ToDictionary(id => id, GetPropertyUrl);
 
-            foreach (var property in lastThreeProperties)
-            {
-                property.Visits = this.repo.All<PageVisit>()
-                    .AsEnumerable()
-                    .Count(pv => pv.Url == propertyUrls[property.Id]);
-            }
+            //foreach (var property in lastThreeProperties)
+            //{
+            //    property.Visits = this.repo.All<PageVisit>()
+            //        .AsEnumerable()
+            //        .Count(pv => pv.Url == propertyUrls[property.Id]);
+            //}
 
             return lastThreeProperties;
         }

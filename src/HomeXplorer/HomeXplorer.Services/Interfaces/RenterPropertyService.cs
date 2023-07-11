@@ -48,7 +48,7 @@
                         PropertyId = propertyId
                     };
 
-                    renter.FavouriteProperties.Add(favProperty);
+                    renter.FavouriteProperties!.Add(favProperty);
 
                     await this.repo.AddAsync<RenterPropertyFavorite>(favProperty);
 
@@ -193,10 +193,10 @@
             {
                 var model = await this.repo
                     .AllReadonly<RenterPropertyFavorite>()
-                    .Where(p => p.RenterId == renter.Id)
+                    .Where(p => p.RenterId == renter.Id && p.Property!.IsActive)
                     .Select(p => new LatestPropertiesViewModel()
                     {
-                        Id = p.Property.Id,
+                        Id = p.Property!.Id,
                         Name = p.Property.Name,
                         City = p.Property.City.Name,
                         Size = p.Property.Size,
@@ -209,7 +209,7 @@
                             .FirstOrDefault()!,
                         Visits = this.repo
                         .AllReadonly<PageVisit>()
-                        .Where(pv => pv.Url.Contains(p.Id.ToString()))
+                        .Where(pv => pv.Url.Contains(p.Property.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()
                     })
@@ -218,12 +218,41 @@
                 return model;
             }
 
-            return null;
+            return null!;
         }
 
-        public Task<IEnumerable<LatestPropertiesViewModel>> GetAllRentedAsync(string userId)
+        public async Task<IEnumerable<LatestPropertiesViewModel>> GetAllRentedAsync(string userId)
         {
-            throw new NotImplementedException();
+            Renter? renter = await this.RetrieveRenterAsync(userId);
+
+            if (renter == null)
+            {
+                return null!;
+            }
+
+            return await this.repo
+                .AllReadonly<RenterPropertyFavorite>()
+                .Where(rp => rp.RenterId == renter.Id)
+                .Select(p => new LatestPropertiesViewModel()
+                {
+                    Id = p.Property!.Id,
+                    Name = p.Property.Name,
+                    City = p.Property.City.Name,
+                    Size = p.Property.Size,
+                    Price = p.Property.Price,
+                    Status = p.Property.PropertyStatus.Name,
+                    AddedOn = p.Property.AddedOn.ToString("MM/dd/yyyy"),
+                    CoverImageUrl = p.Property.Images
+                            .Where(i => i.PropertyId == p.PropertyId)
+                            .Select(i => i.Url)
+                            .FirstOrDefault()!,
+                    Visits = this.repo
+                        .AllReadonly<PageVisit>()
+                        .Where(pv => pv.Url.Contains(p.Property.Id.ToString()))
+                        .Select(pv => pv.VisitsCount)
+                        .Count()
+                })
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<IndexSliderPropertyViewModel>> GetLastThreeAddedForSliderAsync()

@@ -38,8 +38,9 @@
                 await this.repo.AddAsync<Review>(review);
                 await this.repo.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
+                //TODO: return any redirect
                 throw;
             }
         }
