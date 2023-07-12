@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HomeXplorer.Common\HomeXplorer.Common.csproj" />
-    <ProjectReference Include="..\HomeXplorer.Shared\HomeXplorer.Shared.csproj" />
   </ItemGroup>
 
 </Project>

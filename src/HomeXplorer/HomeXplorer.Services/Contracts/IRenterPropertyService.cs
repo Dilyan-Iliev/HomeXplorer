@@ -15,6 +15,8 @@
 
         Task AddToFavoritesAsync(Guid propertyId, string userId);
 
+        Task RemoveFromFavoritesAsync(Guid propertyId, string userId);
+
         Task RentAsync(Guid propertyId, string userId);
 
         Task<RenterAllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting);

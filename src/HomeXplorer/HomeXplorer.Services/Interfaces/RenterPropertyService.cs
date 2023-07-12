@@ -45,13 +45,35 @@
                     favProperty = new RenterPropertyFavorite()
                     {
                         RenterId = renter.Id,
-                        PropertyId = propertyId
+                        PropertyId = propertyId,
+                        AddedOn = DateTime.UtcNow
                     };
 
                     renter.FavouriteProperties!.Add(favProperty);
 
                     await this.repo.AddAsync<RenterPropertyFavorite>(favProperty);
 
+                    await this.repo.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task RemoveFromFavoritesAsync(Guid propertyId, string userId)
+        {
+            Renter? renter = await RetrieveRenterAsync(userId);
+
+            if (renter != null)
+            {
+                RenterPropertyFavorite? favProperty = await this.repo
+                    .All<RenterPropertyFavorite>()
+                    .FirstOrDefaultAsync(rpf => rpf.RenterId == renter.Id
+                        && rpf.PropertyId == propertyId);
+
+                if (favProperty != null)
+                {
+                    renter.FavouriteProperties!.Remove(favProperty);
+
+                    this.repo.Delete<RenterPropertyFavorite>(favProperty);
                     await this.repo.SaveChangesAsync();
                 }
             }
@@ -194,6 +216,7 @@
                 var model = await this.repo
                     .AllReadonly<RenterPropertyFavorite>()
                     .Where(p => p.RenterId == renter.Id && p.Property!.IsActive)
+                    .OrderByDescending(p => p.AddedOn)
                     .Select(p => new LatestPropertiesViewModel()
                     {
                         Id = p.Property!.Id,

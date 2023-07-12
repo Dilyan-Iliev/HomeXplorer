@@ -62,6 +62,16 @@
         }
 
         [HttpPost]
+        public async Task<IActionResult> RemoveFavorite(Guid id)
+        {
+            string userId = this.User.GetId();
+
+            await this.renterPropertyService.RemoveFromFavoritesAsync(id, userId);
+            //add tempdata message
+            return this.RedirectToAction(nameof(Favorites), "Property", new { area = UserRoleConstants.Renter });
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Rent(Guid id)
         {
             string userId = this.User.GetId();

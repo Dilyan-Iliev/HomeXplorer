@@ -19,5 +19,7 @@
         public Guid? PropertyId { get; set; }
 
         public virtual Property? Property { get; set; }
+
+        public DateTime AddedOn { get; set; }
     }
 }

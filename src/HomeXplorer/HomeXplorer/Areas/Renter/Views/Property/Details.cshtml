@@ -136,9 +136,9 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="d-flex justify-content-start">
-                                        <form asp-area="Renter" asp-controller="Property" asp-action="AddFavorite" asp-route-id="@Model.Id">
-                                            <button class="btn @(Model.IsAddedToFavs ? "btn-success" : "btn-danger") mb-2 mr-2" style="margin-right: 10px;" type="submit" @(Model.IsAddedToFavs ? "disabled" : "")>
-                                                <i class="bi @(Model.IsAddedToFavs ? "bi-check" : "bi-heart")"></i> @(Model.IsAddedToFavs ? "Added to Favorites" : "Add To Favorites")
+                                        <form asp-area="Renter" asp-controller="Property" asp-action="@(Model.IsAddedToFavs ? "RemoveFavorite" : "AddFavorite")" asp-route-id="@Model.Id">
+                                            <button class="btn @(Model.IsAddedToFavs ? "btn-danger" : "btn-warning") mb-2 mr-2" style="margin-right: 10px;" type="submit">
+                                                <i class="bi @(Model.IsAddedToFavs ? "bi-x-square" : "bi-heart")"></i> @(Model.IsAddedToFavs ? "Remove from favorites" : "Add To Favorites")
                                             </button>
                                         </form>
 
@@ -195,6 +195,5 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </section><!-- End Property Single-->
