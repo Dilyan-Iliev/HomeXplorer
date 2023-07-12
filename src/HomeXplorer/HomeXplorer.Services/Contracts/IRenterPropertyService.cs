@@ -19,6 +19,8 @@
 
         Task RentAsync(Guid propertyId, string userId);
 
+        Task LeaveAsync(Guid propertyId, string userId);
+
         Task<RenterAllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting);
 
         Task<RenterAllPropertiesViewModel> AllNearbyAsync(int pageNumber, int pageSize,

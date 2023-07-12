@@ -81,6 +81,12 @@
             return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter});
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Leave(Guid id)
+        {
+            string userId = this.User.GetId();
+        }
+
         [HttpGet]
         public async Task<IActionResult> Favorites()
         {
