@@ -88,7 +88,7 @@
 
             await this.renterPropertyService.LeaveAsync(id, userId);
             //add tempdata message
-            return this.RedirectToAction(nameof(AllProperties), "Property", new { area = UserRoleConstants.Renter });
+            return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter });
         }
 
         [HttpGet]

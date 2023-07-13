@@ -254,24 +254,24 @@
             }
 
             return await this.repo
-                .AllReadonly<RenterPropertyFavorite>()
+                .AllReadonly<Property>()
                 .Where(rp => rp.RenterId == renter.Id)
                 .Select(p => new LatestPropertiesViewModel()
                 {
-                    Id = p.Property!.Id,
-                    Name = p.Property.Name,
-                    City = p.Property.City.Name,
-                    Size = p.Property.Size,
-                    Price = p.Property.Price,
-                    Status = p.Property.PropertyStatus.Name,
-                    AddedOn = p.Property.AddedOn.ToString("MM/dd/yyyy"),
-                    CoverImageUrl = p.Property.Images
-                            .Where(i => i.PropertyId == p.PropertyId)
+                    Id = p!.Id,
+                    Name = p.Name,
+                    City = p.City.Name,
+                    Size = p.Size,
+                    Price = p.Price,
+                    Status = p.PropertyStatus.Name,
+                    AddedOn = p.AddedOn.ToString("MM/dd/yyyy"),
+                    CoverImageUrl = p.Images
+                            .Where(i => i.PropertyId == p.Id)
                             .Select(i => i.Url)
                             .FirstOrDefault()!,
                     Visits = this.repo
                         .AllReadonly<PageVisit>()
-                        .Where(pv => pv.Url.Contains(p.Property.Id.ToString()))
+                        .Where(pv => pv.Url.Contains(p.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()
                 })
@@ -433,12 +433,14 @@
             if (renter != null)
             {
                 var rentedProperty = await this.repo
-                    .GetByIdAsync<Property>(propertyId);
+                    .All<Property>()
+                    .Include(p => p.PropertyStatus) // Include PropertyStatus entity
+                    .FirstOrDefaultAsync(p => p.Id == propertyId);
 
                 renter.RentedProperties!.Add(rentedProperty);
 
+                rentedProperty.PropertyStatus.Name = "Taken";
                 rentedProperty.RenterId = renter.Id;
-                rentedProperty.PropertyStatus.Name = ""; //TODO: add taken status
 
                 await this.repo.SaveChangesAsync();
             }
@@ -451,12 +453,14 @@
             if (renter != null)
             {
                 var rentedProperty = await this.repo
-                    .GetByIdAsync<Property>(propertyId);
+                    .All<Property>()
+                    .Include(p => p.PropertyStatus) // Include PropertyStatus entity
+                    .FirstOrDefaultAsync(p => p.Id == propertyId);
 
                 renter.RentedProperties!.Remove(rentedProperty);
 
                 rentedProperty.RenterId = null;
-                rentedProperty.PropertyStatus.Name = ""; //TODO: add free status
+                rentedProperty.PropertyStatus.Name = "Free";
 
                 await this.repo.SaveChangesAsync();
             }
