@@ -78,13 +78,17 @@
 
             await this.renterPropertyService.RentAsync(id, userId);
             //add tempdata message
-            return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter});
+            return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter });
         }
 
         [HttpPost]
         public async Task<IActionResult> Leave(Guid id)
         {
             string userId = this.User.GetId();
+
+            await this.renterPropertyService.LeaveAsync(id, userId);
+            //add tempdata message
+            return this.RedirectToAction(nameof(AllProperties), "Property", new { area = UserRoleConstants.Renter });
         }
 
         [HttpGet]
