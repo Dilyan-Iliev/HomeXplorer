@@ -52,8 +52,9 @@
                             {
                                 Id = i.Id,
                                 Url = i.Url,
-                                PropertyId = i.PropertyId.Value
+                                PropertyId = i.PropertyId!.Value
                             })
+                        //.Take(1)
                         .ToList()
                 })
                 .FirstOrDefaultAsync();
@@ -78,20 +79,41 @@
                     PhoneNumber = r.User.PhoneNumber,
                     FullName = $"{r.User.FirstName} {r.User.LastName}",
                     PersonalImage = r.ProfilePictureUrl,
-                    
+                    TotalLikedProperties = r.FavouriteProperties!.Count(),
+                    TotalRentedProperties = r.FavouriteProperties!.Count(),
+                    TotalReviews = r.Reviews.Count,
+                    AddedReviews = r.Reviews
+                        .Where(rv => rv.ReviewCreatorId == r.Id)
+                        .Select(rv => new ProfileReviewViewModel()
+                        {
+                            AddedOn = rv.AddedOn.ToString("MM/dd/yyyy"),
+                            Description = $"{rv.Description.Substring(0, 10)}..."
+                        })
+                        .ToList()
                 })
                 .FirstOrDefaultAsync();
 
             return model;
         }
 
-        public async Task UpdateProfilePictureAsync(string userId, string profilePictureUrl)
+        public async Task UpdateAgentProfilePictureAsync(string userId, string profilePictureUrl)
         {
             Agent? agent = await FindAgentAsync(userId);
 
             this.guard.AgainstNull(agent, "No agent was found");
 
             agent!.ProfilePictureUrl = profilePictureUrl;
+
+            await this.repo.SaveChangesAsync();
+        }
+
+        public async Task UpdateRenterProfilePictureAsync(string userId, string profilePictureUrl)
+        {
+            Renter? renter = await FindRenterAsync(userId);
+
+            this.guard.AgainstNull(renter, "No agent was found");
+
+            renter!.ProfilePictureUrl = profilePictureUrl;
 
             await this.repo.SaveChangesAsync();
         }

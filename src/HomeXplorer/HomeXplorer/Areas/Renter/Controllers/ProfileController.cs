@@ -93,7 +93,7 @@
             {
                 string userId = this.User.GetId();
                 var imageUrl = await this.cloudinaryService.UploadSingle(this.cloudinary, profilePicture);
-                await this.profileService.UpdateProfilePictureAsync(userId, imageUrl);
+                await this.profileService.UpdateRenterProfilePictureAsync(userId, imageUrl);
 
                 return this.RedirectToAction(nameof(MyProfile));
             }

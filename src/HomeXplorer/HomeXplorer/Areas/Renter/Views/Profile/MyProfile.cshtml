@@ -1,0 +1,142 @@
+﻿@model RenterProfileViewModel
+
+<section style="background-color: #eee;">
+    <div class="container py-5">
+        @*<div class="row">
+        <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+        <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">User</a></li>
+        <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+        </ol>
+        </nav>
+        </div>*@
+        @if (this.TempData.ContainsKey("ProfileError"))
+        {
+            <div class="text-danger text-center">@this.TempData["ProfileError"]</div>
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <img src="@Model.PersonalImage" alt="avatar"
+                         class="rounded-circle img-fluid" style="width: 150px;">
+                    <input type="file" name="profilePicture" id="profilePictureInput" accept="image/*" style="display: none;">
+                    <p class="text-muted mb-4">@Model.Country, @Model.City</p>
+                    <div class="d-flex justify-content-center mb-2">
+                        <a asp-area="Renter" asp-controller="Profile"
+                           asp-action="UpdateProfilePicture" class="btn btn-outline-primary ms-1">Edit Picture</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Full Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.FullName</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.Email</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Phone</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.PhoneNumber</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Total liked properties</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.TotalLikedProperties</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Total rented properties</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.TotalRentedProperties</p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Total reviews added</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@Model.TotalReviews</p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Download personal data</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <a href="@Model.DownloadPersonalInfoUrl" class="mb-0">Personal data</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="lead fw-normal mb-0">Recent reviews</p>
+            </div>
+            <div class="row g-2">
+                @if (Model.AddedReviews.Any())
+                {
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Short description</th>
+                                <th scope="col">Added on</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @{
+                                int reviewCounter = 1;
+                            }
+                            @foreach (var review in Model.AddedReviews)
+                            {
+                                <tr>
+                                    <th scope="row">reviewCounter</th>
+                                    <td>@review.Description</td>
+                                    <td>@review.AddedOn</td>
+                                </tr>
+
+                                reviewCounter++;
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <h4>No reviews</h4>
+                }
+            </div>
+        </div>
+    </div>
+</section>

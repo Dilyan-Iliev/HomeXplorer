@@ -8,6 +8,8 @@
 
         Task<RenterProfileViewModel> GetRenterProfileInfoAsync(string userId);
 
-        Task UpdateProfilePictureAsync(string userId, string profilePictureUrl);
+        Task UpdateAgentProfilePictureAsync(string userId, string profilePictureUrl);
+
+        Task UpdateRenterProfilePictureAsync(string userId, string profilePictureUrl);
     }
 }
