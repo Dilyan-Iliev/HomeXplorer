@@ -108,7 +108,8 @@ else
 
 @*Add reviews section here:*@
 
-@if (Model.ApprovedReviews.Any())
+<partial name="_ApprovedReviewsPartial" model="@Model.ApprovedReviews"/>
+@*@if (Model.ApprovedReviews.Any())
 {
     <section class="section-property section-t8">
         <!-- Carousel wrapper -->
@@ -148,4 +149,4 @@ else
     </section>
 }
 
-<script src="~/js/reviews-carousel.js"></script>
+<script src="~/js/reviews-carousel.js"></script>*@

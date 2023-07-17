@@ -1,5 +1,6 @@
 ﻿namespace HomeXplorer.Services.Contracts
 {
+    using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Renter;
 
@@ -12,6 +13,8 @@
         Task<IEnumerable<LatestPropertiesViewModel>> GetLastThreeAddedPropertiesAsync();
 
         Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id, string userId);
+
+        Task<DetailsPropertyViewModel> GetBasePropertyDetailsAsync(Guid id);
 
         Task AddToFavoritesAsync(Guid propertyId, string userId);
 

@@ -1,2 +1,52 @@
-﻿@*TODO: Add view*@
-@*for the unlogged users*@
+﻿@model BaseMainPageViewModel
+
+@if (Model.SliderProperties.Any())
+{
+    <div class="intro intro-carousel swiper position-relative">
+        <div class="swiper-wrapper">
+
+            @foreach (var property in Model.SliderProperties)
+            {
+                <partial name="_PropertyIndexPartial" model="@property" />
+            }
+        </div>
+    </div>
+}
+else
+{
+    <h3 class="text-center">No available properties yet</h3>
+}
+
+<section class="section-property section-t8">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="title-wrap d-flex justify-content-between">
+                    <div class="title-box">
+                        <h2 class="title-a">Latest Properties</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.LatestProperties!.Any())
+        {
+            <h3 class="text-center">No properties found</h3>
+        }
+        else
+        {
+            <div id="property-carousel" class="swiper">
+                <div class="swiper-wrapper">
+
+                    @foreach (var property in Model.LatestProperties!)
+                    {
+                        <partial name="_LatestPropertiesPartial" model="@property" />
+                    }
+                </div>
+            </div>
+            <div class="propery-carousel-pagination carousel-pagination"></div>
+        }
+    </div>
+</section>
+
+<partial name="_ApprovedReviewsPartial" model="@Model.ApprovedReviews" />

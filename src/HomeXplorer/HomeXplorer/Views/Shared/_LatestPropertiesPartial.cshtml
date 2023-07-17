@@ -1,4 +1,4 @@
-﻿@*@model IndexAgentPropertiesViewModel
+﻿@model LatestPropertiesViewModel
 
 @{
     bool hasLoggedInUser = this.User?.Identity?.IsAuthenticated ?? false;
@@ -23,13 +23,13 @@
 <div class="carousel-item-b swiper-slide">
     <div class="card-box-a card-shadow">
         <div class="img-box-a">
-            <img src="@Model.CoverPhotoUrl" alt="" class="img-a img-fluid">
+            <img src="@Model.CoverImageUrl" alt="" class="img-a img-fluid">
         </div>
         <div class="card-overlay">
             <div class="card-overlay-a-content">
                 <div class="card-header-a">
                     <h2 class="card-title-a">
-                        <a href="/@(area)/Property/Details?id=@Model.Id">
+                        <a asp-area="@area" asp-controller="Property" asp-action="Details" asp-route-id="@Model.Id">
                             @Model.City
                             <br />@Model.Name
                         </a>
@@ -40,7 +40,8 @@
                     <div class="price-box d-flex">
                         <span class="price-a">rent | $ @Model.Price</span>
                     </div>
-                    <a href="/@(area)/Property/Details?id=@Model.Id" class="link-a">
+                    <a asp-area="@area" asp-controller="Property" asp-action="Details" asp-route-id="@Model.Id"
+                       class="link-a">
                         Click here to view
                         <span class="bi bi-chevron-right"></span>
                     </a>
@@ -70,4 +71,4 @@
             </div>
         </div>
     </div>
-</div>*@
+</div>
