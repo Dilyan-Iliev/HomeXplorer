@@ -192,7 +192,7 @@
                 return agent.ProfilePictureUrl;
             }
 
-            return null;
+            return null!;
         }
 
         public async Task<string> RetrieveRenterImage(string userId)
@@ -204,7 +204,7 @@
                 return agent.ProfilePictureUrl;
             }
 
-            return null;
+            return null!;
         }
     }
 }

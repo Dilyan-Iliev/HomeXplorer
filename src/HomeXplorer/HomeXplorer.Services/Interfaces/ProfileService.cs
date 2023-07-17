@@ -7,7 +7,6 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Profile;
-    using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.Services.Exceptions.Contracts;
 
     public class ProfileService
@@ -62,6 +61,30 @@
             return model;
         }
 
+        public async Task<RenterProfileViewModel> GetRenterProfileInfoAsync(string userId)
+        {
+            Renter? renter = await this.FindRenterAsync(userId);
+
+            this.guard.AgainstNull(renter, "No renter was found");
+
+            var model = await this.repo
+                .AllReadonly<Renter>()
+                .Where(r => r.Id == renter!.Id)
+                .Select(r => new RenterProfileViewModel()
+                {
+                    City = r.City.Name,
+                    Country = r.City.Country.Name,
+                    Email = r.User.Email,
+                    PhoneNumber = r.User.PhoneNumber,
+                    FullName = $"{r.User.FirstName} {r.User.LastName}",
+                    PersonalImage = r.ProfilePictureUrl,
+                    
+                })
+                .FirstOrDefaultAsync();
+
+            return model;
+        }
+
         public async Task UpdateProfilePictureAsync(string userId, string profilePictureUrl)
         {
             Agent? agent = await FindAgentAsync(userId);
@@ -77,6 +100,13 @@
         {
             return await this.repo
                             .All<Agent>()
+                            .FirstOrDefaultAsync(a => a.UserId == userId);
+        }
+
+        private async Task<Renter?> FindRenterAsync(string userId)
+        {
+            return await this.repo
+                            .All<Renter>()
                             .FirstOrDefaultAsync(a => a.UserId == userId);
         }
     }

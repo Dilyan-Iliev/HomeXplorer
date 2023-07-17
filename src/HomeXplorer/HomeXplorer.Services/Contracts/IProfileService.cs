@@ -6,8 +6,8 @@
     {
         Task<AgentProfileViewModel> GetAgentProfileInfoAsync(string userId);
 
-        Task UpdateProfilePictureAsync(string userId, string profilePictureUrl);
+        Task<RenterProfileViewModel> GetRenterProfileInfoAsync(string userId);
 
-        //Task<IEnumerable<ProfilePropertiesViewModel>> GetAgentLastFourProperties(string userId);
+        Task UpdateProfilePictureAsync(string userId, string profilePictureUrl);
     }
 }

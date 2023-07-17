@@ -437,9 +437,9 @@
                     .Include(p => p.PropertyStatus) // Include PropertyStatus entity
                     .FirstOrDefaultAsync(p => p.Id == propertyId);
 
-                renter.RentedProperties!.Add(rentedProperty);
+                //renter.RentedProperties!.Add(rentedProperty!);
 
-                rentedProperty.PropertyStatus.Name = "Taken";
+                rentedProperty!.PropertyStatus.Name = "Taken";
                 rentedProperty.RenterId = renter.Id;
 
                 await this.repo.SaveChangesAsync();
@@ -457,9 +457,9 @@
                     .Include(p => p.PropertyStatus) // Include PropertyStatus entity
                     .FirstOrDefaultAsync(p => p.Id == propertyId);
 
-                renter.RentedProperties!.Remove(rentedProperty);
+                //renter.RentedProperties!.Remove(rentedProperty);
 
-                rentedProperty.RenterId = null;
+                rentedProperty!.RenterId = null;
                 rentedProperty.PropertyStatus.Name = "Free";
 
                 await this.repo.SaveChangesAsync();
