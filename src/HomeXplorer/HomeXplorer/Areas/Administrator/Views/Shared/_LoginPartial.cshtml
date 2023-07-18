@@ -1,0 +1,91 @@
+﻿@using HomeXplorer.Common;
+@using HomeXplorer.Core.Repositories;
+@using HomeXplorer.Data.Entities;
+@using System.Security.Claims;
+@using HomeXplorer.Extensions;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IRepository Repository;
+
+@{
+    var user = await UserManager.GetUserAsync(User as ClaimsPrincipal) ?? null;
+}
+
+<ul class="navbar-nav">
+    @if (user == null)
+    {
+        <li class="nav-item">
+            <a class="nav-link active" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" asp-area="" asp-controller="User" asp-action="Register">Register</a>
+        </li>
+    }
+    else if (this.SignInManager.IsSignedIn(User) && await this.UserManager.IsInRoleAsync(user, UserRoleConstants.Agent))
+    {
+        <li class="nav-item">
+            <a class="nav-link active" asp-area="Agent" asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Agent" asp-controller="Property" asp-action="Add">Add Property</a>
+        </li>
+
+        @*<li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-area="Agent" asp-controller="Profile" asp-action="MyProfile">@this.User.GetSubstringedName()</a>
+                <a class="dropdown-item" href="blog-single.html">My Properties</a>
+                <form class="dropdown-item" asp-area="" asp-controller="User" asp-action="Logout" asp-route-id="@UserManager.GetUserId(User)">
+                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                </form>
+            </div>
+        </li>*@
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Profile
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" asp-area="Agent" asp-controller="Profile" asp-action="MyProfile">
+                    <span>@this.User.GetSubstringedName()</span>
+                    <img src="@(await Repository.RetrieveAgentImage(User.GetId()))" width="40" height="40" class="rounded-circle float-right">
+                </a>
+                <a class="dropdown-item" asp-area="Agent" asp-controller="Property" asp-action="All">My Properties</a>
+                <form class="dropdown-item" asp-area="" asp-controller="User" asp-action="Logout" asp-route-id="@UserManager.GetUserId(User)">
+                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                </form>
+            </div>
+        </li>
+    }
+    else if (this.SignInManager.IsSignedIn(User) && await this.UserManager.IsInRoleAsync(user, UserRoleConstants.Renter))
+    {
+        <li class="nav-item">
+            <a class="nav-link active" asp-area="Renter" asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link " asp-area="Renter" asp-controller="Review" asp-action="AddReview">Add Review</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Renter" asp-controller="Property" asp-action="Favorites">My Favourites</a>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Profile
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" asp-area="Renter" asp-controller="Profile" asp-action="MyProfile">
+                    <span>@this.User.GetSubstringedName()</span>
+                    <img src="@(await Repository.RetrieveRenterImage(User.GetId()))" width="40" height="40" class="rounded-circle float-right">
+                </a>
+                <a class="dropdown-item " asp-area="Renter" asp-controller="Property" asp-action="Rented">My Rented</a>
+                <form class="dropdown-item" asp-area="" asp-controller="User" asp-action="Logout" asp-route-id="@UserManager.GetUserId(User)">
+                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                </form>
+            </div>
+        </li>
+    }
+</ul>
