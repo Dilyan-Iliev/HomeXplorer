@@ -4,9 +4,9 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
     using HomeXplorer.Data.Entities;
+    using HomeXplorer.Data.Models.Entities;
     using HomeXplorer.Data.Entities.Configuration;
     using HomeXplorer.Data.Models.Entities.Configuration;
-    using HomeXplorer.Data.Models.Entities;
 
     public class HomeXplorerDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -42,6 +42,9 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new ApplicationUserRoleConfiguration());
             builder.ApplyConfiguration(new RenterConfiguration());
             builder.ApplyConfiguration(new PropertyTypeConfiguration());
             builder.ApplyConfiguration(new PropertyStatusConfiguration());

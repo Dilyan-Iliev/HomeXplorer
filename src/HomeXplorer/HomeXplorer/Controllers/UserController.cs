@@ -159,7 +159,7 @@
 
                     //this.TempData["SuccessLogin"] = $"Welcome {userEmail}";
 
-                    return this.RedirectToAction("Index", "Home", new { area = role });
+                    return this.RedirectToAction("Index", "Home");
                 }
             }
 

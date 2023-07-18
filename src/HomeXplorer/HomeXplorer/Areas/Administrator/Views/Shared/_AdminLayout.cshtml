@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using HomeXplorer.Data.Entities;
+@inject UserManager<ApplicationUser> UserManager;
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -16,7 +19,7 @@
     <div class="layer"></div>
     <!-- ! Body -->
     <a class="skip-link sr-only" href="#skip-target">Skip to content</a>
-    <div> @RenderBody()</div>
+
     <div class="page-flex">
 
         <!-- ! Sidebar -->
@@ -168,14 +171,19 @@
                                 </li>
                             </ul>
                         </li>
-                        @*<li>
-                            <a href="##"><span class="icon setting" aria-hidden="true"></span>Settings</a>
-                        </li>*@
+                        <li>
+                            <a href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">
+                                <span class="icon setting" aria-hidden="true"></span>Logout
+                            </a>
+                            <form id="logoutForm" asp-area="" asp-controller="User" asp-action="Logout" asp-route-id="@UserManager.GetUserId(User)" method="post" style="display: none;">
+                            </form>
+                        </li>
+
                     </ul>
                 </div>
             </div>
 
-            <div class="sidebar-footer">
+            @*<div class="sidebar-footer">
                 <a href="##" class="sidebar-user">
                     <span class="sidebar-user-img">
                         <picture><source srcset="./img/avatar/avatar-illustrated-01.webp" type="image/webp"><img src="./img/avatar/avatar-illustrated-01.png" alt="User name"></picture>
@@ -185,7 +193,7 @@
                         <span class="sidebar-user__subtitle">Support manager</span>
                     </div>
                 </a>
-            </div>
+            </div>*@
 
         </aside>
 
@@ -291,9 +299,11 @@
                     </div>
                 </div>
             </nav>
+
             <!-- ! Main -->
-            @*<main class="main users chart-page" id="skip-target">
-            <div class="container">
+            <main class="main users chart-page" id="skip-target">
+            @RenderBody()
+            @*<div class="container">
             <h2 class="main-title">Dashboard</h2>
             <div class="row stat-cards">
             <div class="col-md-6 col-xl-3">
@@ -692,11 +702,11 @@
             </article>
             </div>
             </div>
-            </div>
-            </main>*@
+            </div>*@
+            </main>
             <!-- ! Footer -->
 
-            <footer class="footer">
+            @*<footer class="footer">
                 <div class="container footer--flex">
                     <div class="footer-start">
                         <p>
@@ -710,7 +720,7 @@
                         <li><a href="##">Puchase</a></li>
                     </ul>
                 </div>
-            </footer>
+            </footer>*@
         </div>
     </div>
     <!-- Chart library -->

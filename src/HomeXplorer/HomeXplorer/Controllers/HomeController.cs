@@ -1,14 +1,15 @@
 ﻿namespace HomeXplorer.Controllers
 {
     using System.Diagnostics;
-    using Microsoft.AspNetCore.Mvc;
 
-    using HomeXplorer.ViewModels;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
 
-    using static HomeXplorer.Common.UserRoleConstants;
+    using HomeXplorer.ViewModels;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property;
+
+    using static HomeXplorer.Common.UserRoleConstants;
 
     public class HomeController : BaseController
     {
@@ -31,6 +32,7 @@
         {
             bool hasLoggedInUser = this.User?.Identity?.IsAuthenticated ?? false;
 
+
             if (hasLoggedInUser && this.User!.IsInRole(Agent))
             {
                 return this.RedirectToAction("Index", "Home", new { area = Agent });
@@ -38,6 +40,10 @@
             else if (hasLoggedInUser && this.User!.IsInRole(Renter))
             {
                 return this.RedirectToAction("Index", "Home", new { area = Renter });
+            }
+            else if (hasLoggedInUser && this.User!.IsInRole(Administrator))
+            {
+                return this.RedirectToAction("Index", "Dashboard", new { area = Administrator });
             }
 
             var slider = await this.renterPropertyService.GetLastThreeAddedForSliderAsync();

@@ -26,6 +26,8 @@
         [Comment("Creator of the review")]
         public Renter ReviewCreator { get; set; } = null!;
 
+
+
         //[Comment("Indicates if the review is approved")]
         //public bool IsApproved { get; set; } = false;
 
