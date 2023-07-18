@@ -12,9 +12,7 @@
 
         Task<IEnumerable<LatestPropertiesViewModel>> GetLastThreeAddedPropertiesAsync();
 
-        Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id, string userId);
-
-        Task<DetailsPropertyViewModel> GetBasePropertyDetailsAsync(Guid id);
+        Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id, string? userId = null);
 
         Task AddToFavoritesAsync(Guid propertyId, string userId);
 

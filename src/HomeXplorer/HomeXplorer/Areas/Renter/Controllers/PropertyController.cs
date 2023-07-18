@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.Areas.Renter.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
 
     using HomeXplorer.Common;
     using HomeXplorer.Extensions;
@@ -37,6 +38,7 @@
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
         {
             string userId = this.User.GetId();

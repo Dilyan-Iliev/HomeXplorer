@@ -371,7 +371,7 @@
             return model;
         }
 
-        public async Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id, string userId)
+        public async Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id, string? userId = null)
         {
             var currentProperty = await this.repo
                 .AllReadonly<Property>()
@@ -425,44 +425,7 @@
 
             return null!;
         }
-
-        public async Task<DetailsPropertyViewModel> GetBasePropertyDetailsAsync(Guid id)
-        {
-            var result = await this.repo
-                .AllReadonly<Property>()
-                .Where(p => p.Id == id)
-                .Select(p => new DetailsPropertyViewModel()
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Address = p.Address,
-                    City = p.City.Name,
-                    Country = p.City.Country.Name,
-                    Size = p.Size,
-                    Price = p.Price,
-                    AddedOd = p.AddedOn.ToString("MM/dd/yyyy"),
-                    PropertyType = p.PropertyType.Name,
-                    PropertyStatus = p.PropertyStatus.Name,
-                    BuildingType = p.BuildingType.Name,
-                    Images = p.Images
-                        .Select(i => new PropertyImagesViewModel()
-                        {
-                            Id = i.Id,
-                            Url = i.Url
-                        })
-                        .ToList()
-                })
-                .FirstOrDefaultAsync();
-
-            if (result != null)
-            {
-                return result;
-            }
-
-            return null!;
-        }
-
+        
         public async Task RentAsync(Guid propertyId, string userId)
         {
             Renter? renter = await RetrieveRenterAsync(userId);

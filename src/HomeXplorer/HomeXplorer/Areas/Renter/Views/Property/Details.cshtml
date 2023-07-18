@@ -10,22 +10,25 @@
                     <span class="color-text-a">@Model.City, @Model.Address</span>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-4">
-                <nav aria-label="breadcrumb" class="breadcrumb-box d-flex justify-content-lg-end">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="/">Home</a>
-                        </li>
-                        @*TODO: Fix pahts in hrefs*@
-                        <li class="breadcrumb-item">
-                            <a href="property-grid.html">Properties</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">
-                            @Model.Name
-                        </li>
-                    </ol>
-                </nav>
-            </div>
+            @if (this.User?.Identity?.IsAuthenticated ?? false)
+            {
+                <div class="col-md-12 col-lg-4">
+                    <nav aria-label="breadcrumb" class="breadcrumb-box d-flex justify-content-lg-end">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/">Home</a>
+                            </li>
+                            @*TODO: Fix pahts in hrefs*@
+                            <li class="breadcrumb-item">
+                                <a href="property-grid.html">Properties</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                @Model.Name
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            }
         </div>
     </div>
 </section><!-- End Intro Single-->
@@ -127,44 +130,48 @@
                                 @Model.Description
                             </p>
                         </div>
-                        <div class="row section-t3">
-                            <div class="col-sm-12">
-                                <div class="title-box-d">
-                                    <h3 class="title-d">Operations</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="row">
+                        @if (this.User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <div class="row section-t3">
                                 <div class="col-sm-12">
-                                    <div class="d-flex justify-content-start">
-                                        <form asp-area="Renter" asp-controller="Property" asp-action="@(Model.IsAddedToFavs ? "RemoveFavorite" : "AddFavorite")" asp-route-id="@Model.Id">
-                                            <button class="btn @(Model.IsAddedToFavs ? "btn-danger" : "btn-warning") mb-2 mr-2" style="margin-right: 10px;" type="submit">
-                                                <i class="bi @(Model.IsAddedToFavs ? "bi-x-square" : "bi-heart")"></i> @(Model.IsAddedToFavs ? "Remove from favorites" : "Add To Favorites")
-                                            </button>
-                                        </form>
-
-                                        @if (!Model.IsRented)
-                                        {
-                                            <form asp-area="Renter" asp-controller="Property" asp-action="Rent" asp-route-id="@Model.Id">
-                                                <button class="btn btn-primary mb-2" type="submit">
-                                                    <i class="bi bi-house"></i> Rent
-                                                </button>
-                                            </form>
-                                        }
-                                        else if (Model.IsRented)
-                                        {
-                                            <form asp-area="Renter" asp-controller="Property" asp-action="Leave" asp-route-id="@Model.Id">
-                                                <button class="btn btn-info mb-2" type="submit">
-                                                    <i class="bi bi-house"></i> Leave
-                                                </button>
-                                            </form>
-                                        }
+                                    <div class="title-box-d">
+                                        <h3 class="title-d">Operations</h3>
                                     </div>
                                 </div>
                             </div>
 
-                        </div>
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="d-flex justify-content-start">
+                                            <form asp-area="Renter" asp-controller="Property" asp-action="@(Model.IsAddedToFavs ? "RemoveFavorite" : "AddFavorite")" asp-route-id="@Model.Id">
+                                                <button class="btn @(Model.IsAddedToFavs ? "btn-danger" : "btn-warning") mb-2 mr-2" style="margin-right: 10px;" type="submit">
+                                                    <i class="bi @(Model.IsAddedToFavs ? "bi-x-square" : "bi-heart")"></i> @(Model.IsAddedToFavs ? "Remove from favorites" : "Add To Favorites")
+                                                </button>
+                                            </form>
+
+                                            @if (!Model.IsRented)
+                                            {
+                                                <form asp-area="Renter" asp-controller="Property" asp-action="Rent" asp-route-id="@Model.Id">
+                                                    <button class="btn btn-primary mb-2" type="submit">
+                                                        <i class="bi bi-house"></i> Rent
+                                                    </button>
+                                                </form>
+                                            }
+                                            else if (Model.IsRented)
+                                            {
+                                                <form asp-area="Renter" asp-controller="Property" asp-action="Leave" asp-route-id="@Model.Id">
+                                                    <button class="btn btn-info mb-2" type="submit">
+                                                        <i class="bi bi-house"></i> Leave
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
 
                     </div>
                 </div>
