@@ -6,6 +6,7 @@
     using HomeXplorer.Services.Contracts;
 
     using static HomeXplorer.Common.UserRoleConstants;
+    using HomeXplorer.Data.Entities;
 
     public class DashboardController : BaseAdminController
     {
@@ -34,8 +35,16 @@
         [HttpGet]
         public async Task<IActionResult> AllCountries()
         {
-            var model = await this.adminService.GetAllCountriesAsync();
-            return this.View(model);
+            try
+            {
+                var model = await this.adminService.GetAllCountriesAsync();
+                return this.View(model);
+
+            }
+            catch (Exception)
+            {
+                return TempDataView();
+            }
         }
 
         [HttpGet]
@@ -63,8 +72,55 @@
                 }
 
                 this.TempData["CountrySuccessfullyAdded"] = "The country was successfully added";
-                //Add this tempdata to the AllCountriesView
                 return this.RedirectToAction(nameof(AllCountries), "Dashboard", new { area = Administrator });
+            }
+            catch (Exception)
+            {
+                return TempDataView();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllPropertyTypes()
+        {
+            try
+            {
+                var model = await this.adminService.GetAllPropertyTypesAsync();
+                return this.View(model);
+            }
+            catch (Exception)
+            {
+                return TempDataView();
+            }
+        }
+
+        [HttpGet]
+        public IActionResult AddPropertyType()
+        {
+            return this.View(new AddNonExistingPropertyTypeViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPropertyType(AddNonExistingPropertyTypeViewModel propertyType)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(propertyType);
+            }
+
+            try
+            {
+                bool propertyTypeExist = await this.adminService.AddNewPropertyTypeAsync(propertyType);
+
+                if (propertyTypeExist)
+                {
+                    this.TempData["InvalidPropertyTypeAdded"] = "This property type already exists";
+                    return this.View();
+                }
+
+                this.TempData["CountrySuccessfullyAdded"] = "The property type was successfully added";
+                //Add this tempdata to the AllPropertyTypes
+                return this.RedirectToAction(nameof(AllPropertyTypes), "Dashboard", new { area = Administrator });
             }
             catch (Exception)
             {

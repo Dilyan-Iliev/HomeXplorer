@@ -24,6 +24,7 @@
             this.countryService = countryService;
         }
 
+
         public async Task<bool> AddNewCountryAsync(AddNonExistingCountryViewModel country)
         {
             bool countryExists = await this.repo
@@ -39,12 +40,35 @@
             return countryExists;
         }
 
+        public async Task<bool> AddNewPropertyTypeAsync(AddNonExistingPropertyTypeViewModel propertyType)
+        {
+            bool propertyTypeExist = await this.repo
+                .All<PropertyType>()
+                .AnyAsync(pt => pt.Name == propertyType.Name);
+
+            if (!propertyTypeExist)
+            {
+                await this.repo.AddAsync<PropertyType>(new PropertyType() { Name = propertyType.Name });
+                await this.repo.SaveChangesAsync();
+            }
+
+            return propertyTypeExist;
+        }
+
         public async Task<AllCountriesWithCitiesViewModel> GetAllCountriesAsync()
         {
             return new AllCountriesWithCitiesViewModel()
             {
                 Countries = await this.countryService.GetCountriesAsync()
             };
+        }
+
+        public async Task<IEnumerable<string>> GetAllPropertyTypesAsync()
+        {
+            return await this.repo
+                .AllReadonly<PropertyType>()
+                .Select(pt => pt.Name)
+                .ToListAsync();
         }
 
         public async Task<DashboardViewModel> GetDashboardInfoAsync()

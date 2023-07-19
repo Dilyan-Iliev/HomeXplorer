@@ -50,5 +50,11 @@
             public const int NameMinLength = 4;
             public const int NameMaxLength = 56;
         }
+
+        public static class PropertyTypeConstants
+        {
+            public const int NameMinLength = 4;
+            public const int NameMaxLength = 15;
+        }
     }
 }

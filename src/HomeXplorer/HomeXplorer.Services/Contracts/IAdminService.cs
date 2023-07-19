@@ -9,5 +9,9 @@
         Task<bool> AddNewCountryAsync(AddNonExistingCountryViewModel country);
 
         Task<AllCountriesWithCitiesViewModel> GetAllCountriesAsync();
+
+        Task<bool> AddNewPropertyTypeAsync(AddNonExistingPropertyTypeViewModel propertyType);
+
+        Task<IEnumerable<string>> GetAllPropertyTypesAsync();
     }
 }

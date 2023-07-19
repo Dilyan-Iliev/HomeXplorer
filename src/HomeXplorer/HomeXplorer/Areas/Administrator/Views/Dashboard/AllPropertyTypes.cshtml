@@ -1,0 +1,19 @@
+﻿@model IEnumerable<string>
+
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                All Property Types
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            @foreach (var propertyType in Model)
+            {
+                <div class="accordion-body">
+                    <strong>@propertyType</strong>
+                </div>
+            }
+        </div>
+    </div>
+</div>

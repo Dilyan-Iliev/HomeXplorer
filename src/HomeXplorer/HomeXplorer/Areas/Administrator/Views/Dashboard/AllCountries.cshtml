@@ -1,5 +1,12 @@
 ﻿@model AllCountriesWithCitiesViewModel
 
+<div>
+    @if (this.TempData.ContainsKey("CountrySuccessfullyAdded"))
+    {
+        <h3 class="text-center text-success">@this.TempData["CountrySuccessfullyAdded"]</h3>
+    }
+</div>
+
 <label asp-for="@Model.CountryId" class="form-label-add-edit">Choose a country</label>
 <select asp-for="@Model.CountryId" class="form-select" aria-required="true" id="countryDropdown">
     <option value="" selected>Select a country</option>
