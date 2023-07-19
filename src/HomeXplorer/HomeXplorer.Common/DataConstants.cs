@@ -44,5 +44,11 @@
             public const int DescriptionMinlength = 15;
             public const int DescriptionMaxLength = 120;
         }
+
+        public static class CountryConstants
+        {
+            public const int NameMinLength = 4;
+            public const int NameMaxLength = 56;
+        }
     }
 }

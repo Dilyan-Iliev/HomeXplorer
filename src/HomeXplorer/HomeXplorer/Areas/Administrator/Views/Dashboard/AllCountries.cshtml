@@ -1,0 +1,17 @@
+﻿@model AllCountriesWithCitiesViewModel
+
+<label asp-for="@Model.CountryId" class="form-label-add-edit">Choose a country</label>
+<select asp-for="@Model.CountryId" class="form-select" aria-required="true" id="countryDropdown">
+    <option value="" selected>Select a country</option>
+    @foreach (var country in Model.Countries)
+    {
+        <option value="@country.Id">@country.Name</option>
+    }
+</select>
+
+<div class="card" style="width: 18rem;">
+    <ul id="cityList" class="list-group list-group-flush"></ul>
+</div>
+
+
+<script src="~/admin/js/cities.js"></script>

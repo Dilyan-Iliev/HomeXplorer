@@ -1,1 +1,153 @@
-﻿
+﻿@model DashboardViewModel
+
+<div class="container">
+    <h2 class="main-title">Dashboard</h2>
+
+    @if (this.TempData.ContainsKey("DashboardError"))
+    {
+        <h3 class="text-info text-center">@this.TempData["DashboardError"]</h3>
+    }
+
+    <div class="row stat-cards">
+        <div class="col-md-6 col-xl-3">
+            <article class="stat-cards-item">
+                <div class="stat-cards-icon primary">
+                    <i data-feather="bar-chart-2" aria-hidden="true"></i>
+                </div>
+                <div class="stat-cards-info">
+                    <p class="stat-cards-info__num">@Model.TotalPropertiesUploaded</p>
+                    <p class="stat-cards-info__title">Total Properties Uploaded</p>
+                    @*<p class="stat-cards-info__progress">
+                    <span class="stat-cards-info__profit success">
+                    <i data-feather="trending-up" aria-hidden="true"></i>4.07%
+                    </span>
+                    Last month
+                    </p>*@
+                </div>
+            </article>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <article class="stat-cards-item">
+                <div class="stat-cards-icon warning">
+                    <i data-feather="file" aria-hidden="true"></i>
+                </div>
+                <div class="stat-cards-info">
+                    <p class="stat-cards-info__num">@Model.TotalLikesOfProperties</p>
+                    <p class="stat-cards-info__title">Total Liked Properties</p>
+                    @*<p class="stat-cards-info__progress">
+                    <span class="stat-cards-info__profit success">
+                    <i data-feather="trending-up" aria-hidden="true"></i>0.24%
+                    </span>
+                    Last month
+                    </p>*@
+                </div>
+            </article>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <article class="stat-cards-item">
+                <div class="stat-cards-icon purple">
+                    <i data-feather="file" aria-hidden="true"></i>
+                </div>
+                <div class="stat-cards-info">
+                    <p class="stat-cards-info__num">@Model.TotalRentedProperties</p>
+                    <p class="stat-cards-info__title">Total Rented Properties</p>
+                    @* <p class="stat-cards-info__progress">
+                    <span class="stat-cards-info__profit danger">
+                    <i data-feather="trending-down" aria-hidden="true"></i>1.64%
+                    </span>
+                    Last month
+                    </p>*@
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <article class="stat-cards-item">
+                <div class="stat-cards-icon success">
+                    <i data-feather="feather" aria-hidden="true"></i>
+                </div>
+                <div class="stat-cards-info">
+                    <p class="stat-cards-info__num">@Model.TotalReviewsAdded</p>
+                    <p class="stat-cards-info__title">Total Reviews Added</p>
+                    @*<p class="stat-cards-info__progress">
+                    <span class="stat-cards-info__profit warning">
+                    <i data-feather="trending-up" aria-hidden="true"></i>0.00%
+                    </span>
+                    Last month
+                    </p>*@
+                </div>
+            </article>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-9">
+
+            <div class="users-table table-wrapper">
+                @if (Model.Reviews.Any())
+                {
+                    <table class="posts-table">
+                        <thead>
+                            <tr class="users-table-info">
+
+                                <th>Short Description</th>
+                                <th>Author</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                @*<th>Action</th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var review in Model.Reviews)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @review.Description
+                                    </td>
+
+                                    <td>
+                                        <div class="pages-table-img">
+                                            <picture>
+                                                <source srcset="@review.ReviewCreatorAvatarUrl" type="image/webp">
+                                                <img src="@review.ReviewCreatorAvatarUrl" alt="User Name">
+                                            </picture>
+                                            @review.ReviewCreatorName
+                                        </div>
+                                    </td>
+
+                                    @review.IsApproved ?
+                                    <td><span class="badge-active">Active</span></td>
+                                    :
+                                    <td><span class="badge-pending">Pending</span></td>
+
+                                    <td>@review.AddedOn</td>
+
+                                    @*<td>
+                            <span class="p-relative">
+                            <button class="dropdown-btn transparent-btn" type="button" title="More info">
+                            <div class="sr-only">More info</div>
+                            <i data-feather="more-horizontal" aria-hidden="true"></i>
+                            </button>
+                            <ul class="users-item-dropdown dropdown">
+                            <li><a href="##">Edit</a></li>
+                            <li><a href="##">Quick edit</a></li>
+                            <li><a href="##">Trash</a></li>
+                            </ul>
+                            </span>
+                            </td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <h3>No reviews yet</h3>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -106,6 +106,7 @@
             services.AddScoped<IAgentPropertyService, AgentPropertyService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IAdminService, AdminService>();
 
             return services;
         }
