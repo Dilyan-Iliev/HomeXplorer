@@ -13,5 +13,9 @@
         Task<bool> AddNewPropertyTypeAsync(AddNonExistingPropertyTypeViewModel propertyType);
 
         Task<IEnumerable<string>> GetAllPropertyTypesAsync();
+
+        Task<bool> AddNewBuildingTypeAsync(AddNonExistingBuildingTypeViewModel buildingType);
+
+        Task<IEnumerable<string>> GetAllBuildingTypesAsync();
     }
 }

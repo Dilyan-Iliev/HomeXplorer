@@ -56,5 +56,11 @@
             public const int NameMinLength = 4;
             public const int NameMaxLength = 15;
         }
+
+        public static class BuildingTypeConstants
+        {
+            public const int NameMinLength = 5;
+            public const int NameMaxLength = 20;
+        }
     }
 }

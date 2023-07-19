@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<string>
 
 <div>
-    @if (this.TempData.ContainsKey("PropertyTypeSuccessfullyAdded"))
+    @if (this.TempData.ContainsKey("BuildingTypeSuccessfullyAdded"))
     {
-        <h3 class="text-center text-success">@this.TempData["PropertyTypeSuccessfullyAdded"]</h3>
+        <h3 class="text-center text-success">@this.TempData["BuildingTypeSuccessfullyAdded"]</h3>
     }
 </div>
 
@@ -11,14 +11,14 @@
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                All Property Types
+                All Building Types
             </button>
         </h2>
         <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-            @foreach (var propertyType in Model)
+            @foreach (var buildingType in Model)
             {
                 <div class="accordion-body">
-                    <strong>@propertyType</strong>
+                    <strong>@buildingType</strong>
                 </div>
             }
         </div>

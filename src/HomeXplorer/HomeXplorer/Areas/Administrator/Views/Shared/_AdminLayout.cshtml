@@ -132,12 +132,12 @@
                                 </span>
                             </a>
                             <ul class="cat-sub-menu">
-                                <li>
-                                    <a href="media-01.html">All building types</a>
-                                </li>
-                                <li>
-                                    <a href="media-02.html">Add new building type</a>
-                                </li>
+                                <a asp-area="Administrator" asp-controller="Dashboard" asp-action="AllBuildingTypes">
+                                    All building types
+                                </a>
+                                <a asp-area="Administrator" asp-controller="Dashboard" asp-action="AddBuildingType">
+                                    Add new building type
+                                </a>
                             </ul>
                         </li>
                     </ul>

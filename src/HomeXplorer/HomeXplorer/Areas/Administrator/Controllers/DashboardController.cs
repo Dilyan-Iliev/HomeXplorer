@@ -118,9 +118,57 @@
                     return this.View();
                 }
 
-                this.TempData["CountrySuccessfullyAdded"] = "The property type was successfully added";
-                //Add this tempdata to the AllPropertyTypes
+                this.TempData["PropertyTypeSuccessfullyAdded"] = "The property type was successfully added";
                 return this.RedirectToAction(nameof(AllPropertyTypes), "Dashboard", new { area = Administrator });
+            }
+            catch (Exception)
+            {
+                return TempDataView();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllBuildingTypes()
+        {
+            try
+            {
+                var model = await this.adminService.GetAllBuildingTypesAsync();
+                return this.View(model);
+
+            }
+            catch (Exception)
+            {
+                return TempDataView();
+            }
+        }
+
+        [HttpGet]
+        public IActionResult AddBuildingType()
+        {
+            return this.View(new AddNonExistingBuildingTypeViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddBuildingType(AddNonExistingBuildingTypeViewModel buildingType)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(buildingType);
+            }
+
+            try
+            {
+                bool buildingTypeExist = await this.adminService.AddNewBuildingTypeAsync(buildingType);
+
+                if (buildingTypeExist)
+                {
+                    this.TempData["InvalidBuildingTypeAdded"] = "This building type already exists";
+                    return this.View();
+                }
+
+                this.TempData["BuildingTypeSuccessfullyAdded"] = "The building type was successfully added";
+                //Add this tempdata to the AllPropertyTypes
+                return this.RedirectToAction(nameof(AllBuildingTypes), "Dashboard", new { area = Administrator });
             }
             catch (Exception)
             {

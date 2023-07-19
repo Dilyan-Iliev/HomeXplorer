@@ -9,6 +9,7 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Data.Models.Entities;
+    using System.Diagnostics.Metrics;
 
     public class AdminService
         : IAdminService
@@ -24,6 +25,20 @@
             this.countryService = countryService;
         }
 
+        public async Task<bool> AddNewBuildingTypeAsync(AddNonExistingBuildingTypeViewModel buildingType)
+        {
+            bool buildingTypeExist = await this.repo
+                .All<BuildingType>()
+                .AnyAsync(bt => bt.Name == buildingType.Name);
+
+            if (!buildingTypeExist)
+            {
+                await this.repo.AddAsync<BuildingType>(new BuildingType() { Name = buildingType.Name });
+                await this.repo.SaveChangesAsync();
+            }
+
+            return buildingTypeExist;
+        }
 
         public async Task<bool> AddNewCountryAsync(AddNonExistingCountryViewModel country)
         {
@@ -53,6 +68,14 @@
             }
 
             return propertyTypeExist;
+        }
+
+        public async Task<IEnumerable<string>> GetAllBuildingTypesAsync()
+        {
+            return await this.repo
+                .AllReadonly<BuildingType>()
+                .Select(bt => bt.Name)
+                .ToListAsync();
         }
 
         public async Task<AllCountriesWithCitiesViewModel> GetAllCountriesAsync()

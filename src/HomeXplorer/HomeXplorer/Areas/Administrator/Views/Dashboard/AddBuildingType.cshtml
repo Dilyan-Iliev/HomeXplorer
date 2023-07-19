@@ -1,0 +1,26 @@
+﻿@model AddNonExistingBuildingTypeViewModel
+
+<article class="sign-up">
+    <div>
+        @if (this.TempData.ContainsKey("InvalidBuildingTypeAdded"))
+        {
+            <h4 class="text text-center text-danger">@this.TempData["InvalidBuildingTypeAdded"]</h4>
+        }
+    </div>
+
+    <h3 class="sign-up__title">Add new building type</h3>
+    <form class="sign-up-form form" method="post">
+
+        <label asp-for="@Model.Name" class="form-label-wrapper">
+            <p class="form-label">Building Type</p>
+            <input asp-for="@Model.Name" class="form-input" type="text" placeholder="Enter building type" required>
+            <span asp-validation-for="@Model.Name" class="text-danger"></span>
+        </label>
+
+        <button type="submit" class="form-btn primary-default-btn transparent-btn">Add new building type</button>
+    </form>
+</article>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
