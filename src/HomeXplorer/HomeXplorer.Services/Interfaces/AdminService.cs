@@ -9,7 +9,6 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Data.Models.Entities;
-    using System.Diagnostics.Metrics;
 
     public class AdminService
         : IAdminService
@@ -38,6 +37,34 @@
             }
 
             return buildingTypeExist;
+        }
+
+        public async Task<bool> AddNewCityAsync(AddNonExistingCityToExistingCountryViewModel city)
+        {
+            //bool countryExist = await this.repo
+            //    .All<Country>()
+            //    .AnyAsync(c => c.Id == city.CountryId);
+
+            //if (countryExist)
+            //{
+            bool cityExist = await this.repo
+                .All<City>()
+                .AnyAsync(c => c.Name == city.CityName);
+
+            if (!cityExist)
+            {
+                City newCity = new()
+                {
+                    Name = city.CityName,
+                    CountryId = city.CountryId,
+                };
+
+                await this.repo.AddAsync<City>(newCity);
+                await this.repo.SaveChangesAsync();
+            }
+            //}
+
+            return cityExist;
         }
 
         public async Task<bool> AddNewCountryAsync(AddNonExistingCountryViewModel country)
@@ -76,6 +103,14 @@
                 .AllReadonly<BuildingType>()
                 .Select(bt => bt.Name)
                 .ToListAsync();
+        }
+
+        public async Task<AllCountriesWithCitiesViewModel> GetAllCitiesFromCountryAsync()
+        {
+            return new AllCountriesWithCitiesViewModel()
+            {
+                Countries = await this.countryService.GetCountriesAsync()
+            };
         }
 
         public async Task<AllCountriesWithCitiesViewModel> GetAllCountriesAsync()

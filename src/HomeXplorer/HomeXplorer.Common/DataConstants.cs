@@ -51,6 +51,12 @@
             public const int NameMaxLength = 56;
         }
 
+        public static class CityConstants
+        {
+            public const int NameMinLength = 2;
+            public const int NameMaxLength = 85;
+        }
+
         public static class PropertyTypeConstants
         {
             public const int NameMinLength = 4;
@@ -62,5 +68,6 @@
             public const int NameMinLength = 5;
             public const int NameMaxLength = 20;
         }
+
     }
 }

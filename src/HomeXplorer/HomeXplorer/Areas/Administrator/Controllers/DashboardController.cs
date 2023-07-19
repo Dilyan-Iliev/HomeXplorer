@@ -11,10 +11,17 @@
     public class DashboardController : BaseAdminController
     {
         private readonly IAdminService adminService;
+        private readonly ICountryService countryService;
+        private readonly IAgentPropertyService propertyService;
 
-        public DashboardController(IAdminService adminService)
+        public DashboardController(
+            IAdminService adminService,
+            ICountryService countryService,
+            IAgentPropertyService propertyService)
         {
             this.adminService = adminService;
+            this.countryService = countryService;
+            this.propertyService = propertyService;
         }
 
         [HttpGet]
@@ -73,6 +80,69 @@
 
                 this.TempData["CountrySuccessfullyAdded"] = "The country was successfully added";
                 return this.RedirectToAction(nameof(AllCountries), "Dashboard", new { area = Administrator });
+            }
+            catch (Exception)
+            {
+                return TempDataView();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllCities()
+        {
+            try
+            {
+                var model = await this.adminService.GetAllCitiesFromCountryAsync();
+                return this.View(model);
+
+            }
+            catch (Exception)
+            {
+                return TempDataView();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddCity()
+        {
+            var model = new AddNonExistingCityToExistingCountryViewModel()
+            {
+                Countries = await this.countryService.GetCountriesAsync()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCity(AddNonExistingCityToExistingCountryViewModel city)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                city.Countries = await this.countryService.GetCountriesAsync();
+                return this.View(city);
+            }
+
+            bool selectedCountryIdExist = await this.propertyService.ExistByIdAsync<Country>(city.CountryId);
+
+            if (!selectedCountryIdExist)
+            {
+                this.TempData["InvalidDropdownOption"] = "You must choose a valid option from the dropdowns";
+                city.Countries = await this.countryService.GetCountriesAsync();
+                return this.View(city);
+            }
+
+            try
+            {
+                bool cityExist = await this.adminService.AddNewCityAsync(city);
+                if (cityExist)
+                {
+                    this.TempData["InvalidCityAdded"] = "This city already exists";
+                    return this.View();
+                }
+
+                this.TempData["CitySuccessfullyAdded"] = "The city was successfully added";
+                return this.RedirectToAction(nameof(AllCities), "Dashboard", new { area = Administrator });
+
             }
             catch (Exception)
             {

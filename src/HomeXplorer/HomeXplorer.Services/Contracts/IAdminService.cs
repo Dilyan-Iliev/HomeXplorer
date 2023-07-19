@@ -17,5 +17,9 @@
         Task<bool> AddNewBuildingTypeAsync(AddNonExistingBuildingTypeViewModel buildingType);
 
         Task<IEnumerable<string>> GetAllBuildingTypesAsync();
+
+        Task<bool> AddNewCityAsync(AddNonExistingCityToExistingCountryViewModel city);
+
+        Task<AllCountriesWithCitiesViewModel> GetAllCitiesFromCountryAsync();
     }
 }
