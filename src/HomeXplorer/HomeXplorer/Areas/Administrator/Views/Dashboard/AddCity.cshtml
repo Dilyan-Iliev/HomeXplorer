@@ -1,0 +1,40 @@
+﻿@model AddNonExistingCityToExistingCountryViewModel
+
+<article class="sign-up">
+    <div>
+        @if (this.TempData.ContainsKey("InvalidCityAdded"))
+        {
+            <h4 class="text text-center text-danger">@this.TempData["InvalidCityAdded"]</h4>
+        }
+        @if (this.TempData.ContainsKey("InvalidDropdownOption"))
+        {
+            <h4 class="text text-center text-danger">@this.TempData["InvalidDropdownOption"]</h4>
+        }
+    </div>
+
+    <h3 class="sign-up__title">Add new country</h3>
+    <form class="sign-up-form form" method="post">
+
+        <label asp-for="@Model.CityName" class="form-label-wrapper">
+            <p class="form-label">City Name</p>
+            <input asp-for="@Model.CityName" class="form-input" type="text" placeholder="Enter city name" required>
+            <span asp-validation-for="@Model.CityName" class="text-danger"></span>
+        </label>
+
+        <label asp-for="@Model.CountryId" class="form-label-add-edit">Choose a country where the city is located</label>
+        <select asp-for="@Model.CountryId" class="form-select" aria-required="true" id="countryDropdown">
+            <option value="" selected>Select a country</option>
+            @foreach (var country in Model.Countries)
+            {
+                <option value="@country.Id">@country.Name</option>
+            }
+        </select>
+        <span asp-validation-for="@Model.CountryId" class="text-danger"></span>
+
+        <button type="submit" class="form-btn primary-default-btn transparent-btn">Add new city</button>
+    </form>
+</article>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -94,12 +94,12 @@
                                 </span>
                             </a>
                             <ul class="cat-sub-menu">
-                                <li>
-                                    <a href="media-01.html">All cities</a>
-                                </li>
-                                <li>
-                                    <a href="media-02.html">Add new city</a>
-                                </li>
+                                <a asp-area="Administrator" asp-controller="Dashboard" asp-action="AllCities">
+                                    All countries
+                                </a>
+                                <a asp-area="Administrator" asp-controller="Dashboard" asp-action="AddCity">
+                                    Add new city
+                                </a>
                             </ul>
                         </li>
                         <li>

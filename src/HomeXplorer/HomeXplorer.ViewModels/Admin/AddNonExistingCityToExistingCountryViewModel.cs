@@ -19,6 +19,7 @@
             ErrorMessage = FieldLength)]
         public string CityName { get; set; } = null!;
 
+        [Required(ErrorMessage = FieldRequired)]
         public int CountryId { get; set; }
 
         public IEnumerable<SelectCountryViewModel> Countries { get; set; }
