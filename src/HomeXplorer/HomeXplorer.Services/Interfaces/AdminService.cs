@@ -41,12 +41,6 @@
 
         public async Task<bool> AddNewCityAsync(AddNonExistingCityToExistingCountryViewModel city)
         {
-            //bool countryExist = await this.repo
-            //    .All<Country>()
-            //    .AnyAsync(c => c.Id == city.CountryId);
-
-            //if (countryExist)
-            //{
             bool cityExist = await this.repo
                 .All<City>()
                 .AnyAsync(c => c.Name == city.CityName);
@@ -62,7 +56,6 @@
                 await this.repo.AddAsync<City>(newCity);
                 await this.repo.SaveChangesAsync();
             }
-            //}
 
             return cityExist;
         }
