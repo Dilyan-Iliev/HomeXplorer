@@ -27,5 +27,9 @@
         Task DeleteReviewAsync(int reviewId);
 
         Task ApproveReviewAsync(int reviewId);
+
+        Task<IEnumerable<AllAgentsViewModel>> GetAllAgentsStatisticsAsync();
+
+        Task<IEnumerable<AllRentersViewModel>> GetAllRentersStatisticsAsync();
     }
 }

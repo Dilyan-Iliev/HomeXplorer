@@ -291,6 +291,34 @@
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AllAgents()
+        {
+            try
+            {
+                var agentsStatistics = await this.adminService.GetAllAgentsStatisticsAsync();
+                return this.View(agentsStatistics);
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllRenters()
+        {
+            try
+            {
+                var rentersStatistics = await this.adminService.GetAllRentersStatisticsAsync();
+                return this.View(rentersStatistics);
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
+        }
+
         private IActionResult TempDataView()
         {
             this.TempData["DashboardError"] = "Something went wrong, please try again";

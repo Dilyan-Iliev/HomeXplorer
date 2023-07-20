@@ -63,7 +63,7 @@
                                             <!-- Approve Form -->
                                             <form method ="post" asp-area="Administrator" asp-controller="Dashboard" asp-action="ApproveReview" asp-route-id="@review.Id">
                                                 <input type="hidden" name="reviewId" value="@review.Id" />
-                                                <button type="submit" title="Approve">
+                                                <button type="submit" title="Approve" style="color: green;">
                                                     &#10004; <!-- Checkmark symbol -->
                                                 </button>
                                             </form>
@@ -71,7 +71,7 @@
                                             <!-- Delete Form -->
                                             <form method="post" asp-area="Administrator" asp-controller="Dashboard" asp-action="DeleteReview" asp-route-id="@review.Id">
                                                 <input type="hidden" name="reviewId" value="@review.Id" />
-                                                <button type="submit" title="Trash">
+                                                <button type="submit" title="Trash" style="color: red;">
                                                     &#10008; <!-- X symbol -->
                                                 </button>
                                             </form>

@@ -114,6 +114,26 @@
             }
         }
 
+        public async Task<IEnumerable<AllAgentsViewModel>> GetAllAgentsStatisticsAsync()
+        {
+            return await this.repo
+                .AllReadonly<Agent>()
+                .Select(a => new AllAgentsViewModel()
+                {
+                    FullName = $"{a.User.FirstName} {a.User.LastName}",
+                    City = a.City.Name,
+                    Country = a.City.Country.Name,
+                    ProfileImageUrl = a.ProfilePictureUrl,
+                    TotalPropertiesUploaded = a.Properties.Count,
+                    TotalPropertiesRented = a.Properties.Count(p => p.RenterId != null),
+                    TotalPropertiesLiked = this.repo
+                        .AllReadonly<RenterPropertyFavorite>()
+                        .Count(favorite => favorite.PropertyId != null
+                        && a.Properties.Any(prop => prop.Id == favorite.PropertyId))
+                })
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<string>> GetAllBuildingTypesAsync()
         {
             return await this.repo
@@ -160,6 +180,22 @@
             return await this.repo
                 .AllReadonly<PropertyType>()
                 .Select(pt => pt.Name)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<AllRentersViewModel>> GetAllRentersStatisticsAsync()
+        {
+            return await this.repo
+                .AllReadonly<Renter>()
+                .Select(r => new AllRentersViewModel()
+                {
+                    FullName = $"{r.User.FirstName} {r.User.LastName}",
+                    City = r.City.Name,
+                    Country = r.City.Country.Name,
+                    ProfileImageUrl = r.ProfilePictureUrl,
+                    TotalPropertiesRented = r.RentedProperties!.Count,
+                    TotalPropertiesLiked = r.FavouriteProperties!.Count
+                })
                 .ToListAsync();
         }
 
