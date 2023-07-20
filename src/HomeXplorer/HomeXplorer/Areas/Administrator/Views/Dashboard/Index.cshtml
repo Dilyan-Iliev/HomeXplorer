@@ -92,10 +92,18 @@
                                         </div>
                                     </td>
 
-                                    @review.IsApproved ?
+                                    @*@review.IsApproved ?
                                     <td><span class="badge-active">Active</span></td>
                                     :
-                                    <td><span class="badge-pending">Pending</span></td>
+                                    <td><span class="badge-pending">Pending</span></td>*@
+                                    @if (review.IsApproved)
+                                    {
+                                        <td><span class="badge-active">Active</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td><span class="badge-pending">Pending</span></td>
+                                    }
 
                                     <td>@review.AddedOn</td>
                                     

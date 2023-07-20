@@ -28,8 +28,7 @@
             {
                 ReviewCreatorId = renter!.Id,
                 AddedOn = DateTime.UtcNow,
-                Description = model.Description,
-                ReviewCreator = renter,
+                Description = model.Description
             };
 
             await this.repo.AddAsync<Review>(review);
