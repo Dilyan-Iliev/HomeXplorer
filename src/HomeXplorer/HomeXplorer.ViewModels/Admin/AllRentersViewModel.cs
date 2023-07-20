@@ -6,5 +6,7 @@
         : BaseAllUsersViewModel
     {
         public string Role { get; set; } = Renter;
+
+        public int TotalReviewsAdded { get; set; }
     }
 }

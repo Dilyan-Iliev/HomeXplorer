@@ -194,7 +194,8 @@
                     Country = r.City.Country.Name,
                     ProfileImageUrl = r.ProfilePictureUrl,
                     TotalPropertiesRented = r.RentedProperties!.Count,
-                    TotalPropertiesLiked = r.FavouriteProperties!.Count
+                    TotalPropertiesLiked = r.FavouriteProperties!.Count,
+                    TotalReviewsAdded = r.Reviews.Count,
                 })
                 .ToListAsync();
         }
