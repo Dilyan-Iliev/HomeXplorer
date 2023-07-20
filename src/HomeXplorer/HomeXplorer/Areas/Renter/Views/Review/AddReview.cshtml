@@ -4,6 +4,11 @@
     <h3 class="text text-center" style="margin-bottom: 20px;">Add your honest review for this web platform</h3>
 </div>
 
+@if (this.TempData.ContainsKey("ReviewError"))
+{
+    <div class="text-center text-danger">@this.TempData["ReviewError"]</div>
+}
+
 <form method="post" style="max-width: 500px; margin: 0 auto;">
     <div class="form-outline mb-4">
         <label asp-for="@Model.Description" class="form-label">Description</label>

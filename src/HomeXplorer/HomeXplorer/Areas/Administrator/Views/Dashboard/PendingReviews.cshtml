@@ -61,8 +61,7 @@
                                     <td>
                                         <span class="p-relative">
                                             <!-- Approve Form -->
-                                            <form asp-area="Administrator" asp-controller="Dashboard" asp-action="ApproveReview" asp-route-id="@review.Id">
-                                                <!-- Hidden fields or any other necessary data for the form -->
+                                            <form method ="post" asp-area="Administrator" asp-controller="Dashboard" asp-action="ApproveReview" asp-route-id="@review.Id">
                                                 <input type="hidden" name="reviewId" value="@review.Id" />
                                                 <button type="submit" title="Approve">
                                                     &#10004; <!-- Checkmark symbol -->
@@ -70,8 +69,7 @@
                                             </form>
 
                                             <!-- Delete Form -->
-                                            <form asp-area="Agent" asp-controller="Property" asp-action="DeleteReview" asp-route-id="@review.Id">
-                                                <!-- Hidden fields or any other necessary data for the form -->
+                                            <form method="post" asp-area="Administrator" asp-controller="Dashboard" asp-action="DeleteReview" asp-route-id="@review.Id">
                                                 <input type="hidden" name="reviewId" value="@review.Id" />
                                                 <button type="submit" title="Trash">
                                                     &#10008; <!-- X symbol -->

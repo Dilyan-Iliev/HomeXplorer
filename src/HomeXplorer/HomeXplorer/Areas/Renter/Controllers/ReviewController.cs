@@ -3,8 +3,10 @@
     using Microsoft.AspNetCore.Mvc;
 
     using HomeXplorer.Extensions;
-    using HomeXplorer.ViewModels.Property.Renter;
     using HomeXplorer.Services.Contracts;
+    using HomeXplorer.ViewModels.Property.Renter;
+
+    using static HomeXplorer.Common.UserRoleConstants;
 
     public class ReviewController : BaseRenterController
     {
@@ -36,12 +38,12 @@
 
                 this.TempData["ReviewApprove"] = "Your review awaits approve from administrator";
 
-                return this.Ok(); //change redirection
+                return this.RedirectToAction("Index", "Home", new { area = Renter });
             }
             catch (Exception)
             {
-                //Add tempdata message and redirection
-                return this.BadRequest();
+                this.TempData["ReviewError"] = "Something went wrong, please try again";
+                return this.View(model);
             }
         }
     }

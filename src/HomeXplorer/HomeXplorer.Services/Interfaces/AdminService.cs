@@ -147,7 +147,7 @@
                 {
                     Id = r.Id,
                     AddedOn = r.AddedOn.ToString("MM/dd/yyyy"),
-                    Description = $"{r.Description.Substring(0, 10)}...",
+                    Description = r.Description,
                     ReviewCreatorName = $"{r.ReviewCreator.User.FirstName} {r.ReviewCreator.User.LastName}",
                     ReviewCreatorAvatarUrl = r.ReviewCreator.ProfilePictureUrl,
                     IsApproved = r.IsApproved
@@ -184,7 +184,7 @@
                     .Select(r => new DashboardReviewViewModel()
                     {
                         AddedOn = r.AddedOn.ToString("MM/dd/yyyy"),
-                        Description = $"{r.Description.Substring(0, 10)}...",
+                        Description = $"{r.Description.Substring(0, 20)}...",
                         ReviewCreatorName = $"{r.ReviewCreator.User.FirstName} {r.ReviewCreator.User.LastName}",
                         ReviewCreatorAvatarUrl = r.ReviewCreator.ProfilePictureUrl,
                         IsApproved = r.IsApproved
