@@ -3,11 +3,12 @@
     using System.Threading.Tasks;
     using System.Collections.Generic;
 
+    using Microsoft.EntityFrameworkCore;
+
+    using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.PropertyStatus;
-    using HomeXplorer.Data.Entities;
-    using Microsoft.EntityFrameworkCore;
 
     public class PropertyStatusService
         : IPropertyStatusService

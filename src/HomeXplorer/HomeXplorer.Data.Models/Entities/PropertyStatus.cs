@@ -1,7 +1,8 @@
 ﻿namespace HomeXplorer.Data.Entities
 {
-    using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
+
+    using Microsoft.EntityFrameworkCore;
 
     [Comment("Status of the property")]
     public class PropertyStatus

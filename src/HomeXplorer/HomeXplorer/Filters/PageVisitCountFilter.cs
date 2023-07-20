@@ -4,10 +4,10 @@
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.AspNetCore.Http.Extensions;
 
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Repositories;
-    using Microsoft.AspNetCore.Http.Extensions;
 
     public class PageVisitCountFilter
         : ActionFilterAttribute

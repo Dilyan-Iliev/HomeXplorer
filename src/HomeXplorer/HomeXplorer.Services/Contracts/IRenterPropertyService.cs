@@ -1,6 +1,5 @@
 ﻿namespace HomeXplorer.Services.Contracts
 {
-    using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Renter;
 

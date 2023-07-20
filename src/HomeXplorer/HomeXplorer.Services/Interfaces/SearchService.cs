@@ -2,11 +2,12 @@
 {
     using System.Threading.Tasks;
 
-    using HomeXplorer.ViewModels.Search;
-    using HomeXplorer.Services.Contracts;
+    using Microsoft.EntityFrameworkCore;
+
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Repositories;
-    using Microsoft.EntityFrameworkCore;
+    using HomeXplorer.ViewModels.Search;
+    using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Renter;
 

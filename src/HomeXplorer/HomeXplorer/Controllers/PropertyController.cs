@@ -1,7 +1,6 @@
 ﻿namespace HomeXplorer.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-
     using Microsoft.AspNetCore.Authorization;
 
     using static HomeXplorer.Common.UserRoleConstants;

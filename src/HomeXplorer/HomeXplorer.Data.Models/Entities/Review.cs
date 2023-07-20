@@ -1,8 +1,9 @@
 ﻿namespace HomeXplorer.Data.Entities
 {
-    using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    using Microsoft.EntityFrameworkCore;
 
     [Comment("Review of a renter")]
     public class Review

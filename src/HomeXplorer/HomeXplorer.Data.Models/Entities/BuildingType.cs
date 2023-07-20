@@ -1,7 +1,8 @@
 ﻿namespace HomeXplorer.Data.Entities
 {
-    using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
+
+    using Microsoft.EntityFrameworkCore;
 
     [Comment("Building type of the property")]
     public class BuildingType

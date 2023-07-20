@@ -3,11 +3,12 @@
     using System.Threading.Tasks;
     using System.Collections.Generic;
 
-    using HomeXplorer.ViewModels.City;
-    using HomeXplorer.Services.Contracts;
     using Microsoft.EntityFrameworkCore;
-    using HomeXplorer.Core.Repositories;
+
     using HomeXplorer.Data.Entities;
+    using HomeXplorer.ViewModels.City;
+    using HomeXplorer.Core.Repositories;
+    using HomeXplorer.Services.Contracts;
 
     public class CityService
         : ICityService

@@ -2,15 +2,15 @@
 {
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
 
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
+    using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.Services.Exceptions.Contracts;
-    using HomeXplorer.ViewModels.Property.Enums;
-    using Microsoft.AspNetCore.Http;
 
     //TODO: add visits count
 

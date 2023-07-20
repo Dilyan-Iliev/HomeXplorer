@@ -2,15 +2,16 @@
 {
     using System.ComponentModel.DataAnnotations;
 
+    using Microsoft.AspNetCore.Http;
+
     using HomeXplorer.ViewModels.City;
     using HomeXplorer.ViewModels.Country;
     using HomeXplorer.ViewModels.BuildingType;
     using HomeXplorer.ViewModels.PropertyType;
+    using HomeXplorer.ViewModels.PropertyStatus;
 
     using static HomeXplorer.Common.ErrorConstants;
     using static HomeXplorer.Common.DataConstants.PropertyConstants;
-    using Microsoft.AspNetCore.Http;
-    using HomeXplorer.ViewModels.PropertyStatus;
 
     public class EditPropertyViewModel
     {

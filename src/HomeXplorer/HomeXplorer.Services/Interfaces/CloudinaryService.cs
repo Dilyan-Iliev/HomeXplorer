@@ -1,11 +1,14 @@
 ﻿namespace HomeXplorer.Services.Interfaces
 {
+    using System.Collections.Generic;
+
+    using Microsoft.AspNetCore.Http;
+
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
+
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Exceptions;
-    using Microsoft.AspNetCore.Http;
-    using System.Collections.Generic;
 
     public class CloudinaryService
         : ICloudinaryService

@@ -32,7 +32,6 @@
         {
             bool hasLoggedInUser = this.User?.Identity?.IsAuthenticated ?? false;
 
-
             if (hasLoggedInUser && this.User!.IsInRole(Agent))
             {
                 return this.RedirectToAction("Index", "Home", new { area = Agent });

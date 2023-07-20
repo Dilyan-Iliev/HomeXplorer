@@ -16,6 +16,12 @@
         <h3>@this.TempData["InvalidDropdownOption"]</h3>
     </div>
 }
+@if (this.TempData.ContainsKey("SearchError"))
+{
+    <div>
+        <h3>@this.TempData["SearchError"]</h3>
+    </div>
+}
 else
 {
     if (!Model.Properties.Any())

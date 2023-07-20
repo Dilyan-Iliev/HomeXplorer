@@ -1,7 +1,8 @@
 ﻿namespace HomeXplorer.Data.Models.Seeding
 {
-    using HomeXplorer.Data.Entities;
     using Microsoft.AspNetCore.Identity;
+
+    using HomeXplorer.Data.Entities;
 
     public class ApplicationUserSeeder
     {

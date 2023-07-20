@@ -1,12 +1,14 @@
 ﻿namespace HomeXplorer.Services.Interfaces
 {
-    using HomeXplorer.Core.Repositories;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+
+    using Microsoft.EntityFrameworkCore;
+
     using HomeXplorer.Data.Entities;
+    using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.PropertyType;
-    using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     public class PropertyTypeService
         : IPropertyTypeService

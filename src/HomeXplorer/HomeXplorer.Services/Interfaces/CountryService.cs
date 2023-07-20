@@ -2,12 +2,13 @@
 {
     using System.Threading.Tasks;
     using System.Collections.Generic;
+
     using Microsoft.EntityFrameworkCore;
 
+    using HomeXplorer.Data.Entities;
+    using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Country;
-    using HomeXplorer.Core.Repositories;
-    using HomeXplorer.Data.Entities;
 
     public class CountryService
         : ICountryService

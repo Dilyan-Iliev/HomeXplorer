@@ -1,9 +1,10 @@
 ﻿namespace HomeXplorer.Data.Models.Entities.Configuration
 {
-    using HomeXplorer.Data.Entities;
-    using HomeXplorer.Data.Models.Seeding;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+    using HomeXplorer.Data.Entities;
+    using HomeXplorer.Data.Models.Seeding;
 
     public class BuildingTypeConfiguration
         : IEntityTypeConfiguration<BuildingType>

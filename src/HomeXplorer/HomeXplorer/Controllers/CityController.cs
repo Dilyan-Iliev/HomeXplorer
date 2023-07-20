@@ -1,8 +1,9 @@
 ﻿namespace HomeXplorer.Controllers
 {
-    using HomeXplorer.Services.Contracts;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
+
+    using HomeXplorer.Services.Contracts;
 
     public class CityController : BaseController
     {

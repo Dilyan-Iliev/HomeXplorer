@@ -1,7 +1,7 @@
 ﻿namespace HomeXplorer.Core.Repositories
 {
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
+    using System.Linq.Expressions;
 
     /// <summary>
     /// Abstraction of repository access methods

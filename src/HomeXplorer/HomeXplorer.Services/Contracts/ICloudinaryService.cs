@@ -1,7 +1,8 @@
 ﻿namespace HomeXplorer.Services.Contracts
 {
-    using CloudinaryDotNet;
     using Microsoft.AspNetCore.Http;
+
+    using CloudinaryDotNet;
 
     public interface ICloudinaryService
     {

@@ -1,8 +1,10 @@
 ﻿namespace HomeXplorer.Config.Google
 {
-    using Microsoft.Extensions.Options;
-    using Newtonsoft.Json;
     using System.Net;
+
+    using Newtonsoft.Json;
+
+    using Microsoft.Extensions.Options;
 
     public class GoogleCaptchaConfig
     {

@@ -2,8 +2,9 @@
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using HomeXplorer.Data.Models.Seeding;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+    using HomeXplorer.Data.Models.Seeding;
 
     public class ApplicationUserRoleConfiguration
         : IEntityTypeConfiguration<IdentityUserRole<string>>

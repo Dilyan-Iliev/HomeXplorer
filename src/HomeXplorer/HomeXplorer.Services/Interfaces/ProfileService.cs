@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.Services.Interfaces
 {
     using System.Threading.Tasks;
+
     using Microsoft.EntityFrameworkCore;
 
     using HomeXplorer.Data.Entities;

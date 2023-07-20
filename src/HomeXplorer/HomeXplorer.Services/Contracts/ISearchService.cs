@@ -1,7 +1,7 @@
 ﻿namespace HomeXplorer.Services.Contracts
 {
-    using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Search;
+    using HomeXplorer.ViewModels.Property.Enums;
 
     public interface ISearchService
     {

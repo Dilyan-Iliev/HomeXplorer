@@ -1,8 +1,9 @@
 ﻿namespace HomeXplorer.Data.Models.Entities.Configuration
 {
-    using HomeXplorer.Data.Entities;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+    using HomeXplorer.Data.Entities;
 
     public class RenterConfiguration
         : IEntityTypeConfiguration<Renter>

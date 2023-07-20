@@ -1,7 +1,8 @@
 ﻿namespace HomeXplorer.Data.Entities
 {
-    using Microsoft.EntityFrameworkCore;
     using System.ComponentModel.DataAnnotations;
+
+    using Microsoft.EntityFrameworkCore;
 
     [Comment("Country of the property")]
     public class Country

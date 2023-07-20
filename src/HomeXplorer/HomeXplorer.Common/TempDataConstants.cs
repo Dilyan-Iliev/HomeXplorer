@@ -2,6 +2,8 @@
 {
     public static class TempDataConstants
     {
-        //put all tempdata messages here as a constants
+        public const string InvalidDropdownOption = "You must choose a valid option from the dropdowns";
+
+        public const string SuccessfullyApproved = "The review was successfully approved";
     }
 }

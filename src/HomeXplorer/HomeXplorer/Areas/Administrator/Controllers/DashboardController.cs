@@ -2,11 +2,12 @@
 {
     using Microsoft.AspNetCore.Mvc;
 
+    using HomeXplorer.Data.Entities;
     using HomeXplorer.ViewModels.Admin;
     using HomeXplorer.Services.Contracts;
 
     using static HomeXplorer.Common.UserRoleConstants;
-    using HomeXplorer.Data.Entities;
+    using static HomeXplorer.Common.TempDataConstants;
 
     public class DashboardController : BaseAdminController
     {
@@ -237,7 +238,6 @@
                 }
 
                 this.TempData["BuildingTypeSuccessfullyAdded"] = "The building type was successfully added";
-                //Add this tempdata to the AllPropertyTypes
                 return this.RedirectToAction(nameof(AllBuildingTypes), "Dashboard", new { area = Administrator });
             }
             catch (Exception)
@@ -267,7 +267,7 @@
             try
             {
                 await this.adminService.ApproveReviewAsync(id);
-                this.TempData["SuccessfullyApproved"] = "The review was successfully approved";
+                this.TempData[SuccessfullyApproved] = SuccessfullyApproved;
                 return this.RedirectToAction(nameof(PendingReviews), "Dashboard", new { area = Administrator });
             }
             catch (Exception)

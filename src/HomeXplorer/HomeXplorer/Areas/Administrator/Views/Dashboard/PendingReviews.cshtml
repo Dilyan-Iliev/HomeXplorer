@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<DashboardReviewViewModel>
+@using static HomeXplorer.Common.TempDataConstants;
 
 <div class="container">
 
@@ -9,10 +10,10 @@
         </div>
     }
 
-    @if (this.TempData.ContainsKey("SuccessfullyApproved"))
+    @if (this.TempData.ContainsKey(SuccessfullyApproved))
     {
         <div class="text-center text-success">
-            @this.TempData["SuccessfullyApproved"]
+            @this.TempData[SuccessfullyApproved]
         </div>
     }
 

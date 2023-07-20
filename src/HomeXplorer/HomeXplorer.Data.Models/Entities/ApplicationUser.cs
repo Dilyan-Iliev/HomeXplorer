@@ -1,8 +1,9 @@
 ﻿namespace HomeXplorer.Data.Entities
 {
+    using System.ComponentModel.DataAnnotations;
+
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using System.ComponentModel.DataAnnotations;
 
     [Comment("Extended Identity User")]
     public class ApplicationUser : IdentityUser
