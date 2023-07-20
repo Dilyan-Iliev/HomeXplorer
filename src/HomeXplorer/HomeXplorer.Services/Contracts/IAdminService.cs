@@ -21,5 +21,11 @@
         Task<bool> AddNewCityAsync(AddNonExistingCityToExistingCountryViewModel city);
 
         Task<AllCountriesWithCitiesViewModel> GetAllCitiesFromCountryAsync();
+
+        Task<IEnumerable<DashboardReviewViewModel>> GetAllPendingReviewsAsync();
+
+        Task DeleteReviewAsync(int reviewId);
+
+        Task ApproveReviewAsync(int reviewId);
     }
 }

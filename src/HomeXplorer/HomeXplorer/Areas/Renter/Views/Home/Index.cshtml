@@ -10,6 +10,12 @@
     {
         <div class="text-danger text-center">@this.TempData["DetailsError"]</div>
     }
+
+    @if (this.TempData.ContainsKey("ReviewApprove"))
+    {
+        <div class="text text-info">@this.TempData["ReviewApprove"]</div>
+    }
+
     <div class="intro intro-carousel swiper position-relative">
         <div class="swiper-wrapper">
 

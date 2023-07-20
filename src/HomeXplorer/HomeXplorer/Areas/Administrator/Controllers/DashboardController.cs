@@ -246,6 +246,51 @@
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> PendingReviews()
+        {
+            try
+            {
+                var reviews = await this.adminService.GetAllPendingReviewsAsync();
+
+                return this.View(reviews);
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveReview(int id)
+        {
+            try
+            {
+                await this.adminService.ApproveReviewAsync(id);
+                this.TempData["SuccessfullyApproved"] = "The review was successfully approved";
+                return this.RedirectToAction(nameof(PendingReviews), "Dashboard", new { area = Administrator });
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteReview(int id)
+        {
+            try
+            {
+                await this.adminService.DeleteReviewAsync(id);
+                this.TempData["SuccessfullyDeleted"] = "The review was successfully removed";
+                return this.RedirectToAction(nameof(PendingReviews), "Dashboard", new { area = Administrator });
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
+        }
+
         private IActionResult TempDataView()
         {
             this.TempData["DashboardError"] = "Something went wrong, please try again";

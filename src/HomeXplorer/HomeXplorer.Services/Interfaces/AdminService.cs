@@ -90,6 +90,30 @@
             return propertyTypeExist;
         }
 
+        public async Task ApproveReviewAsync(int reviewId)
+        {
+            Review? review = await this.repo
+                .GetByIdAsync<Review>(reviewId);
+
+            if (review != null)
+            {
+                review.IsApproved = true;
+                await this.repo.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteReviewAsync(int reviewId)
+        {
+            Review? review = await this.repo
+                .GetByIdAsync<Review>(reviewId);
+
+            if (review != null)
+            {
+                await this.repo.DeleteAsync<Review>(reviewId);
+                await this.repo.SaveChangesAsync();
+            }
+        }
+
         public async Task<IEnumerable<string>> GetAllBuildingTypesAsync()
         {
             return await this.repo
@@ -112,6 +136,23 @@
             {
                 Countries = await this.countryService.GetCountriesAsync()
             };
+        }
+
+        public async Task<IEnumerable<DashboardReviewViewModel>> GetAllPendingReviewsAsync()
+        {
+            return await this.repo
+                .All<Review>()
+                .Where(r => !r.IsApproved)
+                .Select(r => new DashboardReviewViewModel()
+                {
+                    Id = r.Id,
+                    AddedOn = r.AddedOn.ToString("MM/dd/yyyy"),
+                    Description = $"{r.Description.Substring(0, 10)}...",
+                    ReviewCreatorName = $"{r.ReviewCreator.User.FirstName} {r.ReviewCreator.User.LastName}",
+                    ReviewCreatorAvatarUrl = r.ReviewCreator.ProfilePictureUrl,
+                    IsApproved = r.IsApproved
+                })
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<string>> GetAllPropertyTypesAsync()
@@ -146,7 +187,7 @@
                         Description = $"{r.Description.Substring(0, 10)}...",
                         ReviewCreatorName = $"{r.ReviewCreator.User.FirstName} {r.ReviewCreator.User.LastName}",
                         ReviewCreatorAvatarUrl = r.ReviewCreator.ProfilePictureUrl,
-                        //IsApproved
+                        IsApproved = r.IsApproved
                     })
                     .ToListAsync()
             };

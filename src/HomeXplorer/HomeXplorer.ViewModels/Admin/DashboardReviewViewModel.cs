@@ -5,6 +5,8 @@
     public class DashboardReviewViewModel
         : IndexReviewViewModel
     {
+        public int Id { get; set; }
+
         public string AddedOn { get; set; } = null!;
 
         public bool IsApproved { get; set; }

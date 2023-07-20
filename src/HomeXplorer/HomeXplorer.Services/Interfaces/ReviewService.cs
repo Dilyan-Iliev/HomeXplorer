@@ -32,24 +32,15 @@
                 ReviewCreator = renter,
             };
 
-            //TODO: added review must be approved from admin in order to render on home page
-            try
-            {
-                await this.repo.AddAsync<Review>(review);
-                await this.repo.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                //TODO: return any redirect
-                throw;
-            }
+            await this.repo.AddAsync<Review>(review);
+            await this.repo.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<IndexReviewViewModel>> GetAllReviewsAsync()
         {
             return await this.repo
                 .AllReadonly<Review>()
-                //add where for only approved reviews
+                .Where(r => r.IsApproved)
                 .Select(r => new IndexReviewViewModel()
                 {
                     Description = r.Description,

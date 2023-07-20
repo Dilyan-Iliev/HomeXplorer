@@ -56,11 +56,13 @@
                                 </span>
                             </a>
                             <ul class="cat-sub-menu">
+                                @*<li>
+                                <a href="posts.html">All Reviews</a>
+                                </li>*@
                                 <li>
-                                    <a href="posts.html">All Reviews</a>
-                                </li>
-                                <li>
-                                    <a href="new-post.html">Pending for approvement</a>
+                                    <a asp-area="Administrator" asp-controller="Dashboard" asp-action="PendingReviews">
+                                        Pending for approvement
+                                    </a>
                                 </li>
                             </ul>
                         </li>
