@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeXplorer.Services", "Hom
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeXplorer.Common", "HomeXplorer.Common\HomeXplorer.Common.csproj", "{FBAF1F44-774E-43C4-971F-7F71330D592C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeXplorer.Tests", "HomeXplorer.Tests\HomeXplorer.Tests.csproj", "{ED7FBDA9-8139-4D06-A10A-EC543D89378C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{FBAF1F44-774E-43C4-971F-7F71330D592C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBAF1F44-774E-43C4-971F-7F71330D592C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBAF1F44-774E-43C4-971F-7F71330D592C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED7FBDA9-8139-4D06-A10A-EC543D89378C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED7FBDA9-8139-4D06-A10A-EC543D89378C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED7FBDA9-8139-4D06-A10A-EC543D89378C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED7FBDA9-8139-4D06-A10A-EC543D89378C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
