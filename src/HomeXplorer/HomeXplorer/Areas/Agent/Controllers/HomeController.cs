@@ -27,8 +27,8 @@
             }
             catch (Exception)
             {
-                //TODO decide what to happens in case of an error
-                throw;
+                this.TempData["IndexError"] = "Something went wrong - please try again";
+                return this.View();
             }
         }
     }

@@ -17,9 +17,17 @@
         [AllowAnonymous]
         public async Task<IActionResult> CityBasedOnCountry(int countryId)
         {
-            var cities = await this.cityService.GetAllCitiesByCountryIdAsync(countryId);
+            try
+            {
+                var cities = await this.cityService.GetAllCitiesByCountryIdAsync(countryId);
 
-            return this.Json(cities);
+                return this.Json(cities);
+
+            }
+            catch (Exception)
+            {
+                return this.BadRequest();
+            }
         }
     }
 }

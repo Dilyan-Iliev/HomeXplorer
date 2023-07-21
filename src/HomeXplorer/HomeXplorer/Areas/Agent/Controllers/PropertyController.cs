@@ -53,23 +53,37 @@
         {
             string userId = this.User.GetId();
 
-            var model = await this.propertyService.AllAsync(pageNumber, pageSize, propertySorting, userId);
-            return View(model);
+            try
+            {
+                var model = await this.propertyService.AllAsync(pageNumber, pageSize, propertySorting, userId);
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Add()
         {
             //Check if renter user can access this view and others
-
-            var model = new AddPropertyViewModel()
+            try
             {
-                Countries = await this.countryService.GetCountriesAsync(),
-                PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync(),
-                BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync()
-            };
+                var model = new AddPropertyViewModel()
+                {
+                    Countries = await this.countryService.GetCountriesAsync(),
+                    PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync(),
+                    BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync()
+                };
 
-            return this.View(model);
+                return this.View(model);
+
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
         }
 
         [HttpPost]
@@ -77,11 +91,19 @@
         {
             if (!this.ModelState.IsValid)
             {
-                model.Countries = await this.countryService.GetCountriesAsync();
-                model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
-                model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
+                try
+                {
+                    model.Countries = await this.countryService.GetCountriesAsync();
+                    model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
+                    model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
 
-                return this.View(model);
+                    return this.View(model);
+
+                }
+                catch (Exception)
+                {
+                    this.TempDataView();
+                }
             }
 
             try
@@ -126,17 +148,24 @@
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            var property = await this.propertyService
-                .GetDetailsAsync(id);
-
-            if (property == null)
+            try
             {
-                this.TempData["DetailsError"] = "Can not show the details of the property";
+                var property = await this.propertyService
+                    .GetDetailsAsync(id);
 
-                return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent });
+                if (property == null)
+                {
+                    this.TempData["DetailsError"] = "Can not show the details of the property";
+
+                    return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent });
+                }
+
+                return this.View(property);
             }
-
-            return this.View(property);
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
         }
 
         [HttpPost]
@@ -160,35 +189,42 @@
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            EditPropertyViewModel? model = await this.propertyService
-                .FindByIdAsync(id);
-
-            if (model != null)
+            try
             {
-                var editModel = new EditPropertyViewModel()
+                EditPropertyViewModel? model = await this.propertyService
+                    .FindByIdAsync(id);
+
+                if (model != null)
                 {
-                    Name = model.Name,
-                    Address = model.Address,
-                    Price = model.Price,
-                    Size = model.Size,
-                    Description = model.Description,
-                    BuildingTypeId = model.BuildingTypeId,
-                    CountryId = model.CountryId,
-                    CityId = model.CityId,
-                    PropertyTypeId = model.PropertyTypeId,
-                    PropertyStatusId = model.PropertyStatusId,
+                    var editModel = new EditPropertyViewModel()
+                    {
+                        Name = model.Name,
+                        Address = model.Address,
+                        Price = model.Price,
+                        Size = model.Size,
+                        Description = model.Description,
+                        BuildingTypeId = model.BuildingTypeId,
+                        CountryId = model.CountryId,
+                        CityId = model.CityId,
+                        PropertyTypeId = model.PropertyTypeId,
+                        PropertyStatusId = model.PropertyStatusId,
 
-                    AddedImages = await this.propertyService.GetAllImageUrlsForPropertyAsync(id),
+                        AddedImages = await this.propertyService.GetAllImageUrlsForPropertyAsync(id),
 
-                    BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync(),
-                    Countries = await this.countryService.GetCountriesAsync(),
-                    PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync(),
-                    PropertyStatuses = await this.propertyStatusService.GetPropertyStatusesAsync()
-                };
+                        BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync(),
+                        Countries = await this.countryService.GetCountriesAsync(),
+                        PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync(),
+                        PropertyStatuses = await this.propertyStatusService.GetPropertyStatusesAsync()
+                    };
 
-                return this.View(editModel);
+                    return this.View(editModel);
+                }
+                return this.View();
             }
-            return this.View();
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
         }
 
         [HttpPost]
@@ -196,12 +232,19 @@
         {
             if (!this.ModelState.IsValid)
             {
-                model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
-                model.Countries = await this.countryService.GetCountriesAsync();
-                model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
-                model.PropertyStatuses = await this.propertyStatusService.GetPropertyStatusesAsync();
+                try
+                {
+                    model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
+                    model.Countries = await this.countryService.GetCountriesAsync();
+                    model.PropertyTypes = await this.propertyTypeService.GetPropertyTypesAsync();
+                    model.PropertyStatuses = await this.propertyStatusService.GetPropertyStatusesAsync();
 
-                return this.View(model);
+                    return this.View(model);
+                }
+                catch (Exception)
+                {
+                    return this.TempDataView();
+                }
             }
 
             try
@@ -251,6 +294,12 @@
 
                 return this.View(model);
             }
+        }
+
+        private IActionResult TempDataView()
+        {
+            this.TempData["UnexpectedError"] = "Something went wrong, please try again";
+            return this.View();
         }
     }
 }

@@ -42,7 +42,6 @@
                 agent.DownloadPersonalInfoUrl = downloadUrl!;
 
                 return this.View(agent);
-
             }
             catch (Exception)
             {
@@ -60,8 +59,7 @@
 
             if (currentUserId != userId)
             {
-                //TODO: 
-                //return view for unauthorized
+                return this.Unauthorized();
             }
 
             var agentProfile = await profileService.GetAgentProfileInfoAsync(userId);

@@ -78,7 +78,7 @@
             //    options.MinimumSameSitePolicy = SameSiteMode.None;
             //});
 
-            services.AddSession();
+            //services.AddSession();
 
             services.Configure<GoogleCaptchaSettings>(configuration.GetSection("GoogleReCaptcha"));
             services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));

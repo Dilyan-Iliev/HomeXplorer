@@ -11,6 +11,10 @@
     <div class="text-danger">Allowed file types: jpg, jpeg, png</div>
 }
 
+@if (this.TempData.ContainsKey("UnexpectedError"))
+{
+    <div class="text-center text-danger">@this.TempData["UnexpectedError"]</div>
+}
 @if (this.TempData.ContainsKey("InvalidDropdownOption"))
 {
     <div class="text-danger">@this.TempData["InvalidDropdownOption"]</div>

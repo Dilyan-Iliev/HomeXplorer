@@ -8,6 +8,10 @@
 }
 else
 {
+    @if(this.TempData.ContainsKey("IndexError"))
+    {
+        <div class="text-danger text-center">@this.TempData["IndexError"]</div>
+    }
     @if (this.TempData.ContainsKey("DetailsError"))
     {
         <div class="text-danger text-center">@this.TempData["DetailsError"]</div>

@@ -56,14 +56,14 @@
                 ApprovedReviews = approvedReviews
             };
 
-            return View(model);
+            return this.View(model);
         }
 
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Privacy()
         {
-            return View();
+            return this.View();
         }
 
         [AllowAnonymous]
@@ -73,7 +73,7 @@
         {
             if (error == 404)
             {
-                return View("NotFound");
+                return this.View("NotFound");
             }
 
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

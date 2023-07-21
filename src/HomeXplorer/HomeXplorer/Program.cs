@@ -44,7 +44,7 @@ namespace HomeXplorer
 
             app.UseRouting();
 
-            app.UseSession();
+            //app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();
