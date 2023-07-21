@@ -2,14 +2,15 @@
 {
     using System.Text;
 
-    using Newtonsoft.Json;
     using Microsoft.AspNetCore.Mvc;
 
+    using Newtonsoft.Json;
     using CloudinaryDotNet;
 
     using HomeXplorer.Extensions;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Profile;
+
     using static HomeXplorer.Common.UserRoleConstants;
 
     public class ProfileController : BaseRenterController

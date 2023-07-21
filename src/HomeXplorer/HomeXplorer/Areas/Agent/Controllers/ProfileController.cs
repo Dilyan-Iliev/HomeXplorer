@@ -2,15 +2,16 @@
 {
     using System.Text;
 
+    using Microsoft.AspNetCore.Mvc;
+
     using Newtonsoft.Json;
     using CloudinaryDotNet;
-    using Microsoft.AspNetCore.Mvc;
 
     using HomeXplorer.Extensions;
     using HomeXplorer.Services.Contracts;
+    using HomeXplorer.ViewModels.Profile;
 
     using static HomeXplorer.Common.UserRoleConstants;
-    using HomeXplorer.ViewModels.Profile;
 
     public class ProfileController
         : BaseAgentController

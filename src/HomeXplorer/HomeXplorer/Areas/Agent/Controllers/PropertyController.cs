@@ -1,9 +1,9 @@
 ﻿namespace HomeXplorer.Areas.Agent.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
 
     using CloudinaryDotNet;
-    using Microsoft.EntityFrameworkCore;
 
     using HomeXplorer.Common;
     using HomeXplorer.Extensions;
@@ -11,10 +11,10 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Exceptions;
+    using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Agent;
 
     using static HomeXplorer.Common.UserRoleConstants;
-    using HomeXplorer.ViewModels.Property.Enums;
 
     public class PropertyController : BaseAgentController
     {
@@ -25,7 +25,6 @@
         private readonly IAgentPropertyService propertyService;
         private readonly ICloudinaryService cloudinaryService;
         private readonly IPropertyStatusService propertyStatusService;
-
         private readonly IRepository repo;
 
         public PropertyController(

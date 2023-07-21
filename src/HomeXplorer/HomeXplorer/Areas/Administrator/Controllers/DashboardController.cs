@@ -322,7 +322,7 @@
         private IActionResult TempDataView()
         {
             this.TempData["DashboardError"] = "Something went wrong, please try again";
-            return this.View();
+            return this.RedirectToAction(nameof(Index), "Dashboard", new { area = Administrator });
         }
     }
 }
