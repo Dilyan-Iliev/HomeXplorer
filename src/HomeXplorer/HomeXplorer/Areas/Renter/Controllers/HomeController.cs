@@ -22,29 +22,42 @@
         {
             string? userId = this.User?.GetId();
 
-            IEnumerable<LatestPropertiesViewModel> latest =
-                await this.renterPropertyService.GetLastThreeAddedPropertiesAsync();
-
-            IEnumerable<LatestPropertiesViewModel> nearbys = null!;
-
-            if (userId != null)
+            try
             {
-                nearbys = await this.renterPropertyService.GetLastThreePropertiesNearbyAsync(userId);    
+                IEnumerable<LatestPropertiesViewModel> latest =
+                    await this.renterPropertyService.GetLastThreeAddedPropertiesAsync();
+
+                IEnumerable<LatestPropertiesViewModel> nearbys = null!;
+
+                if (userId != null)
+                {
+                    nearbys = await this.renterPropertyService.GetLastThreePropertiesNearbyAsync(userId);
+                }
+
+                var slider = await this.renterPropertyService.GetLastThreeAddedForSliderAsync();
+
+                var approvedReviews = await this.reviewService.GetAllReviewsAsync();
+
+                var model = new MainPageViewModel()
+                {
+                    SliderProperties = slider,
+                    LastThreePropertiesNearby = nearbys,
+                    LatestProperties = latest,
+                    ApprovedReviews = approvedReviews
+                };
+
+                return View(model);
             }
-
-            var slider = await this.renterPropertyService.GetLastThreeAddedForSliderAsync();
-
-            var approvedReviews = await this.reviewService.GetAllReviewsAsync();
-
-            var model = new MainPageViewModel()
+            catch (Exception)
             {
-                SliderProperties = slider,
-                LastThreePropertiesNearby = nearbys,
-                LatestProperties = latest,
-                ApprovedReviews = approvedReviews
-            };
+                return this.TempDataView();
+            }
+        }
 
-            return View(model);
+        private IActionResult TempDataView()
+        {
+            this.TempData["UnexpectedError"] = "Something went wrong, please try again";
+            return this.View();
         }
     }
 }

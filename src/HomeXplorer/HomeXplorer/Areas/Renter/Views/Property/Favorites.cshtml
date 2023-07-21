@@ -9,6 +9,19 @@
     string userRole = hasUser ? this.User.GetRole() : null;
 }
 
+@if (this.TempData.ContainsKey("UnexpectedError"))
+{
+    <div class="text-center text-danger">@this.TempData["UnexpectedError"]</div>
+}
+@if (this.TempData.ContainsKey("SuccessfullyAddedToFavs"))
+{
+    <div class="text-center text-success">@this.TempData["SuccessfullyAddedToFavs"]</div>
+}
+@if (this.TempData.ContainsKey("SuccessfullyRemovedFromFavs"))
+{
+    <div class="text-center text-success">@this.TempData["SuccessfullyRemovedFromFavs"]</div>
+}
+
 @if (!Model.Any())
 {
     <div>

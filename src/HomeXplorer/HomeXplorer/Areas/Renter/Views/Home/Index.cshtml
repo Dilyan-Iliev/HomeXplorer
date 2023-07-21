@@ -4,6 +4,11 @@
     bool hasUser = this.User?.Identity?.IsAuthenticated ?? false;
 }
 
+@if (this.TempData.ContainsKey("UnexpectedError"))
+{
+    <div class="text-center text-danger">@this.TempData["UnexpectedError"]</div>
+}
+
 @if (Model.SliderProperties.Any())
 {
     @if (this.TempData.ContainsKey("DetailsError"))
@@ -114,7 +119,7 @@ else
 
 @*Add reviews section here:*@
 
-<partial name="_ApprovedReviewsPartial" model="@Model.ApprovedReviews"/>
+<partial name="_ApprovedReviewsPartial" model="@Model.ApprovedReviews" />
 @*@if (Model.ApprovedReviews.Any())
 {
     <section class="section-property section-t8">

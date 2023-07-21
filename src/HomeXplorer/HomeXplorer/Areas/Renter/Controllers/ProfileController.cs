@@ -59,8 +59,7 @@
 
             if (currentUserId != userId)
             {
-                //TODO: 
-                //return view for unauthorized
+                this.Unauthorized();
             }
 
             var renterProfile = await profileService.GetRenterProfileInfoAsync(userId);

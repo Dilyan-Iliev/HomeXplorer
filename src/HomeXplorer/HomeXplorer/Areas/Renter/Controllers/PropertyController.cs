@@ -21,9 +21,16 @@
         public async Task<IActionResult> AllProperties(int pageNumber = 1, int pageSize = 3,
             PropertySorting propertySorting = PropertySorting.Default)
         {
-            var model = await this.renterPropertyService.AllAsync(pageNumber, pageSize, propertySorting);
+            try
+            {
+                var model = await this.renterPropertyService.AllAsync(pageNumber, pageSize, propertySorting);
 
-            return this.View(model);
+                return this.View(model);
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
         }
 
         [HttpGet]
@@ -32,9 +39,17 @@
         {
             string userId = this.User.GetId();
 
-            var model = await this.renterPropertyService.AllNearbyAsync(pageNumber, pageSize, propertySorting, userId);
+            try
+            {
+                var model = await this.renterPropertyService
+                    .AllNearbyAsync(pageNumber, pageSize, propertySorting, userId);
 
-            return this.View(model);
+                return this.View(model);
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
         }
 
         [HttpGet]
@@ -42,15 +57,23 @@
         public async Task<IActionResult> Details(Guid id)
         {
             string userId = this.User.GetId();
-            var property = await this.renterPropertyService.GetPropertyDetailsAsync(id, userId);
 
-            if (property == null)
+            try
             {
-                this.TempData["DetailsError"] = "Can't show the details of the property";
-                return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Renter });
-            }
+                var property = await this.renterPropertyService.GetPropertyDetailsAsync(id, userId);
 
-            return this.View(property);
+                if (property == null)
+                {
+                    this.TempData["DetailsError"] = "Can't show the details of the property";
+                    return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Renter });
+                }
+
+                return this.View(property);
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
         }
 
         [HttpPost]
@@ -58,9 +81,17 @@
         {
             string userId = this.User.GetId();
 
-            await this.renterPropertyService.AddToFavoritesAsync(id, userId);
-            //add tempdata message
-            return this.RedirectToAction(nameof(Favorites), "Property", new { area = UserRoleConstants.Renter });
+            try
+            {
+                await this.renterPropertyService.AddToFavoritesAsync(id, userId);
+                this.TempData["SuccessfullyAddedToFavs"] = "The property was successfully added to favorites";
+                return this.RedirectToAction(nameof(Favorites), "Property", new { area = UserRoleConstants.Renter });
+            }
+            catch (Exception)
+            {
+                this.TempData["UnexpectedError"] = "Something went wrong, please try again";
+                return this.RedirectToAction(nameof(Favorites), "Property", new { area = UserRoleConstants.Renter });
+            }
         }
 
         [HttpPost]
@@ -68,9 +99,17 @@
         {
             string userId = this.User.GetId();
 
-            await this.renterPropertyService.RemoveFromFavoritesAsync(id, userId);
-            //add tempdata message
-            return this.RedirectToAction(nameof(Favorites), "Property", new { area = UserRoleConstants.Renter });
+            try
+            {
+                await this.renterPropertyService.RemoveFromFavoritesAsync(id, userId);
+                this.TempData["SuccessfullyRemovedFromFavs"] = "The property was successfully removed from favorites";
+                return this.RedirectToAction(nameof(Favorites), "Property", new { area = UserRoleConstants.Renter });
+            }
+            catch (Exception)
+            {
+                this.TempData["UnexpectedError"] = "Something went wrong, please try again";
+                return this.RedirectToAction(nameof(Favorites), "Property", new { area = UserRoleConstants.Renter });
+            }
         }
 
         [HttpPost]
@@ -78,9 +117,17 @@
         {
             string userId = this.User.GetId();
 
-            await this.renterPropertyService.RentAsync(id, userId);
-            //add tempdata message
-            return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter });
+            try
+            {
+                await this.renterPropertyService.RentAsync(id, userId);
+                this.TempData["SuccessfullyRented"] = "The property was successfully rented";
+                return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter });
+            }
+            catch (Exception)
+            {
+                this.TempData["UnexpectedError"] = "Something went wrong, please try again";
+                return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter });
+            }
         }
 
         [HttpPost]
@@ -88,9 +135,17 @@
         {
             string userId = this.User.GetId();
 
-            await this.renterPropertyService.LeaveAsync(id, userId);
-            //add tempdata message
-            return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter });
+            try
+            {
+                await this.renterPropertyService.LeaveAsync(id, userId);
+                this.TempData["SuccessfullyLeft"] = "The property was successfully left";
+                return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter });
+            }
+            catch (Exception)
+            {
+                this.TempData["UnexpectedError"] = "Something went wrong, please try again";
+                return this.RedirectToAction(nameof(Rented), "Property", new { area = UserRoleConstants.Renter });
+            }
         }
 
         [HttpGet]
@@ -98,14 +153,23 @@
         {
             string userId = this.User.GetId();
 
-            var favProperties = await this.renterPropertyService.GetAllFavoritesAsync(userId);
-
-            if (favProperties == null)
+            try
             {
+                var favProperties =
+                    await this.renterPropertyService.GetAllFavoritesAsync(userId);
+
+                if (favProperties == null)
+                {
+                    return this.TempDataView();
+                }
+
+                return this.View(favProperties);
 
             }
-
-            return this.View(favProperties);
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
         }
 
         [HttpGet]
@@ -113,14 +177,28 @@
         {
             string userId = this.User.GetId();
 
-            var rentedProperties = await this.renterPropertyService.GetAllRentedAsync(userId);
-
-            if (rentedProperties == null)
+            try
             {
+                var rentedProperties = 
+                    await this.renterPropertyService.GetAllRentedAsync(userId);
 
+                if (rentedProperties == null)
+                {
+                    return this.TempDataView();
+                }
+
+                return this.View(rentedProperties);
             }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
+        }
 
-            return this.View(rentedProperties);
+        private IActionResult TempDataView()
+        {
+            this.TempData["UnexpectedError"] = "Something went wrong, please try again";
+            return this.View();
         }
     }
 }
