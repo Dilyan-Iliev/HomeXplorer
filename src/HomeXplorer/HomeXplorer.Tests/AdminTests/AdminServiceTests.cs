@@ -56,7 +56,7 @@
                 new BuildingType() {Name = "Ordinary"},
             };
 
-            dbContext.BuildingTypes.AddRange(buildingTypes);
+            await dbContext.BuildingTypes.AddRangeAsync(buildingTypes);
             await dbContext.SaveChangesAsync();
 
             var mockedCountryService = new Mock<ICountryService>();
@@ -91,7 +91,7 @@
                 new BuildingType() {Name = "Test2"},
             };
 
-            dbContext.BuildingTypes.AddRange(buildingTypes);
+            await dbContext.BuildingTypes.AddRangeAsync(buildingTypes);
             await dbContext.SaveChangesAsync();
 
             var mockedCountryService = new Mock<ICountryService>();
@@ -126,7 +126,7 @@
                 new BuildingType() {Name = "Test2"},
             };
 
-            dbContext.BuildingTypes.AddRange(buildingTypes);
+            await dbContext.BuildingTypes.AddRangeAsync(buildingTypes);
             await dbContext.SaveChangesAsync();
 
             var mockedCountryService = new Mock<ICountryService>();
@@ -188,7 +188,7 @@
                 new Country() { Name = "Sofia"}
             };
 
-            dbContext.Countries.AddRange(countries);
+            await dbContext.Countries.AddRangeAsync(countries);
             await dbContext.SaveChangesAsync();
 
             var mockedCountryService = new Mock<ICountryService>();
@@ -279,7 +279,7 @@
                 new City() {Name = "Plovdiv", CountryId = countryModel.Id},
             };
 
-            dbContext.Cities.AddRange(cities);
+            await dbContext.Cities.AddRangeAsync(cities);
             await dbContext.SaveChangesAsync();
 
             var mockedCountryService = new Mock<ICountryService>();
@@ -321,7 +321,7 @@
                 new City() {Name = "Plovdiv", CountryId = countryModel.Id},
             };
 
-            dbContext.Cities.AddRange(cities);
+            await dbContext.Cities.AddRangeAsync(cities);
             await dbContext.SaveChangesAsync();
 
             var mockedCountryService = new Mock<ICountryService>();
@@ -377,6 +377,208 @@
             Assert.That(await dbContext.Cities
                 .AnyAsync(x => x.Name == cityModel.CityName),
                     Is.True);
+        }
+
+        [Test]
+        public async Task Add_New_Property_Type_Method_Should_Return_True_If_Property_Type_Alread_Exists()
+        {
+            //Arrange
+            // Prepare existing property types data
+            var propertyTypes = new[]
+            {
+                new PropertyType() { Name = "Test"},
+                new PropertyType() { Name = "Villa"},
+            };
+            await dbContext.AddRangeAsync(propertyTypes);
+            await dbContext.SaveChangesAsync();
+
+            var propertyTypeModel = new AddNonExistingPropertyTypeViewModel()
+            {
+                Name = "Villa"
+            };
+
+            var countryServiceMock = new Mock<ICountryService>();
+            var repo = new Repository(dbContext);
+
+            var adminService = new AdminService(repo, countryServiceMock.Object);
+
+            //Act
+            // Call the method under test to attempt adding a new property type
+            bool result = await adminService.AddNewPropertyTypeAsync(propertyTypeModel);
+
+            //Assert
+            // The method should return true since the property type "Villa" already exists
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public async Task Add_New_Property_Type_Method_Should_Return_False_If_Property_Type_Does_Not_Exist()
+        {
+            //Arrange
+            // Create the model for a new property type with a name that does not exist in the database
+            var propertyTypeModel = new AddNonExistingPropertyTypeViewModel()
+            {
+                Name = "Villa"
+            };
+
+            var countryServiceMock = new Mock<ICountryService>();
+            var repo = new Repository(dbContext);
+
+            var adminService = new AdminService(repo, countryServiceMock.Object);
+
+            //Act
+            // Call the method under test to attempt adding a new property type
+            bool result = await adminService.AddNewPropertyTypeAsync(propertyTypeModel);
+
+            //Assert
+            // The method should return false since the property type "Villa" does not exist
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public async Task Add_New_Property_Type_Method_Should_Successfully_Add_New_Property_Type()
+        {
+            //Arrange
+            // Create the model for a new property type with a unique name
+            var propertyTypeModel = new AddNonExistingPropertyTypeViewModel()
+            {
+                Name = "Villa"
+            };
+
+            var countryServiceMock = new Mock<ICountryService>();
+            var repo = new Repository(dbContext);
+
+            var adminService = new AdminService(repo, countryServiceMock.Object);
+
+            //Act
+            // Call the method under test to add a new property type
+            await adminService.AddNewPropertyTypeAsync(propertyTypeModel);
+
+            //Assert
+            // Verify that the new property type is successfully added to the database
+            Assert.That(await dbContext.PropertyTypes
+                .AnyAsync(x => x.Name == propertyTypeModel.Name),
+                    Is.True);
+        }
+
+        [Test]
+        public async Task Approve_Review_Method_Should_Change_Review_ApproveStatus_To_True_If_Review_Is_Found()
+        {
+            //Arrange
+            // Create a new review with a unique ID
+            Review review = new()
+            {
+                Id = 1,
+                Description = "Test",
+            };
+
+            await dbContext.Reviews.AddAsync(review);
+            await dbContext.SaveChangesAsync();
+
+            var mockedCountryService = new Mock<ICountryService>();
+
+            var repository = new Repository(dbContext);
+
+            var adminService = new AdminService(repository, mockedCountryService.Object);
+
+            //Act
+            // Call the method under test with the review's ID
+            await adminService.ApproveReviewAsync(review.Id);
+
+            //Assert
+            // Verify that the review's IsApproved property is now true
+            Assert.That(review.IsApproved, Is.True);
+        }
+
+        [Test]
+        public async Task Approve_Review_Method_Should_Not_Change_Review_ApproveStatus_If_Review_Is_Not_Found()
+        {
+            //Arrange
+            // Create a review with an ID that does not exist in the database
+            Review review = new()
+            {
+                Id = 123,
+                Description = "Test"
+            };
+
+            var mockedCountryService = new Mock<ICountryService>();
+
+            var repository = new Repository(dbContext);
+
+            var adminService = new AdminService(repository, mockedCountryService.Object);
+
+            //Act
+            // Call the method under test with the non-existent review's ID
+            await adminService.ApproveReviewAsync(review.Id);
+
+            //Assert
+            // Verify that the review's IsApproved property remains false
+            Assert.That(review.IsApproved, Is.False);
+        }
+
+        [Test]
+        public async Task Delete_Review_Method_Should_Remove_Review_If_Review_Is_Found()
+        {
+            //Arrange
+            // Create two review objects with distinct IDs
+            Review firstReview = new() { Id = 1, Description = "Test1" };
+            Review secondReview = new() { Id = 2, Description = "Test2" };
+
+            await dbContext.Reviews.AddAsync(firstReview);
+            await dbContext.Reviews.AddAsync(secondReview);
+            await dbContext.SaveChangesAsync();
+
+            var mockedCountryService = new Mock<ICountryService>();
+
+            var repository = new Repository(dbContext);
+
+            var adminService = new AdminService(repository, mockedCountryService.Object);
+
+            //Act
+            // Call the method under test with the ID of the second review
+            await adminService.DeleteReviewAsync(secondReview.Id);
+
+            //Assert
+            // Use Assert.Multiple to perform multiple assertions in a single test
+            Assert.Multiple(async () =>
+            {
+                Assert.That(await dbContext.Reviews.CountAsync(), Is.EqualTo(1));
+                Assert.That(await dbContext.Reviews
+                    .AnyAsync(r => r.Id == secondReview.Id),
+                    Is.False);
+            });
+        }
+
+        [Test]
+        public async Task Delete_Review_Method_Should_Not_Remove_Review_If_Review_Is_Not_Found()
+        {
+            //Arrange
+            // Create a review object with an ID that is not present in the database
+            Review review = new()
+            {
+                Id = 321,
+                Description = "Test"
+            };
+
+            var mockedCountryService = new Mock<ICountryService>();
+
+            var repository = new Repository(dbContext);
+
+            var adminService = new AdminService(repository, mockedCountryService.Object);
+
+            //Act
+            // Call the method under test with the ID of the review (321), which is not in the database
+            await adminService.DeleteReviewAsync(review.Id);
+            
+            //Assert
+            Assert.Multiple(async () =>
+            {
+                // Verify that the review with ID 321 is not found in the database
+                Assert.That(await dbContext.Reviews.AnyAsync(r => r.Id == review.Id), Is.False);
+
+                // Verify that the total number of reviews in the database remains the same
+                Assert.That(await dbContext.Reviews.CountAsync(), Is.EqualTo(0));
+            });
         }
 
         [TearDown]
