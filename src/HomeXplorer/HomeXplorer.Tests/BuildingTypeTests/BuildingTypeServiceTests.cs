@@ -1,26 +1,12 @@
 ﻿namespace HomeXplorer.Tests.BuildingTypeTests
 {
-    using HomeXplorer.Core.Contexts;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Interfaces;
-    using Microsoft.EntityFrameworkCore;
 
     public class BuildingTypeServiceTests
+        : BaseTestsOptions
     {
-        private DbContextOptions<HomeXplorerDbContext> options;
-        private HomeXplorerDbContext dbContext;
-
-        [SetUp]
-        public void SetUp()
-        {
-            options = new DbContextOptionsBuilder<HomeXplorerDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDataBase")
-                .Options;
-
-            dbContext = new HomeXplorerDbContext(options);
-        }
-
         [Test]
         public void Building_Type_Service_Should_Be_Successfully_Initialized_With_Its_Dependencies()
         {
@@ -76,13 +62,6 @@
                 Assert.That(mappedServiceBuildingTypesNames, Is.EqualTo(mappedDbContextBuildingTypesNames));
                 Assert.That(mappedServiceBuildingTypesNames, Is.EqualTo(mappedDbContextBuildingTypesNames));
             });
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            dbContext.Database.EnsureDeleted();
-            //dbContext.Dispose();
         }
     }
 }

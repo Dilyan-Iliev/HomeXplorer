@@ -6,20 +6,8 @@
     using HomeXplorer.Services.Interfaces;
 
     public class CountryServiceTests
+        : BaseTestsOptions
     {
-        private DbContextOptions<HomeXplorerDbContext> options;
-        private HomeXplorerDbContext dbContext;
-
-        [SetUp]
-        public void SetUp()
-        {
-            options = new DbContextOptionsBuilder<HomeXplorerDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDataBase")
-                .Options;
-
-            dbContext = new HomeXplorerDbContext(options);
-        }
-
         [Test]
         public void Country_Service_Should_Be_Successfully_Initialized_With_Its_Dependencies()
         {
@@ -72,13 +60,6 @@
                 Assert.That(mappedServiceCountryNames, Is.EqualTo(mappedDbContextCountryNames));
                 Assert.That(mappedServiceCountryIds, Is.EqualTo(mappedDbContextCountryIds));
             });
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            dbContext.Database.EnsureDeleted();
-            //dbContext.Dispose();
         }
     }
 }

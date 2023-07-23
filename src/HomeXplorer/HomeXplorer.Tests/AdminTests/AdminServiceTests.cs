@@ -12,20 +12,8 @@
     using HomeXplorer.Services.Interfaces;
 
     public class AdminServiceTests
+        : BaseTestsOptions
     {
-        private DbContextOptions<HomeXplorerDbContext> options;
-        private HomeXplorerDbContext dbContext;
-
-        [SetUp]
-        public void SetUp()
-        {
-            options = new DbContextOptionsBuilder<HomeXplorerDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDataBase")
-                .Options;
-
-            dbContext = new HomeXplorerDbContext(options);
-        }
-
         [Test]
         public void Admin_Service_Should_Be_Successfully_Initialized_With_Its_Dependencies()
         {
@@ -612,13 +600,6 @@
                 Assert.That(result,
                     Is.EqualTo(propertyTypes.Select(pt => pt.Name).ToList()));
             });
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            dbContext.Database.EnsureDeleted();
-            //dbContext.Dispose();
         }
     }
 }

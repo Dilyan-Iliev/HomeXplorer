@@ -1,27 +1,12 @@
 ﻿namespace HomeXplorer.Tests.CityTests
 {
-    using Microsoft.EntityFrameworkCore;
-
-    using HomeXplorer.Core.Contexts;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Interfaces;
 
     public class CityServiceTests
+        : BaseTestsOptions
     {
-        private DbContextOptions<HomeXplorerDbContext> options;
-        private HomeXplorerDbContext dbContext;
-
-        [SetUp]
-        public void SetUp()
-        {
-            options = new DbContextOptionsBuilder<HomeXplorerDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDataBase")
-                .Options;
-
-            dbContext = new HomeXplorerDbContext(options);
-        }
-
         [Test]
         public void City_Service_Should_Be_Successfully_Initialized_With_Its_Dependencies()
         {
@@ -79,13 +64,6 @@
                 Assert.That(mappedServiceCityNames, Is.EqualTo(mappedDbContextCityNames));
                 Assert.That(mappedServiceCityNames, Is.EqualTo(mappedDbContextCityNames));
             });
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            dbContext.Database.EnsureDeleted();
-            //dbContext.Dispose();
         }
     }
 }
