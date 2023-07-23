@@ -40,9 +40,31 @@
             //Act
             var result = await pts.GetPropertyTypesAsync();
 
+            var mappedDbContextPropertyTypesNames = dbContext.PropertyTypes
+                .Select(c => c.Name)
+                .ToList();
+
+            var mappedServicePropertyTypesNames = result
+                .Select(c => c.Name)
+                .ToList();
+
+            var mappedDbContextPropertyTypesIds = dbContext.PropertyTypes
+                .Select(c => c.Id)
+                .ToList();
+
+            var mappedServicePropertyTypesIds = result
+                .Select(c => c.Id)
+                .ToList();
+
             //Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.GreaterThan(0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count(), Is.GreaterThan(0));
+                Assert.That(result.Count(), Is.EqualTo(propertyTypes.Length));
+                Assert.That(mappedServicePropertyTypesNames, Is.EqualTo(mappedDbContextPropertyTypesNames));
+                Assert.That(mappedServicePropertyTypesNames, Is.EqualTo(mappedDbContextPropertyTypesNames));
+            });
         }
     }
 }
