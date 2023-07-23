@@ -30,6 +30,8 @@
 
             //Assert
             Assert.That(cityService, Is.Not.Null);
+            Assert.That(cityService, Is.TypeOf<CityService>());
+            Assert.That(cityService, Is.InstanceOf<ICityService>());
         }
 
         [Test]
