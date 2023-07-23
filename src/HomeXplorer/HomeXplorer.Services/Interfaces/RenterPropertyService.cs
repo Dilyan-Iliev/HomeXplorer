@@ -14,18 +14,19 @@
     using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Renter;
     using HomeXplorer.Services.Exceptions.Contracts;
+    using HomeXplorer.Core.Contexts;
 
     public class RenterPropertyService
         : IRenterPropertyService
     {
         private readonly IGuard guard;
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
 
         public RenterPropertyService(IGuard guard,
-            IRepository repo)
+            HomeXplorerDbContext dbContext)
         {
             this.guard = guard;
-            this.repo = repo;
+            this.dbContext = dbContext;
         }
 
         public async Task AddToFavoritesAsync(Guid propertyId, string userId)
@@ -35,8 +36,8 @@
             if (renter != null)
             {
                 //If != null -> this property is already added to favorites
-                RenterPropertyFavorite? favProperty = await this.repo
-                    .All<RenterPropertyFavorite>()
+                RenterPropertyFavorite? favProperty = await this.dbContext
+                    .RentersPropertiesFavorites
                     .FirstOrDefaultAsync(rpf => rpf.RenterId == renter.Id
                         && rpf.PropertyId == propertyId);
 
@@ -51,9 +52,9 @@
 
                     renter.FavouriteProperties!.Add(favProperty);
 
-                    await this.repo.AddAsync<RenterPropertyFavorite>(favProperty);
+                    await this.dbContext.RentersPropertiesFavorites.AddAsync(favProperty);
 
-                    await this.repo.SaveChangesAsync();
+                    await this.dbContext.SaveChangesAsync();
                 }
             }
         }
@@ -64,8 +65,8 @@
 
             if (renter != null)
             {
-                RenterPropertyFavorite? favProperty = await this.repo
-                    .All<RenterPropertyFavorite>()
+                RenterPropertyFavorite? favProperty = await this.dbContext
+                    .RentersPropertiesFavorites
                     .FirstOrDefaultAsync(rpf => rpf.RenterId == renter.Id
                         && rpf.PropertyId == propertyId);
 
@@ -73,16 +74,17 @@
                 {
                     renter.FavouriteProperties!.Remove(favProperty);
 
-                    this.repo.Delete<RenterPropertyFavorite>(favProperty);
-                    await this.repo.SaveChangesAsync();
+                    this.dbContext.RentersPropertiesFavorites.Remove(favProperty);
+                    await this.dbContext.SaveChangesAsync();
                 }
             }
         }
 
         public async Task<RenterAllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting)
         {
-            IQueryable<Property> propertiesQuery = this.repo
-                .AllReadonly<Property>()
+            IQueryable<Property> propertiesQuery = this.dbContext
+                .Properties
+                .AsNoTracking()
                 .Where(p => p.RenterId == null && p.IsActive);
 
             propertiesQuery = propertySorting switch
@@ -121,8 +123,9 @@
                         .Where(i => i.PropertyId == p.Id)
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
-                    Visits = this.repo
-                        .AllReadonly<PageVisit>()
+                    Visits = this.dbContext
+                        .PageVisits
+                        .AsNoTracking()
                         .Where(pv => pv.Url.Contains(p.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()
@@ -146,8 +149,9 @@
         {
             Renter? renter = await this.RetrieveRenterAsync(userId);
 
-            IQueryable<Property> propertiesQuery = this.repo
-                .AllReadonly<Property>()
+            IQueryable<Property> propertiesQuery = this.dbContext
+                .Properties
+                .AsNoTracking()
                 .Where(p => p.RenterId == null && p.IsActive)
                 .Where(p => p.CityId == renter!.CityId);
 
@@ -187,8 +191,9 @@
                         .Where(i => i.PropertyId == p.Id)
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
-                    Visits = this.repo
-                        .AllReadonly<PageVisit>()
+                    Visits = this.dbContext
+                        .PageVisits
+                        .AsNoTracking()
                         .Where(pv => pv.Url.Contains(p.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()
@@ -213,8 +218,9 @@
 
             if (renter != null)
             {
-                var model = await this.repo
-                    .AllReadonly<RenterPropertyFavorite>()
+                var model = await this.dbContext
+                    .RentersPropertiesFavorites
+                    .AsNoTracking()
                     .Where(p => p.RenterId == renter.Id && p.Property!.IsActive)
                     .OrderByDescending(p => p.AddedOn)
                     .Select(p => new LatestPropertiesViewModel()
@@ -230,8 +236,9 @@
                             .Where(i => i.PropertyId == p.PropertyId)
                             .Select(i => i.Url)
                             .FirstOrDefault()!,
-                        Visits = this.repo
-                        .AllReadonly<PageVisit>()
+                        Visits = this.dbContext
+                        .PageVisits
+                        .AsNoTracking()
                         .Where(pv => pv.Url.Contains(p.Property.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()
@@ -253,8 +260,9 @@
                 return null!;
             }
 
-            return await this.repo
-                .AllReadonly<Property>()
+            return await this.dbContext
+                .Properties
+                .AsNoTracking()
                 .Where(rp => rp.RenterId == renter.Id)
                 .Select(p => new LatestPropertiesViewModel()
                 {
@@ -269,8 +277,9 @@
                             .Where(i => i.PropertyId == p.Id)
                             .Select(i => i.Url)
                             .FirstOrDefault()!,
-                    Visits = this.repo
-                        .AllReadonly<PageVisit>()
+                    Visits = this.dbContext
+                        .PageVisits
+                        .AsNoTracking()
                         .Where(pv => pv.Url.Contains(p.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()
@@ -280,8 +289,9 @@
 
         public async Task<IEnumerable<IndexSliderPropertyViewModel>> GetLastThreeAddedForSliderAsync()
         {
-            var model = await this.repo
-                .AllReadonly<Property>()
+            var model = await this.dbContext
+                .Properties
+                .AsNoTracking()
                 .Where(p => p.IsActive && p.RenterId == null)
                 .OrderByDescending(p => p.AddedOn)
                 .Select(p => new IndexSliderPropertyViewModel()
@@ -305,8 +315,9 @@
 
         public async Task<IEnumerable<LatestPropertiesViewModel>> GetLastThreeAddedPropertiesAsync()
         {
-            var model = await this.repo
-                .AllReadonly<Property>()
+            var model = await this.dbContext
+                .Properties
+                .AsNoTracking()
                 .Where(p => p.IsActive && p.RenterId == null)
                 .Select(p => new LatestPropertiesViewModel()
                 {
@@ -321,8 +332,9 @@
                         .Where(i => i.PropertyId == p.Id)
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
-                    Visits = this.repo
-                        .AllReadonly<PageVisit>()
+                    Visits = this.dbContext
+                        .PageVisits
+                        .AsNoTracking()
                         .Where(pv => pv.Url.Contains(p.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()
@@ -335,14 +347,16 @@
 
         public async Task<IEnumerable<LatestPropertiesViewModel>> GetLastThreePropertiesNearbyAsync(string userId)
         {
-            var renterCityId = await this.repo
-                .AllReadonly<Renter>()
+            var renterCityId = await this.dbContext
+                .Renters
+                .AsNoTracking()
                 .Where(r => r.UserId == userId)
                 .Select(r => r.CityId)
                 .FirstOrDefaultAsync();
 
-            var model = await this.repo
-                .AllReadonly<Property>()
+            var model = await this.dbContext
+                .Properties
+                .AsNoTracking()
                 .OrderByDescending(p => p.AddedOn)
                 .Where(p => p.CityId == renterCityId)
                 .Where(p => p.IsActive && p.RenterId == null)
@@ -359,8 +373,9 @@
                         .Where(i => i.PropertyId == p.Id)
                         .Select(i => i.Url).
                         FirstOrDefault()!,
-                    Visits = this.repo
-                        .AllReadonly<PageVisit>()
+                    Visits = this.dbContext
+                        .PageVisits
+                        .AsNoTracking()
                         .Where(pv => pv.Url.Contains(p.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()
@@ -373,8 +388,9 @@
 
         public async Task<RenterDetailsPropertyViewModel> GetPropertyDetailsAsync(Guid id, string? userId = null)
         {
-            var currentProperty = await this.repo
-                .AllReadonly<Property>()
+            var currentProperty = await this.dbContext
+                .Properties
+                .AsNoTracking()
                 .Where(p => p.Id == id)
                 .Select(p => new RenterDetailsPropertyViewModel()
                 {
@@ -408,14 +424,16 @@
 
             if (currentProperty != null)
             {
-                var renterId = await this.repo
-                    .AllReadonly<Renter>()
+                var renterId = await this.dbContext
+                    .Renters
+                    .AsNoTracking()
                     .Where(r => r.UserId == userId)
                     .Select(r => r.Id)
                     .FirstOrDefaultAsync();
 
-                bool isPropertyAddedToFav = await this.repo
-                    .AllReadonly<RenterPropertyFavorite>()
+                bool isPropertyAddedToFav = await this.dbContext
+                    .RentersPropertiesFavorites
+                    .AsNoTracking()
                     .AnyAsync(rpf => rpf.PropertyId == id && rpf.RenterId == renterId);
 
                 currentProperty.IsAddedToFavs = isPropertyAddedToFav;
@@ -432,8 +450,8 @@
 
             if (renter != null)
             {
-                var rentedProperty = await this.repo
-                    .All<Property>()
+                var rentedProperty = await this.dbContext
+                    .Properties
                     .Include(p => p.PropertyStatus) // Include PropertyStatus entity
                     .FirstOrDefaultAsync(p => p.Id == propertyId);
 
@@ -442,7 +460,7 @@
                 rentedProperty!.PropertyStatus.Name = "Taken";
                 rentedProperty.RenterId = renter.Id;
 
-                await this.repo.SaveChangesAsync();
+                await this.dbContext.SaveChangesAsync();
             }
         }
 
@@ -452,8 +470,8 @@
 
             if (renter != null)
             {
-                var rentedProperty = await this.repo
-                    .All<Property>()
+                var rentedProperty = await this.dbContext
+                    .Properties
                     .Include(p => p.PropertyStatus) // Include PropertyStatus entity
                     .FirstOrDefaultAsync(p => p.Id == propertyId);
 
@@ -462,14 +480,15 @@
                 rentedProperty!.RenterId = null;
                 rentedProperty.PropertyStatus.Name = "Free";
 
-                await this.repo.SaveChangesAsync();
+                await this.dbContext.SaveChangesAsync();
             }
         }
 
         private async Task<Renter?> RetrieveRenterAsync(string userId)
         {
-            return await this.repo
-                            .AllReadonly<Renter>()
+            return await this.dbContext
+                            .Renters
+                            .AsNoTracking()
                             .FirstOrDefaultAsync(r => r.UserId == userId);
         }
     }

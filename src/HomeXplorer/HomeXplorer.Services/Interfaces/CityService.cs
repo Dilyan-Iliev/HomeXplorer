@@ -9,21 +9,23 @@
     using HomeXplorer.ViewModels.City;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
+    using HomeXplorer.Core.Contexts;
 
     public class CityService
         : ICityService
     {
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
 
-        public CityService(IRepository repo)
+        public CityService(HomeXplorerDbContext dbContext)
         {
-            this.repo = repo;
+            this.dbContext = dbContext;
         }
 
         public async Task<IEnumerable<SelectCityViewModel>> GetAllCitiesByCountryIdAsync(int countryId)
         {
-            return await this.repo
-                .AllReadonly<City>()
+            return await this.dbContext
+                .Cities
+                .AsNoTracking()
                 .Where(c => c.CountryId == countryId)
                 .Select(c => new SelectCityViewModel()
                 {

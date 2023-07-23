@@ -9,15 +9,16 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property.Renter;
+    using HomeXplorer.Core.Contexts;
 
     public class ReviewService
         : IReviewService
     {
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
 
-        public ReviewService(IRepository repo)
+        public ReviewService(HomeXplorerDbContext dbContext)
         {
-            this.repo = repo;
+            this.dbContext = dbContext;
         }
 
         public async Task AddAsync(AddReviewViewModel model, string userId)
@@ -31,14 +32,15 @@
                 Description = model.Description
             };
 
-            await this.repo.AddAsync<Review>(review);
-            await this.repo.SaveChangesAsync();
+            await this.dbContext.Reviews.AddAsync(review);
+            await this.dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<IndexReviewViewModel>> GetAllReviewsAsync()
         {
-            return await this.repo
-                .AllReadonly<Review>()
+            return await this.dbContext
+                .Reviews
+                .AsNoTracking()
                 .Where(r => r.IsApproved)
                 .Select(r => new IndexReviewViewModel()
                 {
@@ -51,8 +53,9 @@
 
         private async Task<Renter?> RetrieveRenterAsync(string userId)
         {
-            return await this.repo
-                            .AllReadonly<Renter>()
+            return await this.dbContext
+                            .Renters
+                            .AsNoTracking()
                             .FirstOrDefaultAsync(r => r.UserId == userId);
         }
     }

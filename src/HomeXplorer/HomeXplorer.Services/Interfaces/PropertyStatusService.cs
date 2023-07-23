@@ -9,21 +9,23 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.PropertyStatus;
+    using HomeXplorer.Core.Contexts;
 
     public class PropertyStatusService
         : IPropertyStatusService
     {
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
 
-        public PropertyStatusService(IRepository repo)
+        public PropertyStatusService(HomeXplorerDbContext dbContext)
         {
-            this.repo = repo;
+            this.dbContext = dbContext;
         }
 
         public async Task<IEnumerable<SelectPropertyStatusViewModel>> GetPropertyStatusesAsync()
         {
-            return await this.repo
-                .AllReadonly<PropertyStatus>()
+            return await this.dbContext
+                .PropertyStatuses
+                .AsNoTracking()
                 .Select(ps => new SelectPropertyStatusViewModel()
                 {
                     Id = ps.Id,

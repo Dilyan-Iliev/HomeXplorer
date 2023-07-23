@@ -7,7 +7,6 @@
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Contexts;
     using HomeXplorer.ViewModels.Admin;
-    using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Country;
     using HomeXplorer.Services.Interfaces;
@@ -33,11 +32,10 @@
             //Arrange
             // Create mocks for the dependencies (ICountryService and IRepository)
             var mockedCountryService = new Mock<ICountryService>();
-            var mockedRepo = new Mock<IRepository>();
 
             //Act
             // Create an instance of the AdminService with the mocked dependencies
-            var adminService = new AdminService(mockedRepo.Object, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             //Assert
             // Verify that the AdminService instance is not null, indicating successful initialization
@@ -61,9 +59,7 @@
 
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             // Act
             // Call the method under test to retrieve all building types
@@ -96,9 +92,7 @@
 
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             var buildingTypeModel = new AddNonExistingBuildingTypeViewModel()
             {
@@ -131,10 +125,7 @@
 
             var mockedCountryService = new Mock<ICountryService>();
 
-            // Use the real repository with the in-memory database context
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             var buildingTypeViewModel = new AddNonExistingBuildingTypeViewModel()
             {
@@ -157,9 +148,7 @@
             // Create a mock for ICountryService
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             var buildingTypeViewModel = new AddNonExistingBuildingTypeViewModel()
             {
@@ -192,9 +181,8 @@
             await dbContext.SaveChangesAsync();
 
             var mockedCountryService = new Mock<ICountryService>();
-            var repository = new Repository(dbContext);
 
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             var countryModel = new AddNonExistingCountryViewModel()
             {
@@ -216,9 +204,8 @@
             //Arange
             // Create a mock for ICountryService
             var mockedCountryService = new Mock<ICountryService>();
-            var repository = new Repository(dbContext);
 
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             var countryModel = new AddNonExistingCountryViewModel()
             {
@@ -241,9 +228,7 @@
             // Create a mock for ICountryService
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             var countryModel = new AddNonExistingCountryViewModel()
             {
@@ -284,9 +269,7 @@
 
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             var cityModel = new AddNonExistingCityToExistingCountryViewModel()
             {
@@ -326,9 +309,7 @@
 
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             var cityModel = new AddNonExistingCityToExistingCountryViewModel()
             {
@@ -352,8 +333,6 @@
             //Prepare mocks
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
             var countryModel = new SelectCountryViewModel()
             {
                 Id = 1,
@@ -366,7 +345,7 @@
                 CountryId = countryModel.Id
             };
 
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             //Act
             // Call the method under test to add a new city
@@ -398,9 +377,8 @@
             };
 
             var countryServiceMock = new Mock<ICountryService>();
-            var repo = new Repository(dbContext);
 
-            var adminService = new AdminService(repo, countryServiceMock.Object);
+            var adminService = new AdminService(dbContext, countryServiceMock.Object);
 
             //Act
             // Call the method under test to attempt adding a new property type
@@ -422,9 +400,8 @@
             };
 
             var countryServiceMock = new Mock<ICountryService>();
-            var repo = new Repository(dbContext);
 
-            var adminService = new AdminService(repo, countryServiceMock.Object);
+            var adminService = new AdminService(dbContext, countryServiceMock.Object);
 
             //Act
             // Call the method under test to attempt adding a new property type
@@ -446,9 +423,8 @@
             };
 
             var countryServiceMock = new Mock<ICountryService>();
-            var repo = new Repository(dbContext);
 
-            var adminService = new AdminService(repo, countryServiceMock.Object);
+            var adminService = new AdminService(dbContext, countryServiceMock.Object);
 
             //Act
             // Call the method under test to add a new property type
@@ -477,9 +453,7 @@
 
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             //Act
             // Call the method under test with the review's ID
@@ -503,9 +477,7 @@
 
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             //Act
             // Call the method under test with the non-existent review's ID
@@ -530,9 +502,7 @@
 
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             //Act
             // Call the method under test with the ID of the second review
@@ -562,9 +532,7 @@
 
             var mockedCountryService = new Mock<ICountryService>();
 
-            var repository = new Repository(dbContext);
-
-            var adminService = new AdminService(repository, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             //Act
             // Call the method under test with the ID of the review (321), which is not in the database
@@ -607,8 +575,7 @@
         //        // Add more countries if needed
         //    });
 
-        //    var repository = new Repository(dbContext);
-        //    var adminService = new AdminService(repository, mockedCountryService.Object);
+        //    var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
         //    // Act
         //    var result = await adminService.GetAllCitiesFromCountryAsync();
@@ -631,9 +598,8 @@
             await dbContext.SaveChangesAsync();
 
             var mockedCountryService = new Mock<ICountryService>();
-            var repo = new Repository(dbContext);
 
-            var adminService = new AdminService(repo, mockedCountryService.Object);
+            var adminService = new AdminService(dbContext, mockedCountryService.Object);
 
             //Act
             var result = await adminService.GetAllPropertyTypesAsync();

@@ -9,31 +9,32 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Data.Models.Entities;
+    using HomeXplorer.Core.Contexts;
 
     public class AdminService
         : IAdminService
     {
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
         private readonly ICountryService countryService;
 
         public AdminService(
-            IRepository repo,
+            HomeXplorerDbContext dbContext,
             ICountryService countryService)
         {
-            this.repo = repo;
+            this.dbContext = dbContext;
             this.countryService = countryService;
         }
 
         public async Task<bool> AddNewBuildingTypeAsync(AddNonExistingBuildingTypeViewModel buildingType)
         {
-            bool buildingTypeExist = await this.repo
-                .All<BuildingType>()
+            bool buildingTypeExist = await this.dbContext
+                .BuildingTypes
                 .AnyAsync(bt => bt.Name == buildingType.Name);
 
             if (!buildingTypeExist)
             {
-                await this.repo.AddAsync<BuildingType>(new BuildingType() { Name = buildingType.Name });
-                await this.repo.SaveChangesAsync();
+                await this.dbContext.BuildingTypes.AddAsync(new BuildingType() { Name = buildingType.Name });
+                await this.dbContext.SaveChangesAsync();
             }
 
             return buildingTypeExist;
@@ -41,8 +42,8 @@
 
         public async Task<bool> AddNewCityAsync(AddNonExistingCityToExistingCountryViewModel city)
         {
-            bool cityExist = await this.repo
-                .All<City>()
+            bool cityExist = await this.dbContext
+                .Cities
                 .AnyAsync(c => c.Name == city.CityName);
 
             if (!cityExist)
@@ -53,8 +54,8 @@
                     CountryId = city.CountryId,
                 };
 
-                await this.repo.AddAsync<City>(newCity);
-                await this.repo.SaveChangesAsync();
+                await this.dbContext.Cities.AddAsync(newCity);
+                await this.dbContext.SaveChangesAsync();
             }
 
             return cityExist;
@@ -62,14 +63,14 @@
 
         public async Task<bool> AddNewCountryAsync(AddNonExistingCountryViewModel country)
         {
-            bool countryExists = await this.repo
-                .All<Country>()
+            bool countryExists = await this.dbContext
+                .Countries
                 .AnyAsync(c => c.Name == country.Name);
 
             if (!countryExists)
             {
-                await this.repo.AddAsync<Country>(new Country() { Name = country.Name });
-                await this.repo.SaveChangesAsync();
+                await this.dbContext.Countries.AddAsync(new Country() { Name = country.Name });
+                await this.dbContext.SaveChangesAsync();
             }
 
             return countryExists;
@@ -77,14 +78,14 @@
 
         public async Task<bool> AddNewPropertyTypeAsync(AddNonExistingPropertyTypeViewModel propertyType)
         {
-            bool propertyTypeExist = await this.repo
-                .All<PropertyType>()
+            bool propertyTypeExist = await this.dbContext
+                .PropertyTypes
                 .AnyAsync(pt => pt.Name == propertyType.Name);
 
             if (!propertyTypeExist)
             {
-                await this.repo.AddAsync<PropertyType>(new PropertyType() { Name = propertyType.Name });
-                await this.repo.SaveChangesAsync();
+                await this.dbContext.PropertyTypes.AddAsync(new PropertyType() { Name = propertyType.Name });
+                await this.dbContext.SaveChangesAsync();
             }
 
             return propertyTypeExist;
@@ -92,32 +93,35 @@
 
         public async Task ApproveReviewAsync(int reviewId)
         {
-            Review? review = await this.repo
-                .GetByIdAsync<Review>(reviewId);
+            Review? review = await this.dbContext
+                .Reviews
+                .FirstOrDefaultAsync(r => r.Id == reviewId);
 
             if (review != null)
             {
                 review.IsApproved = true;
-                await this.repo.SaveChangesAsync();
+                await this.dbContext.SaveChangesAsync();
             }
         }
 
         public async Task DeleteReviewAsync(int reviewId)
         {
-            Review? review = await this.repo
-                .GetByIdAsync<Review>(reviewId);
+            Review? review = await this.dbContext
+                .Reviews
+                .FirstOrDefaultAsync(r => r.Id == reviewId);
 
             if (review != null)
             {
-                await this.repo.DeleteAsync<Review>(reviewId);
-                await this.repo.SaveChangesAsync();
+                this.dbContext.Reviews.Remove(review);
+                await this.dbContext.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<AllAgentsViewModel>> GetAllAgentsStatisticsAsync()
         {
-            return await this.repo
-                .AllReadonly<Agent>()
+            return await this.dbContext
+                .Agents
+                .AsNoTracking()
                 .Select(a => new AllAgentsViewModel()
                 {
                     FullName = $"{a.User.FirstName} {a.User.LastName}",
@@ -126,8 +130,9 @@
                     ProfileImageUrl = a.ProfilePictureUrl,
                     TotalPropertiesUploaded = a.Properties.Count,
                     TotalPropertiesRented = a.Properties.Count(p => p.RenterId != null),
-                    TotalPropertiesLiked = this.repo
-                        .AllReadonly<RenterPropertyFavorite>()
+                    TotalPropertiesLiked = this.dbContext
+                        .RentersPropertiesFavorites
+                        .AsNoTracking()
                         .Count(favorite => favorite.PropertyId != null
                         && a.Properties.Any(prop => prop.Id == favorite.PropertyId))
                 })
@@ -136,8 +141,9 @@
 
         public async Task<IEnumerable<string>> GetAllBuildingTypesAsync()
         {
-            return await this.repo
-                .AllReadonly<BuildingType>()
+            return await this.dbContext
+                .BuildingTypes
+                .AsNoTracking()
                 .Select(bt => bt.Name)
                 .ToListAsync();
         }
@@ -160,8 +166,9 @@
 
         public async Task<IEnumerable<DashboardReviewViewModel>> GetAllPendingReviewsAsync()
         {
-            return await this.repo
-                .All<Review>()
+            return await this.dbContext
+                .Reviews
+                .AsNoTracking()
                 .Where(r => !r.IsApproved)
                 .Select(r => new DashboardReviewViewModel()
                 {
@@ -177,16 +184,18 @@
 
         public async Task<IEnumerable<string>> GetAllPropertyTypesAsync()
         {
-            return await this.repo
-                .AllReadonly<PropertyType>()
+            return await this.dbContext
+                .PropertyTypes
+                .AsNoTracking()
                 .Select(pt => pt.Name)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<AllRentersViewModel>> GetAllRentersStatisticsAsync()
         {
-            return await this.repo
-                .AllReadonly<Renter>()
+            return await this.dbContext
+                .Renters
+                .AsNoTracking()
                 .Select(r => new AllRentersViewModel()
                 {
                     FullName = $"{r.User.FirstName} {r.User.LastName}",
@@ -205,19 +214,33 @@
             DashboardViewModel dashboardStatistics = new()
             {
                 TotalPropertiesUploaded =
-                await this.repo.AllReadonly<Property>().CountAsync(),
+                await this.dbContext
+                .Properties
+                .AsNoTracking()
+                .CountAsync(),
 
                 TotalReviewsAdded =
-                await this.repo.AllReadonly<Review>().CountAsync(),
+                await this.dbContext
+                .Reviews
+                .AsNoTracking()
+                .CountAsync(),
 
                 TotalLikesOfProperties =
-                await this.repo.AllReadonly<RenterPropertyFavorite>().CountAsync(),
+                await this.dbContext
+                .RentersPropertiesFavorites
+                .AsNoTracking()
+                .CountAsync(),
 
                 TotalRentedProperties =
-                await this.repo.AllReadonly<Property>().CountAsync(p => p.RenterId != null),
+                await this.dbContext
+                .Properties
+                .AsNoTracking()
+                .CountAsync(p => p.RenterId != null),
 
                 Reviews =
-                await this.repo.AllReadonly<Review>()
+                await this.dbContext
+                    .Reviews
+                    .AsNoTracking()
                     .Select(r => new DashboardReviewViewModel()
                     {
                         AddedOn = r.AddedOn.ToString("MM/dd/yyyy"),

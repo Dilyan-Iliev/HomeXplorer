@@ -11,26 +11,31 @@
     using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.Services.Exceptions.Contracts;
+    using HomeXplorer.Core.Contexts;
 
     //TODO: add visits count
 
     public class AgentPropertyService
         : IAgentPropertyService
     {
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
         private readonly IGuard guard;
+        private readonly IRepository repo;
 
         public AgentPropertyService(
-            IRepository repo, IGuard guard)
+            HomeXplorerDbContext dbContext,
+            IGuard guard,
+            IRepository repo)
         {
-            this.repo = repo;
+            this.dbContext = dbContext;
             this.guard = guard;
+            this.repo = repo;
         }
 
         public async Task AddAsync(AddPropertyViewModel model, ICollection<string> imageUrls, string userId)
         {
-            var currentAgent = await this.repo
-                .All<Agent>()
+            var currentAgent = await this.dbContext
+                .Agents
                 .FirstOrDefaultAsync(a => a.UserId == userId);
 
             Property property = new Property()
@@ -60,14 +65,15 @@
                 property.Images.Add(cloudImage);
             }
 
-            await this.repo.AddAsync<Property>(property);
-            await this.repo.SaveChangesAsync();
+            await this.dbContext.Properties.AddAsync(property);
+            await this.dbContext.SaveChangesAsync();
         }
 
         public async Task<AgentAllPropertiesViewModel> AllAsync(int pageNumber, int pageSize, PropertySorting propertySorting, string userId)
         {
-            IQueryable<Property> properties = this.repo
-                .AllReadonly<Property>()
+            IQueryable<Property> properties = this.dbContext
+                .Properties
+                .AsNoTracking()
                 .Where(p => p.Agent.UserId == userId);
 
             properties = propertySorting switch
@@ -106,8 +112,9 @@
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
                     AddedOn = p.AddedOn.ToString("MM/dd/yyyy"),
-                    Visits = this.repo
-                        .AllReadonly<PageVisit>()
+                    Visits = this.dbContext
+                        .PageVisits
+                        .AsNoTracking()
                         .Where(pv => pv.Url.Contains(p.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()
@@ -130,15 +137,15 @@
 
         public async Task DeleteAsync(Guid id)
         {
-            var property = await this.repo
-                .All<Property>()
+            var property = await this.dbContext
+                .Properties
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 
             if (property != null)
             {
                 property.IsActive = false;
-                await this.repo.SaveChangesAsync();
+                await this.dbContext.SaveChangesAsync();
             }
         }
 
@@ -146,10 +153,11 @@
             ICollection<string>? imageUrls, ICollection<CloudImage> oldImages,
             ICollection<int>? deletedPhotosIds)
         {
-            var property = await this.repo
-                .GetByIdAsync<Property>(propertyId);
+            var property = await this.dbContext
+                .Properties
+                .FirstOrDefaultAsync(p => p.Id == propertyId);
 
-            property.Name = model.Name;
+            property!.Name = model.Name;
             property.Description = model.Description;
             property.Price = model.Price;
             property.Size = model.Size;
@@ -185,13 +193,13 @@
                     if (deletedImage != null)
                     {
                         property.Images.Remove(deletedImage);
-                        this.repo.Delete<CloudImage>(deletedImage);
+                        this.dbContext.CloudImages.Remove(deletedImage);
                     }
                 }
             }
 
-            this.repo.Update<Property>(property);
-            await this.repo.SaveChangesAsync();
+            this.dbContext.Properties.Update(property);
+            await this.dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> ExistByIdAsync<T>(object id) where T : class
@@ -202,8 +210,8 @@
 
         public Task<EditPropertyViewModel?> FindByIdAsync(Guid propertyId)
         {
-            return this.repo
-                .All<Property>()
+            return this.dbContext
+                .Properties
                 .Where(p => p.Id == propertyId)
                 .Select(p => new EditPropertyViewModel()
                 {
@@ -231,8 +239,9 @@
 
         public async Task<IEnumerable<PropertyImagesViewModel>> GetAllImageUrlsForPropertyAsync(Guid propertyId)
         {
-            return await this.repo
-                .AllReadonly<CloudImage>()
+            return await this.dbContext
+                .CloudImages
+                .AsNoTracking()
                 .Where(ci => ci.PropertyId == propertyId)
                 .Select(ci => new PropertyImagesViewModel()
                 {
@@ -244,8 +253,9 @@
 
         public async Task<DetailsPropertyViewModel?> GetDetailsAsync(Guid id)
         {
-            var currentProperty = await this.repo
-                .AllReadonly<Property>()
+            var currentProperty = await this.dbContext
+                .Properties
+                .AsNoTracking()
                 .Where(p => p.Id == id)
                 .Select(p => new DetailsPropertyViewModel()
                 {
@@ -281,14 +291,16 @@
 
         public async Task<IEnumerable<IndexAgentPropertiesViewModel>> GetLastThreeAsync(string userId)
         {
-            var currentAgent = await this.repo
-                .AllReadonly<Agent>()
+            var currentAgent = await this.dbContext
+                .Agents
+                .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.UserId == userId);
 
             this.guard.AgainstNull(currentAgent, "Invalid agent");
 
-            var lastThreeProperties = await this.repo
-                .AllReadonly<Property>()
+            var lastThreeProperties = await this.dbContext
+                .Properties
+                .AsNoTracking()
                 .Where(p => p.AgentId == currentAgent!.Id)
                 .Where(p => p.IsActive)
                 .OrderByDescending(p => p.AddedOn)
@@ -305,8 +317,9 @@
                         .Select(i => i.Url)
                         .FirstOrDefault()!,
                     City = p.City.Name,
-                    Visits = this.repo
-                        .AllReadonly<PageVisit>()
+                    Visits = this.dbContext
+                        .PageVisits
+                        .AsNoTracking()
                         .Where(pv => pv.Url.Contains(p.Id.ToString()))
                         .Select(pv => pv.VisitsCount)
                         .Count()

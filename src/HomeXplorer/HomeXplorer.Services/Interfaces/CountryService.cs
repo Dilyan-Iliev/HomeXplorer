@@ -5,25 +5,25 @@
 
     using Microsoft.EntityFrameworkCore;
 
-    using HomeXplorer.Data.Entities;
-    using HomeXplorer.Core.Repositories;
+    using HomeXplorer.Core.Contexts;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Country;
 
     public class CountryService
         : ICountryService
     {
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
 
-        public CountryService(IRepository repo)
+        public CountryService(HomeXplorerDbContext dbContext)
         {
-            this.repo = repo;
+            this.dbContext = dbContext;
         }
 
         public async Task<IEnumerable<SelectCountryViewModel>> GetCountriesAsync()
         {
-            return await this.repo
-                .AllReadonly<Country>()
+            return await this.dbContext
+                .Countries
+                .AsNoTracking()
                 .Select(c => new SelectCountryViewModel()
                 {
                     Id = c.Id,

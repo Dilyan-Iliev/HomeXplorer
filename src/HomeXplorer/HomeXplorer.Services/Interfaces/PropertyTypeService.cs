@@ -9,21 +9,23 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.PropertyType;
+    using HomeXplorer.Core.Contexts;
 
     public class PropertyTypeService
         : IPropertyTypeService
     {
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
 
-        public PropertyTypeService(IRepository repo)
+        public PropertyTypeService(HomeXplorerDbContext dbContext)
         {
-            this.repo = repo;
+            this.dbContext = dbContext;
         }
 
         public async Task<IEnumerable<SelectPropertyTypeViewModel>> GetPropertyTypesAsync()
         {
-            return await this.repo
-                .AllReadonly<PropertyType>()
+            return await this.dbContext
+                .PropertyTypes
+                .AsNoTracking()
                 .Select(p => new SelectPropertyTypeViewModel()
                 {
                     Id = p.Id,

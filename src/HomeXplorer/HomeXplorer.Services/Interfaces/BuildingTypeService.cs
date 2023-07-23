@@ -9,21 +9,23 @@
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.BuildingType;
+    using HomeXplorer.Core.Contexts;
 
     public class BuildingTypeService
         : IBuildingTypeService
     {
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
 
-        public BuildingTypeService(IRepository repo)
+        public BuildingTypeService(HomeXplorerDbContext dbContext)
         {
-            this.repo = repo;
+            this.dbContext = dbContext;
         }
 
         public async Task<IEnumerable<SelectBuildingTypeViewModel>> GetBuildingTypesAsync()
         {
-            return await this.repo
-                .AllReadonly<BuildingType>()
+            return await this.dbContext
+                .BuildingTypes
+                .AsNoTracking()
                 .Select(b => new SelectBuildingTypeViewModel()
                 {
                     Id = b.Id,

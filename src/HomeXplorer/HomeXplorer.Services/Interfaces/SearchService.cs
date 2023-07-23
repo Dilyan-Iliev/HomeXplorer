@@ -5,7 +5,7 @@
     using Microsoft.EntityFrameworkCore;
 
     using HomeXplorer.Data.Entities;
-    using HomeXplorer.Core.Repositories;
+    using HomeXplorer.Core.Contexts;
     using HomeXplorer.ViewModels.Search;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property.Enums;
@@ -17,17 +17,17 @@
         private readonly IPropertyTypeService propertyTypeService;
         private readonly IBuildingTypeService buildingTypeService;
         private readonly ICountryService countryService;
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
 
         public SearchService(IPropertyTypeService propertyTypeService,
             IBuildingTypeService buildingTypeService,
             ICountryService countryService,
-            IRepository repo)
+            HomeXplorerDbContext dbContext)
         {
             this.propertyTypeService = propertyTypeService;
             this.buildingTypeService = buildingTypeService;
             this.countryService = countryService;
-            this.repo = repo;
+            this.dbContext = dbContext;
         }
 
         public async Task<PropertySearchViewModel> FillPropertySearchbarAsync()
@@ -43,8 +43,9 @@
         public async Task<SearchResultViewModel> SearchResult(PropertySearchViewModel model,
             int pageNumber, int pageSize, PropertySorting propertySorting)
         {
-            IQueryable<Property> propertiesQuery = this.repo
-                .AllReadonly<Property>();
+            IQueryable<Property> propertiesQuery = this.dbContext
+                .Properties
+                .AsNoTracking();
 
             if (!string.IsNullOrWhiteSpace(model.SearchTerm))
             {

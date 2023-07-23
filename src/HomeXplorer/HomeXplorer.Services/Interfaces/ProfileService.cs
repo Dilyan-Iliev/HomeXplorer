@@ -9,18 +9,19 @@
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Profile;
     using HomeXplorer.Services.Exceptions.Contracts;
+    using HomeXplorer.Core.Contexts;
 
     public class ProfileService
         : IProfileService
     {
-        private readonly IRepository repo;
+        private readonly HomeXplorerDbContext dbContext;
         private readonly IGuard guard;
 
         public ProfileService(
-            IRepository repo,
+            HomeXplorerDbContext dbContext,
             IGuard guard)
         {
-            this.repo = repo;
+            this.dbContext = dbContext;
             this.guard = guard;
         }
 
@@ -30,8 +31,9 @@
 
             this.guard.AgainstNull(agent, "No agent was found");
 
-            var model = await this.repo
-                .AllReadonly<Agent>()
+            var model = await this.dbContext
+                .Agents
+                .AsNoTracking()
                 .Where(a => a.Id == agent!.Id)
                 .Select(a => new AgentProfileViewModel()
                 {
@@ -69,8 +71,9 @@
 
             this.guard.AgainstNull(renter, "No renter was found");
 
-            var model = await this.repo
-                .AllReadonly<Renter>()
+            var model = await this.dbContext
+                .Renters
+                .AsNoTracking()
                 .Where(r => r.Id == renter!.Id)
                 .Select(r => new RenterProfileViewModel()
                 {
@@ -105,7 +108,7 @@
 
             agent!.ProfilePictureUrl = profilePictureUrl;
 
-            await this.repo.SaveChangesAsync();
+            await this.dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateRenterProfilePictureAsync(string userId, string profilePictureUrl)
@@ -116,20 +119,20 @@
 
             renter!.ProfilePictureUrl = profilePictureUrl;
 
-            await this.repo.SaveChangesAsync();
+            await this.dbContext.SaveChangesAsync();
         }
 
         private async Task<Agent?> FindAgentAsync(string userId)
         {
-            return await this.repo
-                            .All<Agent>()
+            return await this.dbContext
+                            .Agents
                             .FirstOrDefaultAsync(a => a.UserId == userId);
         }
 
         private async Task<Renter?> FindRenterAsync(string userId)
         {
-            return await this.repo
-                            .All<Renter>()
+            return await this.dbContext
+                            .Renters
                             .FirstOrDefaultAsync(a => a.UserId == userId);
         }
     }
