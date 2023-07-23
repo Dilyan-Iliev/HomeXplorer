@@ -7,12 +7,17 @@
     public class PropertyStatusServiceTests
         : BaseTestsOptions
     {
+        private IPropertyStatusService pts;
+
+        [SetUp]
+        public void Setup()
+        {
+            pts = new PropertyStatusService(dbContext);
+        }
+
         [Test]
         public void Property_Status_Service_Should_Be_Successfully_Initialized_With_Its_Dependencies()
         {
-            //Arrange
-            IPropertyStatusService pts = new PropertyStatusService(dbContext);
-
             //Act & Assert
             Assert.That(pts, Is.Not.Null);
             Assert.That(pts, Is.TypeOf<PropertyStatusService>());
@@ -31,8 +36,6 @@
 
             await dbContext.AddRangeAsync(propertyStatuses);
             await dbContext.SaveChangesAsync();
-
-            var pts = new PropertyStatusService(dbContext);
 
             //Act
             var result = await pts.GetPropertyStatusesAsync();

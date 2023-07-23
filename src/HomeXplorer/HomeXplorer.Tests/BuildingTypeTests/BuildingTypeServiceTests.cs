@@ -7,12 +7,17 @@
     public class BuildingTypeServiceTests
         : BaseTestsOptions
     {
+        private IBuildingTypeService bts;
+
+        [SetUp]
+        public void SetUp()
+        {
+            bts = new BuildingTypeService(dbContext);
+        }
+
         [Test]
         public void Building_Type_Service_Should_Be_Successfully_Initialized_With_Its_Dependencies()
         {
-            //Arrange
-            IBuildingTypeService bts = new BuildingTypeService(dbContext);
-
             //Act & Assert
             Assert.That(bts, Is.Not.Null);
             Assert.That(bts, Is.TypeOf<BuildingTypeService>());
@@ -31,8 +36,6 @@
 
             await dbContext.AddRangeAsync(buildingTypes);
             await dbContext.SaveChangesAsync();
-
-            var bts = new BuildingTypeService(dbContext);
 
             //Act
             var result = await bts.GetBuildingTypesAsync();

@@ -4,16 +4,22 @@
     using HomeXplorer.Data.Entities;
     using Microsoft.EntityFrameworkCore;
     using HomeXplorer.Services.Interfaces;
+    using HomeXplorer.Services.Contracts;
 
     public class CountryServiceTests
         : BaseTestsOptions
     {
+        private ICountryService countryService;
+
+        [SetUp]
+        public void SetUp()
+        {
+            countryService = new CountryService(dbContext);
+        }
+
         [Test]
         public void Country_Service_Should_Be_Successfully_Initialized_With_Its_Dependencies()
         {
-            //Act
-            var countryService = new CountryService(dbContext);
-
             //Assert
             Assert.That(countryService, Is.Not.Null);
         }
@@ -30,8 +36,6 @@
 
             dbContext.Countries.AddRange(countriesData);
             dbContext.SaveChanges();
-
-            var countryService = new CountryService(dbContext);
 
             // Act
             var result = await countryService.GetCountriesAsync();

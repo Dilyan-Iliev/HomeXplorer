@@ -7,16 +7,21 @@
     public class CityServiceTests
         : BaseTestsOptions
     {
+        private ICityService cs;
+
+        [SetUp]
+        public void Setup()
+        {
+            cs = new CityService(dbContext);
+        }
+
         [Test]
         public void City_Service_Should_Be_Successfully_Initialized_With_Its_Dependencies()
         {
-            //Arrange
-            ICityService cityService = new CityService(dbContext);
-
             //Assert
-            Assert.That(cityService, Is.Not.Null);
-            Assert.That(cityService, Is.TypeOf<CityService>());
-            Assert.That(cityService, Is.InstanceOf<ICityService>());
+            Assert.That(cs, Is.Not.Null);
+            Assert.That(cs, Is.TypeOf<CityService>());
+            Assert.That(cs, Is.InstanceOf<ICityService>());
         }
 
         [Test]
@@ -34,10 +39,8 @@
             await dbContext.Cities.AddRangeAsync(cities);
             await dbContext.SaveChangesAsync();
 
-            ICityService cityService = new CityService(dbContext);
-
             //Act
-            var result = await cityService.GetAllCitiesByCountryIdAsync(country.Id);
+            var result = await cs.GetAllCitiesByCountryIdAsync(country.Id);
 
             var mappedDbContextCityNames = dbContext.Cities
                 .Select(c => c.Name)
