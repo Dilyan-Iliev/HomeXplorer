@@ -9,8 +9,8 @@
     using HomeXplorer.ViewModels.Admin;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
-    using HomeXplorer.Services.Interfaces;
     using HomeXplorer.ViewModels.Country;
+    using HomeXplorer.Services.Interfaces;
 
     public class AdminServiceTests
     {
@@ -569,7 +569,7 @@
             //Act
             // Call the method under test with the ID of the review (321), which is not in the database
             await adminService.DeleteReviewAsync(review.Id);
-            
+
             //Assert
             Assert.Multiple(async () =>
             {
@@ -578,6 +578,73 @@
 
                 // Verify that the total number of reviews in the database remains the same
                 Assert.That(await dbContext.Reviews.CountAsync(), Is.EqualTo(0));
+            });
+        }
+
+        //[Test]
+        //public async Task Get_All_Cities_From_Country_Should_Return_Correct_Data()
+        //{
+        //    var countryModel = new Country()
+        //    {
+        //        Id = 1,
+        //        Name = "Bulgaria"
+        //    };
+        //    await dbContext.Countries.AddAsync(countryModel);
+
+        //    var cities = new List<City>()
+        //    {
+        //        new City() {Name = "Sofia", CountryId = countryModel.Id},
+        //        new City() {Name = "Plovdiv", CountryId = countryModel.Id},
+        //        new City() {Name = "Varna", CountryId = countryModel.Id},
+        //    };
+        //    await dbContext.Cities.AddRangeAsync(cities);
+        //    await dbContext.SaveChangesAsync();
+
+        //    var mockedCountryService = new Mock<ICountryService>();
+        //    mockedCountryService.Setup(s => s.GetCountriesAsync()).ReturnsAsync(new List<SelectCountryViewModel>
+        //    {
+        //        new SelectCountryViewModel { Id = 1, Name = "Bulgaria" }
+        //        // Add more countries if needed
+        //    });
+
+        //    var repository = new Repository(dbContext);
+        //    var adminService = new AdminService(repository, mockedCountryService.Object);
+
+        //    // Act
+        //    var result = await adminService.GetAllCitiesFromCountryAsync();
+
+        //    Assert.That(result, Is.Not.Null);
+
+        //}
+
+        [Test]
+        public async Task Get_All_Property_Types_Method_Should_Return_Correct_Data()
+        {
+            //Arrange
+            var propertyTypes = new List<PropertyType>()
+            {
+                new PropertyType() {Name = "Test1"},
+                new PropertyType() {Name = "Test2"},
+            };
+
+            await dbContext.PropertyTypes.AddRangeAsync(propertyTypes);
+            await dbContext.SaveChangesAsync();
+
+            var mockedCountryService = new Mock<ICountryService>();
+            var repo = new Repository(dbContext);
+
+            var adminService = new AdminService(repo, mockedCountryService.Object);
+
+            //Act
+            var result = await adminService.GetAllPropertyTypesAsync();
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count, Is.GreaterThan(0));
+                Assert.That(result,
+                    Is.EqualTo(propertyTypes.Select(pt => pt.Name).ToList()));
             });
         }
 
