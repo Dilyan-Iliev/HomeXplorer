@@ -5,11 +5,10 @@
 
     using Microsoft.EntityFrameworkCore;
 
+    using HomeXplorer.Core.Contexts;
     using HomeXplorer.Data.Entities;
-    using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property.Renter;
-    using HomeXplorer.Core.Contexts;
 
     public class ReviewService
         : IReviewService

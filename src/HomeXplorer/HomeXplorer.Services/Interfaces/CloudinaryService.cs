@@ -23,7 +23,7 @@
 
             if (!files.Any())
             {
-                return null;
+                return null!;
             }
 
             foreach (var file in files
