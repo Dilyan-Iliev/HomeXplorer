@@ -2,13 +2,13 @@
 {
     using Moq;
 
+    using Microsoft.EntityFrameworkCore;
+
+    using HomeXplorer.Data.Entities;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Services.Interfaces;
-    using HomeXplorer.Services.Exceptions.Contracts;
-    using HomeXplorer.Data.Entities;
-    using Microsoft.EntityFrameworkCore;
     using HomeXplorer.Services.Exceptions;
-    using NUnit.Framework.Internal.Execution;
+    using HomeXplorer.Services.Exceptions.Contracts;
 
     public class ProfileServiceTests
         : BaseTestsOptions
@@ -21,6 +21,14 @@
         {
             guard = new Mock<IGuard>();
             ps = new ProfileService(dbContext, guard.Object);
+        }
+
+        [Test]
+        public void Profile_Service_Should_Be_Successfully_Initialized_With_Its_Dependencies()
+        {
+            Assert.That(ps, Is.Not.Null);
+            Assert.That(ps, Is.TypeOf<ProfileService>());
+            Assert.That(ps, Is.InstanceOf<IProfileService>());
         }
 
         [Test]
