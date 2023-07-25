@@ -262,5 +262,223 @@
             Assert.ThrowsAsync<HomeXplorerException>(async () =>
                 await ps.GetRenterProfileInfoAsync(user2.Id));
         }
+
+        [Test]
+        public async Task Update_Agent_Profile_Picture_Should_Successfully_Change_Agent_Profile_Picture()
+        {
+            //Arrange
+            ApplicationUser user = new()
+            {
+                Id = "7898c6a7-da15-4f3b-abfd-16cdd74ca80a",
+                FirstName = "Test",
+                LastName = "Testov",
+                Email = "test@abv.bg",
+                PhoneNumber = "000"
+            };
+
+            Agent agent = new()
+            {
+                Id = 1,
+                UserId = user.Id,
+                City = new City()
+                {
+                    Id = 1,
+                    Name = "Test",
+                    Country = new Country()
+                    {
+                        Id = 1,
+                        Name = "Test",
+                    }
+                },
+                Properties = new List<Property>()
+                {
+                    new Property()
+                    {
+                        Id = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
+                        Name = "TestName2",
+                        Address = "TestAddress2",
+                        Description = "TestDescription2",
+                        CityId = 1,
+                        Price = 10,
+                        Size = 5,
+                        PropertyStatusId = 1,
+                        BuildingTypeId = 1,
+                        AgentId = 1,
+                        Images = new List<CloudImage>()
+                        {
+                            new CloudImage()
+                            {
+                                Id = 1,
+                                PropertyId = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
+                                Url = "test.test"
+                            }
+                        },
+                    }
+                },
+                ProfilePictureUrl = "test@test"
+            };
+
+            await dbContext.Users.AddAsync(user);
+            await dbContext.Agents.AddAsync(agent);
+            await dbContext.SaveChangesAsync();
+
+            //Act
+            string newProfilePIctureUrl = "changed.test";
+            await ps.UpdateAgentProfilePictureAsync(user.Id, newProfilePIctureUrl);
+
+            //Assert
+            Assert.That(agent.ProfilePictureUrl, Is.EqualTo(newProfilePIctureUrl));
+        }
+
+        [Test]
+        public async Task Update_Agent_Profile_Picture_Should_Throw_Exception_When_Agent_Is_Null()
+        {
+            //Arrange
+            ApplicationUser user = new()
+            {
+                Id = "7898c6a7-da15-4f3b-abfd-16cdd74ca80a",
+                FirstName = "Test",
+                LastName = "Testov",
+                Email = "test@abv.bg",
+                PhoneNumber = "000"
+            };
+
+            ApplicationUser user2 = new()
+            {
+                Id = "7598c6a7-da15-4f3b-abfd-16cdd74ca80a",
+                FirstName = "Test",
+                LastName = "Testov",
+                Email = "test@abv.bg",
+                PhoneNumber = "000"
+            };
+
+            await dbContext.Users.AddAsync(user);
+            await dbContext.SaveChangesAsync();
+
+            //Act
+            guard.Setup(g => g.AgainstNull(It.IsAny<Agent>(), "No agent was found"))
+            .Throws(new HomeXplorerException("No agent was found"));
+
+            //Assert
+            Assert.ThrowsAsync<HomeXplorerException>(async () =>
+                await ps.GetAgentProfileInfoAsync(user2.Id));
+        }
+
+        [Test]
+        public async Task Update_Renter_Profile_Picture_Should_Successfully_Change_Renter_Profile_Picture()
+        {
+            //Arrange
+            ApplicationUser user = new()
+            {
+                Id = "7898c6a7-da15-4f3b-abfd-16cdd74ca80a",
+                FirstName = "Test",
+                LastName = "Testov",
+                Email = "test@abv.bg",
+                PhoneNumber = "000"
+            };
+
+            Renter renter = new()
+            {
+                Id = 1,
+                UserId = user.Id,
+                City = new City()
+                {
+                    Id = 1,
+                    Name = "Test",
+                    Country = new Country()
+                    {
+                        Id = 1,
+                        Name = "Test",
+                    }
+                },
+                ProfilePictureUrl = "test.test",
+                Reviews = new List<Review>()
+                {
+                    new Review()
+                    {
+                        Id = 1,
+                        Description = "TestTestTestTest1",
+                        ReviewCreatorId = 1,
+                    },
+                    new Review()
+                    {
+                        Id = 2,
+                        Description = "TestTestTestTest2",
+                        ReviewCreatorId = 1
+                    }
+                },
+                RentedProperties = new List<Property>()
+                {
+                    new Property()
+                    {
+                        Id = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
+                        Name = "TestName2",
+                        Address = "TestAddress2",
+                        Description = "TestDescription2",
+                        CityId = 1,
+                        Price = 10,
+                        Size = 5,
+                        PropertyStatusId = 1,
+                        BuildingTypeId = 1,
+                        AgentId = 1,
+                        Images = new List<CloudImage>()
+                        {
+                            new CloudImage()
+                            {
+                                Id = 1,
+                                PropertyId = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
+                                Url = "test.test"
+                            }
+                        },
+                        RenterId = 1
+                    }
+                }
+            };
+
+            await dbContext.Users.AddAsync(user);
+            await dbContext.Renters.AddAsync(renter);
+            await dbContext.SaveChangesAsync();
+
+            //Act
+            string newRenterProfilePictureUrl = "changed.test";
+            await ps.UpdateRenterProfilePictureAsync(user.Id, newRenterProfilePictureUrl);
+
+            //Assert
+            Assert.That(renter.ProfilePictureUrl, Is.EqualTo(newRenterProfilePictureUrl));
+        }
+
+        [Test]
+        public async Task Update_Renter_Profile_Picture_Should_Throw_Exception_When_Renter_Is_Null()
+        {
+            //Arrange
+            ApplicationUser user = new()
+            {
+                Id = "7898c6a7-da15-4f3b-abfd-16cdd74ca80a",
+                FirstName = "Test",
+                LastName = "Testov",
+                Email = "test@abv.bg",
+                PhoneNumber = "000"
+            };
+
+            ApplicationUser user2 = new()
+            {
+                Id = "7298c6a7-da15-4f3b-abfd-16cdd74ca80a",
+                FirstName = "Test",
+                LastName = "Testov",
+                Email = "test@abv.bg",
+                PhoneNumber = "000"
+            };
+
+            await dbContext.Users.AddAsync(user);
+            await dbContext.SaveChangesAsync();
+
+            //Act
+            guard.Setup(g => g.AgainstNull(It.IsAny<Renter>(), "No renter was found"))
+            .Throws(new HomeXplorerException("No renter was found"));
+
+            //Assert
+            Assert.ThrowsAsync<HomeXplorerException>(async () =>
+                await ps.GetRenterProfileInfoAsync(user2.Id));
+        }
     }
 }
