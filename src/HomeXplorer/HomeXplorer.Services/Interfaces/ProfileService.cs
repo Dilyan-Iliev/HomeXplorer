@@ -62,7 +62,7 @@
                 })
                 .FirstOrDefaultAsync();
 
-            return model;
+            return model!;
         }
 
         public async Task<RenterProfileViewModel> GetRenterProfileInfoAsync(string userId)
@@ -84,20 +84,20 @@
                     FullName = $"{r.User.FirstName} {r.User.LastName}",
                     PersonalImage = r.ProfilePictureUrl,
                     TotalLikedProperties = r.FavouriteProperties!.Count(),
-                    TotalRentedProperties = r.FavouriteProperties!.Count(),
-                    TotalReviews = r.Reviews.Count,
+                    TotalRentedProperties = r.RentedProperties!.Count(),
+                    TotalReviews = r.Reviews.Where(rv => rv.ReviewCreatorId == r.Id).Count(),
                     AddedReviews = r.Reviews
                         .Where(rv => rv.ReviewCreatorId == r.Id)
                         .Select(rv => new ProfileReviewViewModel()
                         {
                             AddedOn = rv.AddedOn.ToString("MM/dd/yyyy"),
-                            Description = $"{rv.Description.Substring(0, 10)}..."
+                            Description = rv.Description /*$"{rv.Description.Substring(0, 10)}..."*/
                         })
                         .ToList()
                 })
                 .FirstOrDefaultAsync();
 
-            return model;
+            return model!;
         }
 
         public async Task UpdateAgentProfilePictureAsync(string userId, string profilePictureUrl)
