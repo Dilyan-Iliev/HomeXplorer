@@ -15,12 +15,14 @@
         : BaseTestsOptions
     {
         private IAdminService adminService;
-        private readonly ICountryService countryService;
+        private Mock<ICountryService> countryService;
 
         [SetUp]
-        public void SetUp()
+        public void Initial()
         {
-            adminService = new AdminService(dbContext, countryService);
+            countryService = new Mock<ICountryService>();
+
+            adminService = new AdminService(dbContext, countryService.Object);
         }
 
         [Test]

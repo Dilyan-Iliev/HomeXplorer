@@ -10,7 +10,7 @@
         private ICityService cs;
 
         [SetUp]
-        public void Setup()
+        public void Initial()
         {
             cs = new CityService(dbContext);
         }

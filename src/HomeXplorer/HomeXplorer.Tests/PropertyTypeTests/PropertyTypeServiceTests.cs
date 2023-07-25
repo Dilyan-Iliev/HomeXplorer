@@ -9,8 +9,8 @@
     {
         private IPropertyTypeService pts;
 
-        [SetUp] // Use NUnit.Framework.SetUp attribute
-        public void TestSetUp()
+        [SetUp]
+        public void Initial()
         {
             pts = new PropertyTypeService(dbContext);
         }

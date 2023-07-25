@@ -10,7 +10,7 @@
         private IBuildingTypeService bts;
 
         [SetUp]
-        public void SetUp()
+        public void Initial()
         {
             bts = new BuildingTypeService(dbContext);
         }

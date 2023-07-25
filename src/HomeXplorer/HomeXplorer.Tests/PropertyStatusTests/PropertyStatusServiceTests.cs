@@ -10,7 +10,7 @@
         private IPropertyStatusService pts;
 
         [SetUp]
-        public void Setup()
+        public void Initial()
         {
             pts = new PropertyStatusService(dbContext);
         }

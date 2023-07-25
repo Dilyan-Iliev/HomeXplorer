@@ -12,7 +12,7 @@
         private ICountryService countryService;
 
         [SetUp]
-        public void SetUp()
+        public void Initial()
         {
             countryService = new CountryService(dbContext);
         }

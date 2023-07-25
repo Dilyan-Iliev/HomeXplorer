@@ -13,7 +13,7 @@
         private IReviewService rs;
 
         [SetUp]
-        public void SetUp()
+        public void Initial()
         {
             rs = new ReviewService(dbContext);
         }
