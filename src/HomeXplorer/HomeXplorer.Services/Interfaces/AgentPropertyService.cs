@@ -2,16 +2,15 @@
 {
     using System.Threading.Tasks;
 
-    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
 
+    using HomeXplorer.Core.Contexts;
     using HomeXplorer.Data.Entities;
     using HomeXplorer.Core.Repositories;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Property.Enums;
     using HomeXplorer.ViewModels.Property.Agent;
     using HomeXplorer.Services.Exceptions.Contracts;
-    using HomeXplorer.Core.Contexts;
 
     //TODO: add visits count
 
@@ -340,12 +339,12 @@
             return lastThreeProperties;
         }
 
-        private string GetPropertyUrl(Guid propertyId)
-        {
-            // Logic to get the property URL based on the property ID
-            // Adjust this based on your URL structure or how you retrieve the property URL
-            // Example: if the URL format is "/property/{propertyId}", return $"/property/{propertyId}"
-            return $"/property/{propertyId}";
-        }
+        //private string GetPropertyUrl(Guid propertyId)
+        //{
+        //    // Logic to get the property URL based on the property ID
+        //    // Adjust this based on your URL structure or how you retrieve the property URL
+        //    // Example: if the URL format is "/property/{propertyId}", return $"/property/{propertyId}"
+        //    return $"/property/{propertyId}";
+        //}
     }
 }
