@@ -790,11 +790,116 @@
             await rps.RentAsync(property.Id, renterUser.Id);
 
             //Assert
-            Assert.Multiple(() =>
+            Assert.Multiple(async () =>
             {
                 Assert.That(property.PropertyStatus.Name, Is.EqualTo("Taken"));
                 Assert.That(property.RenterId, Is.Not.Null);
                 Assert.That(property.RenterId, Is.EqualTo(renter.Id));
+                Assert.That(renter!.RentedProperties!.Count,
+                    Is.EqualTo(await dbContext
+                    .Properties.CountAsync(p => p.RenterId == renter.Id)));
+            });
+        }
+
+        [Test]
+        public async Task Leave_Method_Should_Decrease_Rented_Properties_Of_Renter_User()
+        {
+            //Arrange
+            ApplicationUser renterUser = new()
+            {
+                Id = "7898c6a7-da15-4f3b-abfd-16cdd74ca80a",
+                FirstName = "Test",
+                LastName = "Testov",
+                Email = "test@abv.bg",
+                PhoneNumber = "000"
+            };
+
+            ApplicationUser agentUser = new()
+            {
+                Id = "5898c6a7-da15-4f3b-abfd-16cdd14ca50c",
+                FirstName = "Test",
+                LastName = "Testov"
+            };
+
+            var propStatus = new PropertyStatus() { Id = 1, Name = "Free" };
+            var buildType = new BuildingType() { Id = 1, Name = "testBuild" };
+            var propType = new PropertyType() { Id = 1, Name = "testStatus" };
+
+            Property property = new()
+            {
+                Id = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
+                Name = "TestName2",
+                Address = "TestAddress2",
+                Description = "TestDescription2",
+                CityId = 1,
+                Price = 10,
+                Size = 5,
+                PropertyStatusId = propStatus.Id,
+                BuildingTypeId = buildType.Id,
+                PropertyTypeId = propType.Id,
+                AgentId = 1,
+                Images = new List<CloudImage>()
+                {
+                    new CloudImage()
+                    {Id = 1,PropertyId = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),Url = "test.test"},
+                }
+            };
+
+            Renter renter = new()
+            {
+                Id = 1,
+                UserId = renterUser.Id,
+                City = new City()
+                {
+                    Id = 1,
+                    Name = "Test",
+                    Country = new Country()
+                    { Id = 1, Name = "Test" }
+                },
+                ProfilePictureUrl = "test.test",
+                Reviews = new List<Review>()
+                {
+                    new Review()
+                    {Id = 1,Description = "Test1",ReviewCreatorId = 1}
+                },
+                RentedProperties = new List<Property>() { property }
+            };
+
+            Agent agent = new()
+            {
+                Id = 1,
+                UserId = agentUser.Id,
+                City = new City()
+                {
+                    Id = 2,
+                    Name = "Test2",
+                    Country = new Country()
+                    { Id = 2, Name = "Test2" }
+                },
+                Properties = new List<Property>() { property },
+                ProfilePictureUrl = "testPicture",
+            };
+
+            await dbContext.Users.AddAsync(agentUser);
+            await dbContext.Users.AddAsync(renterUser);
+            await dbContext.Agents.AddAsync(agent);
+            await dbContext.Renters.AddAsync(renter);
+            await dbContext.BuildingTypes.AddAsync(buildType);
+            await dbContext.PropertyTypes.AddAsync(propType);
+            await dbContext.PropertyStatuses.AddAsync(propStatus);
+            await dbContext.SaveChangesAsync();
+
+            //Act
+            await rps.LeaveAsync(property.Id, renterUser.Id);
+
+            //Assert
+            Assert.Multiple(async () =>
+            {
+                Assert.That(property.PropertyStatus.Name, Is.EqualTo("Free"));
+                Assert.That(property.RenterId, Is.Null);
+                Assert.That(renter!.RentedProperties!.Count,
+                    Is.EqualTo(await dbContext
+                    .Properties.CountAsync(p => p.RenterId == renter.Id)));
             });
         }
     }
