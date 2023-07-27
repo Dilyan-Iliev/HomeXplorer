@@ -505,101 +505,6 @@
             Assert.That(renter.FavouriteProperties, Is.Empty);
         }
 
-        //[Test]
-        //public async Task Get_Last_Three_For_Slider_Method_Should_Return_Correct_Data()
-        //{
-        //    //Arrange
-
-        //    ApplicationUser agentUser = new()
-        //    {
-        //        Id = "5898c6a7-da15-4f3b-abfd-16cdd14ca50c",
-        //        FirstName = "Test",
-        //        LastName = "Testov"
-        //    };
-
-        //    var propStatus = new PropertyStatus() { Id = 1, Name = "Free" };
-        //    var buildType = new BuildingType() { Id = 1, Name = "testBuild" };
-
-        //    Property property1 = new()
-        //    {
-        //        Id = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
-        //        Name = "TestName2",
-        //        Address = "TestAddress2",
-        //        Description = "TestDescription2",
-        //        CityId = 1,
-        //        Price = 10,
-        //        Size = 5,
-        //        PropertyStatusId = propStatus.Id,
-        //        BuildingTypeId = buildType.Id,
-        //        AgentId = 1,
-        //        Images = new List<CloudImage>()
-        //        {
-        //            new CloudImage()
-        //            {
-        //                Id = 1,
-        //                PropertyId = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
-        //                Url = "test.test"
-        //            }
-        //        },
-        //        RenterId = null
-        //    };
-
-        //    Property property2 = new()
-        //    {
-        //        Id = Guid.Parse("64ee63f0-f5e5-4f93-ad53-afff3c0586a4"),
-        //        Name = "TestName2",
-        //        Address = "TestAddress2",
-        //        Description = "TestDescription2",
-        //        CityId = 1,
-        //        Price = 10,
-        //        Size = 5,
-        //        PropertyStatusId = propStatus.Id,
-        //        BuildingTypeId = buildType.Id,
-        //        AgentId = 1,
-        //        Images = new List<CloudImage>()
-        //        {
-        //            new CloudImage()
-        //            {
-        //                Id = 2,
-        //                PropertyId = Guid.Parse("64ee63f0-f5e5-4f93-ad53-afff3c0586a4"),
-        //                Url = "test.test"
-        //            }
-        //        },
-        //        RenterId = null
-        //    };
-
-        //    Agent agent = new()
-        //    {
-        //        Id = 1,
-        //        UserId = agentUser.Id,
-        //        City = new City()
-        //        {
-        //            Id = 2,
-        //            Name = "Test2",
-        //            Country = new Country()
-        //            {
-        //                Id = 2,
-        //                Name = "Test2",
-        //            }
-        //        },
-        //        Properties = new List<Property>()
-        //        {
-        //            property1, property2
-        //        },
-        //        ProfilePictureUrl = "testPicture",
-        //    };
-
-        //    await dbContext.Users.AddAsync(agentUser);
-        //    await dbContext.Agents.AddAsync(agent);
-        //    await dbContext.Properties.AddAsync(property1);
-        //    await dbContext.Properties.AddAsync(property2);
-        //    await dbContext.BuildingTypes.AddAsync(buildType);
-        //    await dbContext.SaveChangesAsync();
-
-        //    //Act
-        //    var result = await rps.GetLastThreeAddedForSliderAsync();
-        //}
-
         [Test]
         public async Task Get_Property_Details_Method_Should_Return_Correct_Data()
         {
@@ -635,11 +540,7 @@
                 Reviews = new List<Review>()
                 {
                     new Review()
-                    {
-                        Id = 1,
-                        Description = "Test1",
-                        ReviewCreatorId = 1,
-                    }
+                    {Id = 1,Description = "Test1",ReviewCreatorId = 1}
                 }
             };
 
@@ -664,11 +565,7 @@
                 Images = new List<CloudImage>()
                 {
                     new CloudImage()
-                    {
-                        Id = 1,
-                        PropertyId = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
-                        Url = "test.test"
-                    },
+                    {Id = 1,PropertyId = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),Url = "test.test"},
                 }
             };
 
@@ -722,6 +619,182 @@
                 Assert.That(result.AgentFullName,
                     Is.EqualTo($"{property.Agent.User.FirstName} {property.Agent.User.LastName}"));
                 Assert.That(result.AgentProfilePicture, Is.EqualTo(property.Agent.ProfilePictureUrl));
+            });
+        }
+
+        [Test]
+        public async Task Get_Property_Details_Method_Should_Return_Null_If_No_Property_Was_Found()
+        {
+            //Arrange
+            ApplicationUser agentUser = new()
+            {
+                Id = "5898c6a7-da15-4f3b-abfd-16cdd14ca50c",
+                FirstName = "Test",
+                LastName = "Testov"
+            };
+
+            Property property = new()
+            {
+                Id = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
+                Name = "TestName2",
+                Address = "TestAddress2",
+                Description = "TestDescription2",
+                CityId = 1,
+                Price = 10,
+                Size = 5,
+                PropertyStatusId = 1,
+                BuildingTypeId = 1,
+                PropertyTypeId = 1,
+                AgentId = 1,
+                Images = new List<CloudImage>()
+                {
+                    new CloudImage()
+                    {Id = 1,PropertyId = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),Url = "test.test"},
+                }
+            };
+
+            Property property2 = new()
+            {
+                Id = Guid.Parse("64ee63f0-f5e5-4f93-ad64-bfff3c0886a2"),
+                Name = "TestName2",
+                Address = "TestAddress2",
+                Description = "TestDescription2",
+                CityId = 1,
+                Price = 10,
+                Size = 5,
+                PropertyStatusId = 1,
+                BuildingTypeId = 1,
+                PropertyTypeId = 1,
+                AgentId = 2,
+                Images = new List<CloudImage>()
+                {
+                    new CloudImage()
+                    {Id = 2,PropertyId = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),Url = "test.test"},
+                }
+            };
+
+            Agent agent = new()
+            {
+                Id = 1,
+                UserId = agentUser.Id,
+                City = new City()
+                {
+                    Id = 2,
+                    Name = "Test2",
+                    Country = new Country()
+                    { Id = 2, Name = "Test2" }
+                },
+                Properties = new List<Property>() { property },
+                ProfilePictureUrl = "testPicture",
+            };
+
+            await dbContext.Users.AddAsync(agentUser);
+            await dbContext.Agents.AddAsync(agent);
+            await dbContext.SaveChangesAsync();
+
+            //Act
+            var result = await rps.GetPropertyDetailsAsync(property2.Id, agentUser.Id);
+
+            //Assert
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public async Task Rent_Method_Should_Increse_Rented_Properties_Of_Renter_User()
+        {
+            //Arrange
+            ApplicationUser renterUser = new()
+            {
+                Id = "7898c6a7-da15-4f3b-abfd-16cdd74ca80a",
+                FirstName = "Test",
+                LastName = "Testov",
+                Email = "test@abv.bg",
+                PhoneNumber = "000"
+            };
+
+            ApplicationUser agentUser = new()
+            {
+                Id = "5898c6a7-da15-4f3b-abfd-16cdd14ca50c",
+                FirstName = "Test",
+                LastName = "Testov"
+            };
+
+            Renter renter = new()
+            {
+                Id = 1,
+                UserId = renterUser.Id,
+                City = new City()
+                {
+                    Id = 1,
+                    Name = "Test",
+                    Country = new Country()
+                    { Id = 1, Name = "Test" }
+                },
+                ProfilePictureUrl = "test.test",
+                Reviews = new List<Review>()
+                {
+                    new Review()
+                    {Id = 1,Description = "Test1",ReviewCreatorId = 1}
+                }
+            };
+
+            var propStatus = new PropertyStatus() { Id = 1, Name = "Free" };
+            var buildType = new BuildingType() { Id = 1, Name = "testBuild" };
+            var propType = new PropertyType() { Id = 1, Name = "testStatus" };
+
+            Property property = new()
+            {
+                Id = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),
+                Name = "TestName2",
+                Address = "TestAddress2",
+                Description = "TestDescription2",
+                CityId = 1,
+                Price = 10,
+                Size = 5,
+                PropertyStatusId = propStatus.Id,
+                BuildingTypeId = buildType.Id,
+                PropertyTypeId = propType.Id,
+                AgentId = 1,
+                Images = new List<CloudImage>()
+                {
+                    new CloudImage()
+                    {Id = 1,PropertyId = Guid.Parse("63ee63f0-f5e5-4f93-ad53-afff3c0886a2"),Url = "test.test"},
+                }
+            };
+
+            Agent agent = new()
+            {
+                Id = 1,
+                UserId = agentUser.Id,
+                City = new City()
+                {
+                    Id = 2,
+                    Name = "Test2",
+                    Country = new Country()
+                    { Id = 2, Name = "Test2" }
+                },
+                Properties = new List<Property>() { property },
+                ProfilePictureUrl = "testPicture",
+            };
+
+            await dbContext.Users.AddAsync(agentUser);
+            await dbContext.Users.AddAsync(renterUser);
+            await dbContext.Agents.AddAsync(agent);
+            await dbContext.Renters.AddAsync(renter);
+            await dbContext.BuildingTypes.AddAsync(buildType);
+            await dbContext.PropertyTypes.AddAsync(propType);
+            await dbContext.PropertyStatuses.AddAsync(propStatus);
+            await dbContext.SaveChangesAsync();
+
+            //Act
+            await rps.RentAsync(property.Id, renterUser.Id);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(property.PropertyStatus.Name, Is.EqualTo("Taken"));
+                Assert.That(property.RenterId, Is.Not.Null);
+                Assert.That(property.RenterId, Is.EqualTo(renter.Id));
             });
         }
     }
