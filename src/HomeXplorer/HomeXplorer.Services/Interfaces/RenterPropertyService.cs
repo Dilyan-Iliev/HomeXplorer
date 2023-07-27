@@ -417,8 +417,7 @@
                     AgentEmail = p.Agent.User.Email,
                     AgentPhone = p.Agent.User.PhoneNumber,
                     AgentFullName = $"{p.Agent.User.FirstName} {p.Agent.User.LastName}",
-                    AgentProfilePicture = p.Agent.ProfilePictureUrl,
-                    //IsAddedToFavs
+                    AgentProfilePicture = p.Agent.ProfilePictureUrl
                 })
                 .FirstOrDefaultAsync();
 
