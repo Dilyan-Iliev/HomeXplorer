@@ -4,10 +4,18 @@
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
     using HomeXplorer.Data.Entities;
+    using HomeXplorer.Data.Models.Seeding;
 
     public class RenterConfiguration
         : IEntityTypeConfiguration<Renter>
     {
+        private readonly RenterSeeder seeder;
+
+        public RenterConfiguration()
+        {
+            this.seeder = new RenterSeeder();
+        }
+
         public void Configure(EntityTypeBuilder<Renter> builder)
         {
             builder
@@ -15,6 +23,9 @@
                 .WithOne(x => x.Renter)
                 .HasForeignKey(x => x.RenterId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            var renters = seeder.GenerateRenters();
+            builder.HasData(renters);
         }
     }
 }

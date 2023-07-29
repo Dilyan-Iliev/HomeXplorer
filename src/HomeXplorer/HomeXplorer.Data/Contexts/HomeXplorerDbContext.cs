@@ -45,6 +45,7 @@
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new ApplicationUserRoleConfiguration());
+            builder.ApplyConfiguration(new AgentConfiguration());
             builder.ApplyConfiguration(new RenterConfiguration());
             builder.ApplyConfiguration(new PropertyTypeConfiguration());
             builder.ApplyConfiguration(new PropertyStatusConfiguration());
@@ -52,6 +53,7 @@
             builder.ApplyConfiguration(new CountryConfiguration());
             builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new PropertyConfiguration());
+            builder.ApplyConfiguration(new CloudImageConfiguration());
             builder.ApplyConfiguration(new RenterPropertyFavoriteConfiguration());
 
             base.OnModelCreating(builder);

@@ -18,7 +18,7 @@
 
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            var users = this.seeder.GenerateAdminUser();
+            var users = this.seeder.GenerateInitialUsers();
             builder.HasData(users);
         }
     }

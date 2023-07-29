@@ -18,8 +18,8 @@
 
         public void Configure(EntityTypeBuilder<IdentityUserRole<string>> builder)
         {
-            var adminUserRole = this.seeder.MapRoleToAdminUser();
-            builder.HasData(adminUserRole);
+            var mappedRoles = this.seeder.MapRolesToUsers();
+            builder.HasData(mappedRoles);
         }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeXplorer.Data.Migrations
 {
     [DbContext(typeof(HomeXplorerDbContext))]
-    [Migration("20230718144959_SeedAdminUser")]
-    partial class SeedAdminUser
+    [Migration("20230729143712_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,6 +56,15 @@ namespace HomeXplorer.Data.Migrations
                     b.ToTable("Agents");
 
                     b.HasComment("Agent who offers the property");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CityId = 1,
+                            ProfilePictureUrl = "https://res.cloudinary.com/degtesnvc/image/upload/v1688283726/default-avatar-profile-icon-of-social-media-user-vector_lcoi8s.jpg",
+                            UserId = "6ea2b1f0-3183-4fe5-b2fa-83b765e18e55"
+                        });
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.ApplicationUser", b =>
@@ -143,7 +152,7 @@ namespace HomeXplorer.Data.Migrations
                         {
                             Id = "a30c9896-54aa-4901-878a-b1bd6417f91e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ede945b6-99ea-4532-b1e0-033990354bba",
+                            ConcurrencyStamp = "e1243e4b-253b-488c-8042-2c5666f21188",
                             Email = "applicationtest@abv.bg",
                             EmailConfirmed = false,
                             FirstName = "Platform",
@@ -151,12 +160,50 @@ namespace HomeXplorer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "APPLICATIONTEST@ABV.BG",
                             NormalizedUserName = "APPLICATIONTEST@ABV.BG",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKZ4rMemeLkpW9zkE+gSuRWi1m8OptD0g1umci9gnn3UrwWaZ0huYRjH/DcQtg3DvQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPvhHAfR7h8xtejl6E6axiLWbwMtzRSJVek/06RDUBHfnEkLA07BWop4PXVr6CO3eg==",
                             PhoneNumberConfirmed = false,
-                            RegisteredOn = new DateTime(2023, 7, 18, 14, 49, 58, 349, DateTimeKind.Utc).AddTicks(6719),
-                            SecurityStamp = "5f25bbf2-fca0-4b5c-8860-69e8dd527f57",
+                            RegisteredOn = new DateTime(2023, 7, 29, 14, 37, 11, 509, DateTimeKind.Utc).AddTicks(9874),
+                            SecurityStamp = "78e595fc-02ac-48df-b5af-f39f6ed6d8b6",
                             TwoFactorEnabled = false,
                             UserName = "applicationtest@abv.bg"
+                        },
+                        new
+                        {
+                            Id = "6ea2b1f0-3183-4fe5-b2fa-83b765e18e55",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d84679c2-bece-47b0-b17e-6a4708be645c",
+                            Email = "agenttest@test.bg",
+                            EmailConfirmed = false,
+                            FirstName = "Initial",
+                            LastName = "Agent",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "AGENTTEST@TEST.BG",
+                            NormalizedUserName = "AGENTTEST@TEST.BG",
+                            PasswordHash = "AQAAAAEAACcQAAAAECk7G1enJp+i6liB1luB4X2zrMERokXG9s5yRuaswRZRjmgBnpkkMZfsGqFfyA1nDw==",
+                            PhoneNumberConfirmed = false,
+                            RegisteredOn = new DateTime(2023, 7, 29, 14, 37, 11, 522, DateTimeKind.Utc).AddTicks(1942),
+                            SecurityStamp = "5260ab13-f5a1-4d0c-86c4-e466a024781f",
+                            TwoFactorEnabled = false,
+                            UserName = "agenttest@test.bg"
+                        },
+                        new
+                        {
+                            Id = "fad56a17-221a-409c-b9aa-5fa0f274f9c0",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "226ad7b6-8283-4dcb-aac2-b9a3010e0f28",
+                            Email = "renterttest@test.bg",
+                            EmailConfirmed = false,
+                            FirstName = "Initial",
+                            LastName = "Renter",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "RENTERTEST@TEST.BG",
+                            NormalizedUserName = "renterTEST@TEST.BG",
+                            PasswordHash = "AQAAAAEAACcQAAAAELAsUxexZMQtK4J0YYlTdjzY5QtXcNXZm2hmXhmBvy95UOXuPJqZxWuNHMoov4qu2A==",
+                            PhoneNumberConfirmed = false,
+                            RegisteredOn = new DateTime(2023, 7, 29, 14, 37, 11, 536, DateTimeKind.Utc).AddTicks(4810),
+                            SecurityStamp = "c3949aec-dfc3-47bc-8ab6-d413628ed3a6",
+                            TwoFactorEnabled = false,
+                            UserName = "rentertest@test.bg"
                         });
                 });
 
@@ -1787,6 +1834,86 @@ namespace HomeXplorer.Data.Migrations
                     b.ToTable("CloudImages");
 
                     b.HasComment("Image of the property");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            PropertyId = new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554425/386038_64_St_W_Okotoks-1_rk3g0b_umsjgr.webp"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            PropertyId = new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554425/386038_64_St_W_Okotoks-14_eabwwr_cmcayy.webp"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            PropertyId = new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554425/386038_64_St_W_Okotoks-24_upzvcz_wakzke.webp"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            PropertyId = new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554425/386038_64_St_W_Okotoks-13_xmndng_wajp67.webp"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            PropertyId = new Guid("62373c07-f1e7-4813-ba49-bc8a61ad8f26"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554623/krtajna-bali-indonesia-01_pyq5dc_jg4sqh.webp"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            PropertyId = new Guid("62373c07-f1e7-4813-ba49-bc8a61ad8f26"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554623/krtajna-bali-indonesia-02_czzwv0_mofzcq.webp"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            PropertyId = new Guid("62373c07-f1e7-4813-ba49-bc8a61ad8f26"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554623/krtajna-bali-indonesia-10_mqq0yu_lyrena.webp"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            PropertyId = new Guid("a9742cc5-14cf-424c-b5a5-f4ecba4e1453"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554832/3_-_DJI_20230704202223_0050_D_ycntes_sj7twt.webp"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            PropertyId = new Guid("a9742cc5-14cf-424c-b5a5-f4ecba4e1453"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554832/11_-_DJI_20230704192355_0019_D_j1gzep_gozyn7.webp"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            PropertyId = new Guid("a9742cc5-14cf-424c-b5a5-f4ecba4e1453"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554832/1_-_DJI_20230704192923_0029_D_pqslwu_jn21nr.webp"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            PropertyId = new Guid("e22089fd-8c9e-4600-94b7-ad946b779f07"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554994/huerta-grande-la-zubia-granada-spain01_ftjwx5_q2uwxc.webp"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            PropertyId = new Guid("e22089fd-8c9e-4600-94b7-ad946b779f07"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554994/huerta-grande-la-zubia-granada-spain04_cqwfiu_c1piur.webp"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            PropertyId = new Guid("e22089fd-8c9e-4600-94b7-ad946b779f07"),
+                            Url = "https://res.cloudinary.com/degtesnvc/image/upload/v1690554994/huerta-grande-la-zubia-granada-spain12_zk2jwn_o6rh3p.webp"
+                        });
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Country", b =>
@@ -1925,6 +2052,76 @@ namespace HomeXplorer.Data.Migrations
                     b.ToTable("Properties");
 
                     b.HasComment("Offered property");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"),
+                            AddedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Address = "123 Serenity Lane, Greenhaven, Sofia, 12345",
+                            AgentId = 1,
+                            BuildingTypeId = 1,
+                            CityId = 1,
+                            Description = "Welcome to Tranquil Solace Villa, a serene escape nestled amidst lush landscapes. This charming villa offers a perfect blend of luxury and comfort. Immerse yourself in the peaceful ambiance, away from the hustle and bustle, and experience the joy of simple living surrounded by nature's beauty",
+                            IsActive = true,
+                            ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Tranquil Haven Villa",
+                            Price = 1250m,
+                            PropertyStatusId = 1,
+                            PropertyTypeId = 1,
+                            Size = 100
+                        },
+                        new
+                        {
+                            Id = new Guid("62373c07-f1e7-4813-ba49-bc8a61ad8f26"),
+                            AddedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Address = "456 Tranquility Road, Woodland Springs, Plovdiv, 67890",
+                            AgentId = 1,
+                            BuildingTypeId = 2,
+                            CityId = 2,
+                            Description = "Discover Serenity Woods Retreat, a picturesque hideaway set in a woodland paradise. This enchanting retreat offers a cozy sanctuary where you can unwind and rejuvenate. Embrace the soothing sounds of nature, and let the stress melt away in this delightful haven of tranquility.",
+                            IsActive = true,
+                            ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Serenity Woods Retreat",
+                            Price = 1000m,
+                            PropertyStatusId = 1,
+                            PropertyTypeId = 4,
+                            Size = 180
+                        },
+                        new
+                        {
+                            Id = new Guid("a9742cc5-14cf-424c-b5a5-f4ecba4e1453"),
+                            AddedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Address = "789 Enchantment Avenue, Meadowland Heights, Sofia, 54321",
+                            AgentId = 1,
+                            BuildingTypeId = 1,
+                            CityId = 1,
+                            Description = "Step into the enchanting world of Enchanted Meadow Chalet, where fairy tales come to life. This whimsical chalet is surrounded by lush meadows, creating a magical ambiance that promises a unique and memorable experience. Indulge in the charm of this extraordinary abode and create cherished memories in this one-of-a-kind retreat.",
+                            IsActive = true,
+                            ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Enchanted Meadow Chalet",
+                            Price = 850m,
+                            PropertyStatusId = 1,
+                            PropertyTypeId = 1,
+                            Size = 95
+                        },
+                        new
+                        {
+                            Id = new Guid("e22089fd-8c9e-4600-94b7-ad946b779f07"),
+                            AddedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Address = "987 Harmony Hill, Summitview, Sofia, 24680",
+                            AgentId = 1,
+                            BuildingTypeId = 1,
+                            CityId = 1,
+                            Description = "Welcome to Harmony Heights Villa, an exclusive hilltop residence offering breathtaking panoramic views. This luxurious villa combines elegance with the serenity of its elevated location. Enjoy a life of opulence and privacy in this stunning retreat, where you can revel in the beauty of the surroundings while indulging in modern comforts.",
+                            IsActive = true,
+                            ModifiedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Harmony Heights Villa",
+                            Price = 1400m,
+                            PropertyStatusId = 1,
+                            PropertyTypeId = 1,
+                            Size = 150
+                        });
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.PropertyStatus", b =>
@@ -2054,6 +2251,15 @@ namespace HomeXplorer.Data.Migrations
                     b.ToTable("Renters");
 
                     b.HasComment("Renter of the property");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CityId = 1,
+                            ProfilePictureUrl = "https://res.cloudinary.com/degtesnvc/image/upload/v1688283726/default-avatar-profile-icon-of-social-media-user-vector_lcoi8s.jpg",
+                            UserId = "fad56a17-221a-409c-b9aa-5fa0f274f9c0"
+                        });
                 });
 
             modelBuilder.Entity("HomeXplorer.Data.Entities.Review", b =>
@@ -2073,6 +2279,10 @@ namespace HomeXplorer.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasComment("Review description");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit")
+                        .HasComment("Indicates if the review is approved");
 
                     b.Property<int>("ReviewCreatorId")
                         .HasColumnType("int")
@@ -2140,6 +2350,20 @@ namespace HomeXplorer.Data.Migrations
                             ConcurrencyStamp = "f5d5297a-1cdd-4236-ae81-bf1e7ff0f75e",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = "1fec1601-56ea-4757-ae65-590e0007a356",
+                            ConcurrencyStamp = "cb14d5e0-d3f3-41ef-8ff5-c13c7b030c30",
+                            Name = "Agent",
+                            NormalizedName = "AGENT"
+                        },
+                        new
+                        {
+                            Id = "66a2871f-9cc2-4ece-93b9-8ec584db7ed1",
+                            ConcurrencyStamp = "17987d43-6434-48ee-a2d9-3dafa661aa41",
+                            Name = "Renter",
+                            NormalizedName = "Renter"
                         });
                 });
 
@@ -2236,6 +2460,16 @@ namespace HomeXplorer.Data.Migrations
                         {
                             UserId = "a30c9896-54aa-4901-878a-b1bd6417f91e",
                             RoleId = "e7c3115f-215e-4f62-a15f-ffa31b0f6ac1"
+                        },
+                        new
+                        {
+                            UserId = "6ea2b1f0-3183-4fe5-b2fa-83b765e18e55",
+                            RoleId = "1fec1601-56ea-4757-ae65-590e0007a356"
+                        },
+                        new
+                        {
+                            UserId = "fad56a17-221a-409c-b9aa-5fa0f274f9c0",
+                            RoleId = "66a2871f-9cc2-4ece-93b9-8ec584db7ed1"
                         });
                 });
 

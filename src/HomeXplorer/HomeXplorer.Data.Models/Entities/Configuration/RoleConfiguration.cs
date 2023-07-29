@@ -18,8 +18,8 @@
 
         public void Configure(EntityTypeBuilder<IdentityRole> builder)
         {
-           var adminRole = this.seeder.GenerateAdminRole();
-            builder.HasData(adminRole);
+            var roles = this.seeder.GenerateRoles();
+            builder.HasData(roles);
         }
     }
 }

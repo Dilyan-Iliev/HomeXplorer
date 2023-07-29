@@ -795,8 +795,8 @@
                 Assert.That(property.PropertyStatus.Name, Is.EqualTo("Taken"));
                 Assert.That(property.RenterId, Is.Not.Null);
                 Assert.That(property.RenterId, Is.EqualTo(renter.Id));
-                Assert.That(renter!.RentedProperties!.Count,
-                    Is.EqualTo(await dbContext
+                Assert.That(renter!.RentedProperties!,
+                    Has.Count.EqualTo(await dbContext
                     .Properties.CountAsync(p => p.RenterId == renter.Id)));
             });
         }
@@ -897,8 +897,8 @@
             {
                 Assert.That(property.PropertyStatus.Name, Is.EqualTo("Free"));
                 Assert.That(property.RenterId, Is.Null);
-                Assert.That(renter!.RentedProperties!.Count,
-                    Is.EqualTo(await dbContext
+                Assert.That(renter!.RentedProperties!,
+                    Has.Count.EqualTo(await dbContext
                     .Properties.CountAsync(p => p.RenterId == renter.Id)));
             });
         }

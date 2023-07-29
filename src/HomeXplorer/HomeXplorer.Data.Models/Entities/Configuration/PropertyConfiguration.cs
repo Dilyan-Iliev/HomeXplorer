@@ -1,11 +1,19 @@
 ﻿namespace HomeXplorer.Data.Entities.Configuration
 {
+    using HomeXplorer.Data.Models.Seeding;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
     public class PropertyConfiguration
         : IEntityTypeConfiguration<Property>
     {
+        private readonly PropertySeeder seeder;
+
+        public PropertyConfiguration()
+        {
+            this.seeder = new PropertySeeder();
+        }
+
         public void Configure(EntityTypeBuilder<Property> builder)
         {
             builder
@@ -25,6 +33,9 @@
                 .WithOne(x => x.Property)
                 .HasForeignKey(x => x.PropertyId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            var properties = seeder.GenerateProperties();
+            builder.HasData(properties);
         }
     }
 }

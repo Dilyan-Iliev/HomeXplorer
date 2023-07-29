@@ -374,20 +374,15 @@ namespace HomeXplorer.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Review description"),
                     AddedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date and time when the review was added"),
-                    ReviewerId = table.Column<int>(type: "int", nullable: false, comment: "Reviewer ID"),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ReviewCreatorId = table.Column<int>(type: "int", nullable: false, comment: "Reviewer ID"),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the review is approved")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reviews_Renters_ReviewerId",
-                        column: x => x.ReviewerId,
+                        name: "FK_Reviews_Renters_ReviewCreatorId",
+                        column: x => x.ReviewCreatorId,
                         principalTable: "Renters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -419,7 +414,8 @@ namespace HomeXplorer.Data.Migrations
                 columns: table => new
                 {
                     RenterId = table.Column<int>(type: "int", nullable: false),
-                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AddedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -436,6 +432,26 @@ namespace HomeXplorer.Data.Migrations
                         principalColumn: "Id");
                 },
                 comment: "Linking table representing favorite properties for renters");
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "1fec1601-56ea-4757-ae65-590e0007a356", "cb14d5e0-d3f3-41ef-8ff5-c13c7b030c30", "Agent", "AGENT" },
+                    { "66a2871f-9cc2-4ece-93b9-8ec584db7ed1", "17987d43-6434-48ee-a2d9-3dafa661aa41", "Renter", "Renter" },
+                    { "e7c3115f-215e-4f62-a15f-ffa31b0f6ac1", "f5d5297a-1cdd-4236-ae81-bf1e7ff0f75e", "Administrator", "ADMINISTRATOR" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RegisteredOn", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { "6ea2b1f0-3183-4fe5-b2fa-83b765e18e55", 0, "d84679c2-bece-47b0-b17e-6a4708be645c", "agenttest@test.bg", false, "Initial", "Agent", false, null, "AGENTTEST@TEST.BG", "AGENTTEST@TEST.BG", "AQAAAAEAACcQAAAAECk7G1enJp+i6liB1luB4X2zrMERokXG9s5yRuaswRZRjmgBnpkkMZfsGqFfyA1nDw==", null, false, new DateTime(2023, 7, 29, 14, 37, 11, 522, DateTimeKind.Utc).AddTicks(1942), "5260ab13-f5a1-4d0c-86c4-e466a024781f", false, "agenttest@test.bg" },
+                    { "a30c9896-54aa-4901-878a-b1bd6417f91e", 0, "e1243e4b-253b-488c-8042-2c5666f21188", "applicationtest@abv.bg", false, "Platform", "Admin", false, null, "APPLICATIONTEST@ABV.BG", "APPLICATIONTEST@ABV.BG", "AQAAAAEAACcQAAAAEPvhHAfR7h8xtejl6E6axiLWbwMtzRSJVek/06RDUBHfnEkLA07BWop4PXVr6CO3eg==", null, false, new DateTime(2023, 7, 29, 14, 37, 11, 509, DateTimeKind.Utc).AddTicks(9874), "78e595fc-02ac-48df-b5af-f39f6ed6d8b6", false, "applicationtest@abv.bg" },
+                    { "fad56a17-221a-409c-b9aa-5fa0f274f9c0", 0, "226ad7b6-8283-4dcb-aac2-b9a3010e0f28", "renterttest@test.bg", false, "Initial", "Renter", false, null, "RENTERTEST@TEST.BG", "renterTEST@TEST.BG", "AQAAAAEAACcQAAAAELAsUxexZMQtK4J0YYlTdjzY5QtXcNXZm2hmXhmBvy95UOXuPJqZxWuNHMoov4qu2A==", null, false, new DateTime(2023, 7, 29, 14, 37, 11, 536, DateTimeKind.Utc).AddTicks(4810), "c3949aec-dfc3-47bc-8ab6-d413628ed3a6", false, "rentertest@test.bg" }
+                });
 
             migrationBuilder.InsertData(
                 table: "BuildingTypes",
@@ -474,6 +490,16 @@ namespace HomeXplorer.Data.Migrations
                     { 5, "Ranch" },
                     { 6, "Studio" },
                     { 7, "Residential area" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { "1fec1601-56ea-4757-ae65-590e0007a356", "6ea2b1f0-3183-4fe5-b2fa-83b765e18e55" },
+                    { "e7c3115f-215e-4f62-a15f-ffa31b0f6ac1", "a30c9896-54aa-4901-878a-b1bd6417f91e" },
+                    { "66a2871f-9cc2-4ece-93b9-8ec584db7ed1", "fad56a17-221a-409c-b9aa-5fa0f274f9c0" }
                 });
 
             migrationBuilder.InsertData(
@@ -519,10 +545,7 @@ namespace HomeXplorer.Data.Migrations
                     { 36, 1, "Aytos" },
                     { 37, 1, "Omurtag" },
                     { 38, 1, "Velingrad" },
-                    { 39, 1, "Isperih" },
-                    { 40, 1, "Karlovo" },
-                    { 41, 1, "Lom" },
-                    { 42, 1, "Panagyurishte" }
+                    { 39, 1, "Isperih" }
                 });
 
             migrationBuilder.InsertData(
@@ -530,6 +553,9 @@ namespace HomeXplorer.Data.Migrations
                 columns: new[] { "Id", "CountryId", "Name" },
                 values: new object[,]
                 {
+                    { 40, 1, "Karlovo" },
+                    { 41, 1, "Lom" },
+                    { 42, 1, "Panagyurishte" },
                     { 43, 1, "Botevgrad" },
                     { 44, 1, "Peshtera" },
                     { 45, 1, "Rakovski" },
@@ -568,10 +594,7 @@ namespace HomeXplorer.Data.Migrations
                     { 78, 1, "Dolna Banya" },
                     { 79, 1, "Vetovo" },
                     { 80, 1, "Kazichene" },
-                    { 81, 1, "Ignatievo" },
-                    { 82, 1, "Kostandovo" },
-                    { 83, 1, "Bukovlak" },
-                    { 84, 1, "Koynare" }
+                    { 81, 1, "Ignatievo" }
                 });
 
             migrationBuilder.InsertData(
@@ -579,6 +602,9 @@ namespace HomeXplorer.Data.Migrations
                 columns: new[] { "Id", "CountryId", "Name" },
                 values: new object[,]
                 {
+                    { 82, 1, "Kostandovo" },
+                    { 83, 1, "Bukovlak" },
+                    { 84, 1, "Koynare" },
                     { 85, 1, "Slavyanovo" },
                     { 86, 1, "Kalipetrovo" },
                     { 87, 1, "Trud" },
@@ -617,10 +643,7 @@ namespace HomeXplorer.Data.Migrations
                     { 120, 1, "Nikolovo" },
                     { 121, 1, "Ravda" },
                     { 122, 1, "Glozhene" },
-                    { 123, 1, "Novo Selo" },
-                    { 124, 1, "Kurtovo Konare" },
-                    { 125, 1, "Ablanitsa" },
-                    { 126, 1, "Skutare" }
+                    { 123, 1, "Novo Selo" }
                 });
 
             migrationBuilder.InsertData(
@@ -628,6 +651,9 @@ namespace HomeXplorer.Data.Migrations
                 columns: new[] { "Id", "CountryId", "Name" },
                 values: new object[,]
                 {
+                    { 124, 1, "Kurtovo Konare" },
+                    { 125, 1, "Ablanitsa" },
+                    { 126, 1, "Skutare" },
                     { 127, 1, "Sadovo" },
                     { 128, 1, "Chepintsi" },
                     { 129, 1, "Parvomaytsi" },
@@ -666,10 +692,7 @@ namespace HomeXplorer.Data.Migrations
                     { 162, 1, "Seliminovo" },
                     { 163, 1, "Uzundzhovo" },
                     { 164, 1, "Busmantsi" },
-                    { 165, 1, "Polikrayshte" },
-                    { 166, 1, "Lesnovo" },
-                    { 167, 1, "Merichleri" },
-                    { 168, 1, "Lyuben Karavelovo" }
+                    { 165, 1, "Polikrayshte" }
                 });
 
             migrationBuilder.InsertData(
@@ -677,6 +700,9 @@ namespace HomeXplorer.Data.Migrations
                 columns: new[] { "Id", "CountryId", "Name" },
                 values: new object[,]
                 {
+                    { 166, 1, "Lesnovo" },
+                    { 167, 1, "Merichleri" },
+                    { 168, 1, "Lyuben Karavelovo" },
                     { 169, 1, "Divotino" },
                     { 170, 1, "Byal Izvor" },
                     { 171, 1, "Kermen" },
@@ -715,10 +741,7 @@ namespace HomeXplorer.Data.Migrations
                     { 204, 1, "Kosharitsa" },
                     { 205, 1, "Konstantinovo" },
                     { 206, 1, "Yabalchevo" },
-                    { 207, 1, "Galabets" },
-                    { 208, 1, "Chervena Voda" },
-                    { 209, 1, "Veselinovo" },
-                    { 210, 1, "Bata" }
+                    { 207, 1, "Galabets" }
                 });
 
             migrationBuilder.InsertData(
@@ -726,6 +749,9 @@ namespace HomeXplorer.Data.Migrations
                 columns: new[] { "Id", "CountryId", "Name" },
                 values: new object[,]
                 {
+                    { 208, 1, "Chervena Voda" },
+                    { 209, 1, "Veselinovo" },
+                    { 210, 1, "Bata" },
                     { 211, 1, "Rudartsi" },
                     { 212, 1, "Dolni Bogrov" },
                     { 213, 1, "Aldomirovtsi" },
@@ -764,10 +790,7 @@ namespace HomeXplorer.Data.Migrations
                     { 246, 1, "Borovo" },
                     { 247, 1, "Cherven Breg" },
                     { 248, 1, "Snyagovo" },
-                    { 249, 1, "Krastava" },
-                    { 250, 1, "Kadievo" },
-                    { 251, 1, "Voysil" },
-                    { 252, 1, "Vresovo" }
+                    { 249, 1, "Krastava" }
                 });
 
             migrationBuilder.InsertData(
@@ -775,10 +798,54 @@ namespace HomeXplorer.Data.Migrations
                 columns: new[] { "Id", "CountryId", "Name" },
                 values: new object[,]
                 {
+                    { 250, 1, "Kadievo" },
+                    { 251, 1, "Voysil" },
+                    { 252, 1, "Vresovo" },
                     { 253, 1, "Vinitsa" },
                     { 254, 1, "Mortagonovo" },
                     { 255, 1, "Izvorsko" },
                     { 256, 1, "Dobroslavtsi" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Agents",
+                columns: new[] { "Id", "CityId", "ProfilePictureUrl", "UserId" },
+                values: new object[] { 1, 1, "https://res.cloudinary.com/degtesnvc/image/upload/v1688283726/default-avatar-profile-icon-of-social-media-user-vector_lcoi8s.jpg", "6ea2b1f0-3183-4fe5-b2fa-83b765e18e55" });
+
+            migrationBuilder.InsertData(
+                table: "Renters",
+                columns: new[] { "Id", "CityId", "ProfilePictureUrl", "UserId" },
+                values: new object[] { 1, 1, "https://res.cloudinary.com/degtesnvc/image/upload/v1688283726/default-avatar-profile-icon-of-social-media-user-vector_lcoi8s.jpg", "fad56a17-221a-409c-b9aa-5fa0f274f9c0" });
+
+            migrationBuilder.InsertData(
+                table: "Properties",
+                columns: new[] { "Id", "AddedOn", "Address", "AgentId", "BuildingTypeId", "CityId", "Description", "IsActive", "ModifiedOn", "Name", "Price", "PropertyStatusId", "PropertyTypeId", "RenterId", "Size" },
+                values: new object[,]
+                {
+                    { new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "123 Serenity Lane, Greenhaven, Sofia, 12345", 1, 1, 1, "Welcome to Tranquil Solace Villa, a serene escape nestled amidst lush landscapes. This charming villa offers a perfect blend of luxury and comfort. Immerse yourself in the peaceful ambiance, away from the hustle and bustle, and experience the joy of simple living surrounded by nature's beauty", true, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Tranquil Haven Villa", 1250m, 1, 1, null, 100 },
+                    { new Guid("62373c07-f1e7-4813-ba49-bc8a61ad8f26"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "456 Tranquility Road, Woodland Springs, Plovdiv, 67890", 1, 2, 2, "Discover Serenity Woods Retreat, a picturesque hideaway set in a woodland paradise. This enchanting retreat offers a cozy sanctuary where you can unwind and rejuvenate. Embrace the soothing sounds of nature, and let the stress melt away in this delightful haven of tranquility.", true, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Serenity Woods Retreat", 1000m, 1, 4, null, 180 },
+                    { new Guid("a9742cc5-14cf-424c-b5a5-f4ecba4e1453"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "789 Enchantment Avenue, Meadowland Heights, Sofia, 54321", 1, 1, 1, "Step into the enchanting world of Enchanted Meadow Chalet, where fairy tales come to life. This whimsical chalet is surrounded by lush meadows, creating a magical ambiance that promises a unique and memorable experience. Indulge in the charm of this extraordinary abode and create cherished memories in this one-of-a-kind retreat.", true, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Enchanted Meadow Chalet", 850m, 1, 1, null, 95 },
+                    { new Guid("e22089fd-8c9e-4600-94b7-ad946b779f07"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "987 Harmony Hill, Summitview, Sofia, 24680", 1, 1, 1, "Welcome to Harmony Heights Villa, an exclusive hilltop residence offering breathtaking panoramic views. This luxurious villa combines elegance with the serenity of its elevated location. Enjoy a life of opulence and privacy in this stunning retreat, where you can revel in the beauty of the surroundings while indulging in modern comforts.", true, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Harmony Heights Villa", 1400m, 1, 1, null, 150 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "CloudImages",
+                columns: new[] { "Id", "PropertyId", "Url" },
+                values: new object[,]
+                {
+                    { 1, new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554425/386038_64_St_W_Okotoks-1_rk3g0b_umsjgr.webp" },
+                    { 2, new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554425/386038_64_St_W_Okotoks-14_eabwwr_cmcayy.webp" },
+                    { 3, new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554425/386038_64_St_W_Okotoks-24_upzvcz_wakzke.webp" },
+                    { 4, new Guid("5edf4581-d8ae-4a8f-b2f3-2c87b7d10799"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554425/386038_64_St_W_Okotoks-13_xmndng_wajp67.webp" },
+                    { 5, new Guid("62373c07-f1e7-4813-ba49-bc8a61ad8f26"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554623/krtajna-bali-indonesia-01_pyq5dc_jg4sqh.webp" },
+                    { 6, new Guid("62373c07-f1e7-4813-ba49-bc8a61ad8f26"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554623/krtajna-bali-indonesia-02_czzwv0_mofzcq.webp" },
+                    { 7, new Guid("62373c07-f1e7-4813-ba49-bc8a61ad8f26"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554623/krtajna-bali-indonesia-10_mqq0yu_lyrena.webp" },
+                    { 8, new Guid("a9742cc5-14cf-424c-b5a5-f4ecba4e1453"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554832/3_-_DJI_20230704202223_0050_D_ycntes_sj7twt.webp" },
+                    { 9, new Guid("a9742cc5-14cf-424c-b5a5-f4ecba4e1453"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554832/11_-_DJI_20230704192355_0019_D_j1gzep_gozyn7.webp" },
+                    { 10, new Guid("a9742cc5-14cf-424c-b5a5-f4ecba4e1453"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554832/1_-_DJI_20230704192923_0029_D_pqslwu_jn21nr.webp" },
+                    { 11, new Guid("e22089fd-8c9e-4600-94b7-ad946b779f07"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554994/huerta-grande-la-zubia-granada-spain01_ftjwx5_q2uwxc.webp" },
+                    { 12, new Guid("e22089fd-8c9e-4600-94b7-ad946b779f07"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554994/huerta-grande-la-zubia-granada-spain04_cqwfiu_c1piur.webp" },
+                    { 13, new Guid("e22089fd-8c9e-4600-94b7-ad946b779f07"), "https://res.cloudinary.com/degtesnvc/image/upload/v1690554994/huerta-grande-la-zubia-granada-spain12_zk2jwn_o6rh3p.webp" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -886,14 +953,9 @@ namespace HomeXplorer.Data.Migrations
                 column: "RenterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ApplicationUserId",
+                name: "IX_Reviews_ReviewCreatorId",
                 table: "Reviews",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ReviewerId",
-                table: "Reviews",
-                column: "ReviewerId");
+                column: "ReviewCreatorId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
