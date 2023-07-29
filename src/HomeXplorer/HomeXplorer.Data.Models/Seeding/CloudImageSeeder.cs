@@ -6,7 +6,7 @@
     {
         public ICollection<CloudImage> GenerateImages()
         {
-            return new List<CloudImage>
+            return new List<CloudImage>()
             {
                 new CloudImage()
                         {
