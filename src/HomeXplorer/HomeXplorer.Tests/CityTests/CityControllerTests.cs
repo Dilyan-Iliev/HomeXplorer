@@ -1,10 +1,12 @@
 ﻿namespace HomeXplorer.Tests.CityTests
 {
-    using HomeXplorer.Controllers;
-    using HomeXplorer.Services.Contracts;
-    using HomeXplorer.ViewModels.City;
     using Microsoft.AspNetCore.Mvc;
+
     using Moq;
+
+    using HomeXplorer.Controllers;
+    using HomeXplorer.ViewModels.City;
+    using HomeXplorer.Services.Contracts;
 
     public class CityControllerTests
     {
