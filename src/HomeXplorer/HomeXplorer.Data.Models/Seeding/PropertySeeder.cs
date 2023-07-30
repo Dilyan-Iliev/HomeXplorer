@@ -22,6 +22,7 @@
                     PropertyStatusId = 1,
                     AgentId = 1,
                     RenterId = null,
+                    AddedOn = DateTime.UtcNow
                 },
 
                 new Property()
@@ -38,6 +39,7 @@
                     PropertyStatusId = 1,
                     AgentId = 1,
                     RenterId = null,
+                    AddedOn = DateTime.UtcNow
                 },
 
                 new Property()
@@ -54,6 +56,7 @@
                     PropertyStatusId = 1,
                     AgentId = 1,
                     RenterId = null,
+                    AddedOn = DateTime.UtcNow
                 },
 
                 new Property()
@@ -70,6 +73,7 @@
                     PropertyStatusId = 1,
                     AgentId = 1,
                     RenterId = null,
+                    AddedOn = DateTime.UtcNow
                 }
             };
 

@@ -47,13 +47,13 @@
                 Id = "fad56a17-221a-409c-b9aa-5fa0f274f9c0",
                 FirstName = "Initial",
                 LastName = "Renter",
-                Email = "renterttest@test.bg",
+                Email = "rentertest@test.bg",
                 NormalizedEmail = "RENTERTEST@TEST.BG",
                 UserName = "rentertest@test.bg",
-                NormalizedUserName = "renterTEST@TEST.BG"
+                NormalizedUserName = "RENTERTEST@TEST.BG"
             };
 
-            renterUser.PasswordHash = hasher.HashPassword(agentUser, "homeXplorerRenter123!");
+            renterUser.PasswordHash = hasher.HashPassword(renterUser, "homeXplorerRenter123!");
 
             users.Add(renterUser);
 

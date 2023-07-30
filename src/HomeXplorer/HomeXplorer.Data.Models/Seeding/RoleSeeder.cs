@@ -28,7 +28,7 @@
                 {
                     Id = "66a2871f-9cc2-4ece-93b9-8ec584db7ed1",
                     Name = "Renter",
-                    NormalizedName = "Renter",
+                    NormalizedName = "RENTER",
                     ConcurrencyStamp = "17987d43-6434-48ee-a2d9-3dafa661aa41"
                 }
             };

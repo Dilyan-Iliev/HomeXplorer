@@ -4,6 +4,7 @@ using HomeXplorer.Core.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeXplorer.Data.Migrations
 {
     [DbContext(typeof(HomeXplorerDbContext))]
-    partial class HomeXplorerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230730140551_FixedSeedingBugs")]
+    partial class FixedSeedingBugs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,7 +152,7 @@ namespace HomeXplorer.Data.Migrations
                         {
                             Id = "a30c9896-54aa-4901-878a-b1bd6417f91e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8d4bc3be-2202-40b8-be4e-769e4fbeeb12",
+                            ConcurrencyStamp = "2eb4435a-2d29-46d1-afe3-9aa8b749447c",
                             Email = "applicationtest@abv.bg",
                             EmailConfirmed = false,
                             FirstName = "Platform",
@@ -158,10 +160,10 @@ namespace HomeXplorer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "APPLICATIONTEST@ABV.BG",
                             NormalizedUserName = "APPLICATIONTEST@ABV.BG",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIhSu7wydhjSiDaZoodCm0ZuEJa73TaxLw7/iWAGU9dIIoxDeNt8ResUOsBdIx+9WA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAMpIqa/zkspf36XY9B8mnCA3OPF9vhikFRWJqx8JidRh6NQd49zwtvPaaCgIoNDjw==",
                             PhoneNumberConfirmed = false,
-                            RegisteredOn = new DateTime(2023, 7, 30, 14, 8, 56, 928, DateTimeKind.Utc).AddTicks(8452),
-                            SecurityStamp = "948cc8de-1c6c-4a9d-9351-3a17a76f342d",
+                            RegisteredOn = new DateTime(2023, 7, 30, 14, 5, 50, 333, DateTimeKind.Utc).AddTicks(5656),
+                            SecurityStamp = "3e2dfcb4-5a6e-4d2e-914b-41e85833fd6c",
                             TwoFactorEnabled = false,
                             UserName = "applicationtest@abv.bg"
                         },
@@ -169,7 +171,7 @@ namespace HomeXplorer.Data.Migrations
                         {
                             Id = "6ea2b1f0-3183-4fe5-b2fa-83b765e18e55",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "92c105b4-cbb1-4f0f-83d7-eabafe920457",
+                            ConcurrencyStamp = "917dde6f-c1c8-42fa-87d7-2cf3ac3c2af1",
                             Email = "agenttest@test.bg",
                             EmailConfirmed = false,
                             FirstName = "Initial",
@@ -177,10 +179,10 @@ namespace HomeXplorer.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "AGENTTEST@TEST.BG",
                             NormalizedUserName = "AGENTTEST@TEST.BG",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMxVd+YGDFEd9I/ABBONdKQTuQkA9qbM0IuiCx9vdyeq5/2LeyPUsUvQqqD+bZA/gQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJlUZt/wTxQFCTOPASO02BonflraHqimx9XCLp/h+6kOlRIIsYzD7MDXsXiV8yjbPg==",
                             PhoneNumberConfirmed = false,
-                            RegisteredOn = new DateTime(2023, 7, 30, 14, 8, 56, 938, DateTimeKind.Utc).AddTicks(2696),
-                            SecurityStamp = "1e65e403-07d5-410e-9dc8-2c2ed94e2442",
+                            RegisteredOn = new DateTime(2023, 7, 30, 14, 5, 50, 342, DateTimeKind.Utc).AddTicks(4253),
+                            SecurityStamp = "e32e83d3-ec16-4279-81ee-d019b01d7caf",
                             TwoFactorEnabled = false,
                             UserName = "agenttest@test.bg"
                         },
@@ -188,18 +190,18 @@ namespace HomeXplorer.Data.Migrations
                         {
                             Id = "fad56a17-221a-409c-b9aa-5fa0f274f9c0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7d6aa63f-4a9f-4234-a622-c79d6905eff8",
-                            Email = "rentertest@test.bg",
+                            ConcurrencyStamp = "dcce86de-bf92-48a1-8982-0340b6daf3bd",
+                            Email = "renterttest@test.bg",
                             EmailConfirmed = false,
                             FirstName = "Initial",
                             LastName = "Renter",
                             LockoutEnabled = false,
                             NormalizedEmail = "RENTERTEST@TEST.BG",
-                            NormalizedUserName = "RENTERTEST@TEST.BG",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHggyw4QBfimzvUmEMKM56Y2f1DajcRI6pw0YvsBqxOIUKHvEKUfhP4bIIT2VxlPxw==",
+                            NormalizedUserName = "renterTEST@TEST.BG",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHbzWsKDSOpSCRk3lI2lAECHfvfvS4l721MUNMQde4GPmz7W0yjpork36yEyrHUwlA==",
                             PhoneNumberConfirmed = false,
-                            RegisteredOn = new DateTime(2023, 7, 30, 14, 8, 56, 948, DateTimeKind.Utc).AddTicks(2481),
-                            SecurityStamp = "9fb2f67e-330e-4d66-8327-5047be45cf35",
+                            RegisteredOn = new DateTime(2023, 7, 30, 14, 5, 50, 352, DateTimeKind.Utc).AddTicks(9585),
+                            SecurityStamp = "3fcf72b1-2189-4abf-910b-27dd921ab699",
                             TwoFactorEnabled = false,
                             UserName = "rentertest@test.bg"
                         });
