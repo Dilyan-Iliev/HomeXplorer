@@ -26,7 +26,7 @@
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Result([FromQuery] PropertySearchViewModel searchResultModel,
-            int pageNumber = 1, int pageSize = 3,
+            int pageNumber = 1, int pageSize = 6,
             PropertySorting propertySorting = PropertySorting.Default)
         {
             try
