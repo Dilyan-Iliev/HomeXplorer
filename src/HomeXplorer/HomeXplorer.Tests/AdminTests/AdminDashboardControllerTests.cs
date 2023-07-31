@@ -589,7 +589,128 @@
             Assert.That(viewResult!.Model, Is.TypeOf<AddNonExistingPropertyTypeViewModel>());
         }
 
+        [Test]
+        public async Task HttpPost_AddPropertyType_Should_Add_New_NonExisting_PropertyType()
+        {
+            //Arrange
+            var model = new AddNonExistingPropertyTypeViewModel() { Name = "Test" };
 
+            adminService.Setup(a => a.AddNewPropertyTypeAsync(model))
+                .ReturnsAsync(false);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AddPropertyType(model);
+
+            //Arrange
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(adminController.AllPropertyTypes)));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Dashboard"));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Administrator"));
+            });
+
+            Assert.That(adminController.TempData["PropertyTypeSuccessfullyAdded"],
+                Is.EqualTo("The property type was successfully added"));
+        }
+
+        [Test]
+        public async Task HttpPost_AddPropertyType_Should_Not_Add_Existing_PropertyType()
+        {
+            //Arrange
+            var model = new AddNonExistingPropertyTypeViewModel() { Name = "Test" };
+
+            adminService.Setup(a => a.AddNewPropertyTypeAsync(model))
+                .ReturnsAsync(true);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AddPropertyType(model);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<ViewResult>());
+                Assert.That(adminController.TempData["InvalidPropertyTypeAdded"],
+                    Is.EqualTo("This property type already exists"));
+            });
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("Asd")]
+        [TestCase("Qwertyuiopasdfgh")]
+        public async Task HttpPost_AddPropertyType_On_Invalid_Model_Should_Return_Same_View_With_Model(string modelName)
+        {
+            //Arrange
+            var model = new AddNonExistingPropertyTypeViewModel() { Name = modelName };
+
+            adminService.Setup(a => a.AddNewPropertyTypeAsync(model))
+                .ReturnsAsync(false);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            if (string.IsNullOrEmpty(modelName))
+            {
+                adminController.ModelState.AddModelError("Name", "All fields are required");
+            }
+            else
+            {
+                adminController.ModelState.AddModelError("Name", "The field must be between 4 and 15 characters long.");
+            }
+
+            //Act
+            var result = await adminController.AddPropertyType(model);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        [Test]
+        public async Task HttpPost_AddPropertyType_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            var model = new AddNonExistingPropertyTypeViewModel() { Name = "Test" };
+
+            adminService.Setup(a => a.AddNewPropertyTypeAsync(model))
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AddPropertyType(model);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
+        [Test]
+        public async Task AllBuildingTypes_Should_Return_Correct_Data()
+        {
+
+        }
 
         private static void AssertForTempDataViewMethod(DashboardController adminController, IActionResult result)
         {
