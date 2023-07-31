@@ -1,15 +1,18 @@
 ﻿namespace HomeXplorer.Tests.AdminTests
 {
-    using HomeXplorer.Areas.Administrator.Controllers;
-    using HomeXplorer.Data.Entities;
-    using HomeXplorer.Services.Contracts;
-    using HomeXplorer.ViewModels.Admin;
-    using HomeXplorer.ViewModels.City;
-    using HomeXplorer.ViewModels.Country;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
     using Moq;
+
+    using HomeXplorer.Data.Entities;
+    using HomeXplorer.ViewModels.City;
+    using HomeXplorer.ViewModels.Admin;
+    using HomeXplorer.Services.Contracts;
+    using HomeXplorer.ViewModels.Country;
+    using HomeXplorer.Areas.Administrator.Controllers;
+    using NUnit.Framework.Constraints;
 
     public class AdminDashboardControllerTests
     {
@@ -834,6 +837,245 @@
                 Assert.That(adminController.TempData["InvalidBuildingTypeAdded"],
                     Is.EqualTo("This building type already exists"));
             });
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("Asds")]
+        [TestCase("Qwertyuiopasdfghjklz")]
+        public async Task HttpPost_AddBuildingType_On_Invalid_Model_Should_Return_Same_View_With_Model(string modelName)
+        {
+            //Arrange
+            var model = new AddNonExistingBuildingTypeViewModel() { Name = modelName };
+
+            adminService.Setup(a => a.AddNewBuildingTypeAsync(model))
+                .ReturnsAsync(true);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            if (string.IsNullOrEmpty(modelName))
+            {
+                adminController.ModelState.AddModelError("Name", "The Name field is required.");
+            }
+            else
+            {
+                adminController.ModelState.AddModelError("Name", "The Name field must be between 5 and 20 characters long.");
+            }
+
+            //Act
+            var result = await adminController.AddBuildingType(model);
+
+            //Assert
+            adminService.Verify(x => x.AddNewBuildingTypeAsync(model), Times.Never);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        [Test]
+        public async Task HttpPost_AddBuildingType_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            var model = new AddNonExistingBuildingTypeViewModel() { Name = "Test" };
+
+            adminService.Setup(a => a.AddNewBuildingTypeAsync(model))
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AddBuildingType(model);
+
+            //Assert
+            adminService.Verify(x => x.AddNewBuildingTypeAsync(model), Times.Once);
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
+        [Test]
+        public async Task PendingReviews_Should_Return_Correct_Data()
+        {
+            //Arrange
+            var expectedResult = new List<DashboardReviewViewModel>()
+            {
+                new DashboardReviewViewModel()
+                {
+                    Id = 1,
+                    AddedOn = "07/30/20023",
+                    ReviewCreatorName = "John Snow",
+                    Description = "Test Description",
+                    IsApproved = false,
+                    ReviewCreatorAvatarUrl = "test avatar url"
+                },
+                new DashboardReviewViewModel()
+                {
+                    Id = 2,
+                    AddedOn = "07/31/20023",
+                    ReviewCreatorName = "John Snow2",
+                    Description = "Test Description2",
+                    IsApproved = false,
+                    ReviewCreatorAvatarUrl = "test avatar url2"
+                },
+            };
+
+            adminService.Setup(a => a.GetAllPendingReviewsAsync())
+                .ReturnsAsync(expectedResult);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            //Act
+            var result = await adminController.PendingReviews();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.Not.Null);
+            Assert.That(viewResult!.Model, Is.TypeOf<List<DashboardReviewViewModel>>());
+        }
+
+        [Test]
+        public async Task PendingReviews_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            var expectedResult = new List<DashboardReviewViewModel>()
+            {
+                new DashboardReviewViewModel()
+                {
+                    Id = 1,
+                    AddedOn = "07/30/20023",
+                    ReviewCreatorName = "John Snow",
+                    Description = "Test Description",
+                    IsApproved = false,
+                    ReviewCreatorAvatarUrl = "test avatar url"
+                }
+            };
+
+            adminService.Setup(a => a.GetAllPendingReviewsAsync())
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.PendingReviews();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
+        [Test]
+        public async Task ApproveReview_Should_Return_RedirectToAction_When_Changes_Review_Approve_Status()
+        {
+            //Arrange
+            int reviewId = 1;
+            adminService.Setup(a => a.ApproveReviewAsync(reviewId))
+                .Verifiable();
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.ApproveReview(reviewId);
+
+            //Assert
+            adminService.Verify();
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(DashboardController.PendingReviews)));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Administrator"));
+            });
+        }
+
+        [Test]
+        public async Task ApproveReview_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            int reviewId = 1;
+            adminService.Setup(a => a.ApproveReviewAsync(reviewId))
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.ApproveReview(reviewId);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);            
+        }
+
+        [Test]
+        public async Task DeleteReview_Should_Return_RedirectToAction_When_Removes_Review()
+        {
+            //Arrange
+            int reviewId = 1;
+            adminService.Setup(a => a.DeleteReviewAsync(reviewId))
+                .Verifiable();
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.DeleteReview(reviewId);
+
+            //Assert
+            adminService.Verify();
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(DashboardController.PendingReviews)));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Administrator"));
+            });
+        }
+
+        [Test]
+        public async Task DeleteReview_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            int reviewId = 1;
+            adminService.Setup(a => a.DeleteReviewAsync(reviewId))
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.DeleteReview(reviewId);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);
         }
 
         private static void AssertForTempDataViewMethod(DashboardController adminController, IActionResult result)
