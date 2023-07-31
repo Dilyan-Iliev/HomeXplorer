@@ -1,6 +1,7 @@
 ﻿namespace HomeXplorer.Tests.AdminTests
 {
     using HomeXplorer.Areas.Administrator.Controllers;
+    using HomeXplorer.Data.Entities;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Admin;
     using HomeXplorer.ViewModels.City;
@@ -113,7 +114,8 @@
         public void HttpGet_Add_Country_Should_Return_ViewResult()
         {
             //Arrange
-            var adminController = new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
 
             //Act
             var result = adminController.AddCountry();
@@ -230,6 +232,197 @@
             //Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        [Test]
+        public async Task HttpPost_AddCountry_Should_Return_TempDataView_Method_On_Exception()
+        {
+            // Arrange
+            var model = new AddNonExistingCountryViewModel
+            {
+                Name = "TestCountry"
+            };
+
+            adminService.Setup(a => a.AddNewCountryAsync(model))
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            // Act
+            var result = await adminController.AddCountry(model);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
+        [Test]
+        public async Task AllCities_Should_Return_Correct_Data()
+        {
+            //Arrange
+            var expectedModel = new AllCountriesWithCitiesViewModel()
+            {
+                Countries = new List<SelectCountryViewModel>()
+                {
+                    new SelectCountryViewModel() { Id = 1, Name = "TestCountry"}
+                },
+                Cities = new List<SelectCityViewModel>()
+                {
+                    new SelectCityViewModel() { Id = 1, Name = "TestCity1"},
+                    new SelectCityViewModel() { Id = 2, Name = "TestCity2"},
+                }
+            };
+
+            adminService.Setup(a => a.GetAllCitiesFromCountryAsync())
+                .ReturnsAsync(expectedModel);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            //Act
+            var result = await adminController.AllCities();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult?.Model, Is.EqualTo(expectedModel));
+        }
+
+        [Test]
+        public async Task AllCities_Should_Return_TempDataView_Method_On_Exception()
+        {
+            //Arrange
+            var expectedModel = new AllCountriesWithCitiesViewModel()
+            {
+                Countries = new List<SelectCountryViewModel>()
+                {
+                    new SelectCountryViewModel() { Id = 1, Name = "TestCountry"}
+                },
+                Cities = new List<SelectCityViewModel>()
+                {
+                    new SelectCityViewModel() { Id = 1, Name = "TestCity1"},
+                    new SelectCityViewModel() { Id = 2, Name = "TestCity2"},
+                }
+            };
+
+            adminService.Setup(a => a.GetAllCitiesFromCountryAsync())
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AllCities();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
+        [Test]
+        public async Task HttpGet_AddCity_Should_Return_Correct_Data()
+        {
+            //Arrange
+            var expectedModel = new AllCountriesWithCitiesViewModel()
+            {
+                Countries = new List<SelectCountryViewModel>()
+                {
+                    new SelectCountryViewModel() { Id = 1, Name = "TestCountry"}
+                },
+                Cities = new List<SelectCityViewModel>()
+                {
+                    new SelectCityViewModel() { Id = 1, Name = "TestCity1"},
+                    new SelectCityViewModel() { Id = 2, Name = "TestCity2"},
+                }
+            };
+
+            adminService.Setup(a => a.GetAllCitiesFromCountryAsync())
+                .ReturnsAsync(expectedModel);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            //Act
+            var result = adminController.AddCountry();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(viewResult!.Model, Is.Not.Null);
+                Assert.That(viewResult.Model, Is.TypeOf<AddNonExistingCountryViewModel>());
+            });
+        }
+
+        [Test]
+        public async Task HttpPost_AddCity_Should_Add_New_NonExisting_City()
+        {
+            //Arrange
+            var model = new AddNonExistingCityToExistingCountryViewModel
+            {
+                CityName = "TestName",
+                CountryId = 1
+            };
+
+            countryService.Setup(cs => cs.GetCountriesAsync())
+                .ReturnsAsync(new List<SelectCountryViewModel>());
+
+            agentPropertyService.Setup(aps => aps.ExistByIdAsync<Country>(model.CountryId))
+                .ReturnsAsync(true);
+
+            adminService.Setup(a => a.AddNewCityAsync(model))
+                .ReturnsAsync(false);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AddCity(model);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+
+            var redirectToActionResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectToActionResult!.ActionName, Is.EqualTo(nameof(adminController.AllCities)));
+                Assert.That(redirectToActionResult!.ControllerName, Is.EqualTo("Dashboard"));
+                Assert.That(redirectToActionResult!.RouteValues!["area"], Is.EqualTo("Administrator"));
+            });
+        }
+
+        private static void AssertForTempDataViewMethod(DashboardController adminController, IActionResult result)
+        {
+            Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+
+            var redirectionResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectionResult!.ActionName, Is.EqualTo(nameof(adminController.Index)));
+                Assert.That(redirectionResult!.ControllerName, Is.EqualTo("Dashboard"));
+                Assert.That(redirectionResult!.RouteValues!["area"], Is.EqualTo("Administrator"));
+            });
+
+            Assert.That(adminController.TempData["DashboardError"],
+                Is.EqualTo("Something went wrong, please try again"));
         }
     }
 }
