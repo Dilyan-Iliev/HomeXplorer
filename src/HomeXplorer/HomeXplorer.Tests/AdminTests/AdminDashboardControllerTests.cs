@@ -709,7 +709,131 @@
         [Test]
         public async Task AllBuildingTypes_Should_Return_Correct_Data()
         {
+            //Arrange
+            var expectedResult = new List<string> { "Test1", "Test2" };
 
+            adminService.Setup(a => a.GetAllBuildingTypesAsync())
+                .ReturnsAsync(expectedResult);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            //Act
+            var result = await adminController.AllBuildingTypes();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.Not.Null);
+            Assert.That(viewResult!.Model, Is.EqualTo(expectedResult));
+        }
+
+        [Test]
+        public async Task AllBuildingTypes_Should_Return_TempDataView_Method_On_Excception()
+        {
+            //Arrange
+            var expectedResult = new List<string> { "Test1", "Test2" };
+
+            adminService.Setup(a => a.GetAllBuildingTypesAsync())
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AllBuildingTypes();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
+        [Test]
+        public void HttpGet_Add_Building_Type_Should_Return_ViewResult()
+        {
+            //Arrange
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            //Act
+            var result = adminController.AddBuildingType();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.Not.Null);
+            Assert.That(viewResult!.Model, Is.TypeOf<AddNonExistingBuildingTypeViewModel>());
+        }
+
+        [Test]
+        public async Task HttpPost_AddBuildingType_Should_Add_NonExisting_BuildingType()
+        {
+            //Arrange
+            var model = new AddNonExistingBuildingTypeViewModel() { Name = "Test" };
+
+            adminService.Setup(a => a.AddNewBuildingTypeAsync(model))
+                .ReturnsAsync(false);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AddBuildingType(model);
+
+            //Assert
+            adminService.Verify(x => x.AddNewBuildingTypeAsync(model), Times.Once);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+
+            var redirectToActionResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectToActionResult!.ActionName, Is.EqualTo(nameof(adminController.AllBuildingTypes)));
+                Assert.That(redirectToActionResult!.ControllerName, Is.EqualTo("Dashboard"));
+                Assert.That(redirectToActionResult!.RouteValues!["area"], Is.EqualTo("Administrator"));
+            });
+
+            Assert.That(adminController.TempData["BuildingTypeSuccessfullyAdded"],
+                Is.EqualTo("The building type was successfully added"));
+        }
+
+        [Test]
+        public async Task HttpPost_AddBuildingType_Should_Not_Add_Existing_BuildingType()
+        {
+            //Arrange
+            var model = new AddNonExistingBuildingTypeViewModel() { Name = "Test" };
+
+            adminService.Setup(a => a.AddNewBuildingTypeAsync(model))
+                .ReturnsAsync(true);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AddBuildingType(model);
+
+            //Assert
+            adminService.Verify(x => x.AddNewBuildingTypeAsync(model), Times.Once);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<ViewResult>());
+                Assert.That(adminController.TempData["InvalidBuildingTypeAdded"],
+                    Is.EqualTo("This building type already exists"));
+            });
         }
 
         private static void AssertForTempDataViewMethod(DashboardController adminController, IActionResult result)
