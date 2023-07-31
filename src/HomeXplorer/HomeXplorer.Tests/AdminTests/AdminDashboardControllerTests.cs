@@ -215,7 +215,8 @@
             adminService.Setup(a => a.AddNewCountryAsync(model))
                 .ReturnsAsync(false);
 
-            var adminController = new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
 
             if (string.IsNullOrEmpty(modelName))
             {
@@ -331,7 +332,7 @@
         }
 
         [Test]
-        public async Task HttpGet_AddCity_Should_Return_Correct_Data()
+        public void HttpGet_AddCity_Should_Return_Correct_Data()
         {
             //Arrange
             var expectedModel = new AllCountriesWithCitiesViewModel()
@@ -407,7 +408,188 @@
                 Assert.That(redirectToActionResult!.ControllerName, Is.EqualTo("Dashboard"));
                 Assert.That(redirectToActionResult!.RouteValues!["area"], Is.EqualTo("Administrator"));
             });
+
+            Assert.That(adminController.TempData["CitySuccessfullyAdded"],
+                Is.EqualTo("The city was successfully added"));
         }
+
+        [Test]
+        public async Task HttpPost_AddCity_Should_Not_Add_New_NonExisting_City_If_Country_Does_Not_Exist()
+        {
+            //Arrange
+            var model = new AddNonExistingCityToExistingCountryViewModel
+            {
+                CityName = "TestName",
+                CountryId = 1
+            };
+
+            countryService.Setup(cs => cs.GetCountriesAsync())
+                .ReturnsAsync(new List<SelectCountryViewModel>());
+
+            agentPropertyService.Setup(aps => aps.ExistByIdAsync<Country>(model.CountryId))
+                .ReturnsAsync(false);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AddCity(model);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(viewResult!.Model, Is.Not.Null);
+                Assert.That(viewResult.Model, Is.TypeOf<AddNonExistingCityToExistingCountryViewModel>());
+            });
+
+            Assert.That(adminController.TempData["InvalidDropdownOption"], Is.EqualTo("You must choose a valid option from the dropdowns"));
+        }
+
+        [Test]
+        [TestCase(null, 1)]
+        [TestCase(null, null)]
+        [TestCase("CityName", null)]
+        [TestCase("T", 1)]
+        [TestCase("jPh9kYVzAxFknu8EdIge04JR5TfRrA2GuG4H7yF2eaWUZvi6zrmk3q3qZEXuSgswvb4k0VmOQtGwwdsZ4D", 1)]
+        public async Task HttpPost_AddCity_On_Invalid_Model_Should_Return_Same_View_With_Model(string modelName,
+            int? countryId)
+        {
+            //Arrange
+            var model = new AddNonExistingCityToExistingCountryViewModel
+            {
+                CityName = modelName,
+                CountryId = countryId ?? 0
+            };
+
+            adminService.Setup(a => a.AddNewCityAsync(model))
+                .ReturnsAsync(false);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            if (string.IsNullOrEmpty(modelName) || countryId == null)
+            {
+                adminController.ModelState.AddModelError("Name", "All fields are required");
+            }
+            else
+            {
+                adminController.ModelState.AddModelError("Name", "The Name field must be between 2 and 85 characters long.");
+            }
+
+            //Act
+            var result = await adminController.AddCity(model);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        [Test]
+        public async Task HttpPost_Add_City_Should_Return_TempDataView_Method_On_Exception()
+        {
+            //Arrange
+            var model = new AddNonExistingCityToExistingCountryViewModel
+            {
+                CityName = "TestName",
+                CountryId = 1
+            };
+
+            countryService.Setup(cs => cs.GetCountriesAsync())
+                .ReturnsAsync(new List<SelectCountryViewModel>());
+
+            agentPropertyService.Setup(aps => aps.ExistByIdAsync<Country>(model.CountryId))
+                .ReturnsAsync(true);
+
+            adminService.Setup(a => a.AddNewCityAsync(model))
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AddCity(model);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
+        [Test]
+        public async Task AllPropertyTypes_Should_Return_Correct_Data()
+        {
+            //Arrange
+            var expectedData = new List<string>() { "Test1", "Test2" };
+
+            adminService.Setup(a => a.GetAllPropertyTypesAsync())
+                .ReturnsAsync(expectedData);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            //Act
+            var result = await adminController.AllPropertyTypes();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.EqualTo(expectedData));
+        }
+
+        [Test]
+        public async Task AllPropertyTypes_Should_Return_TempDataView_Method_On_Exception()
+        {
+            //Arrange
+            var expectedData = new List<string>() { "Test1", "Test2" };
+
+            adminService.Setup(a => a.GetAllPropertyTypesAsync())
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AllPropertyTypes();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
+        [Test]
+        public void HttpGet_AddPropertyType_Should_Return_ViewResult()
+        {
+            //Arrange
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            //Act
+            var result = adminController.AddPropertyType();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.Not.Null);
+            Assert.That(viewResult!.Model, Is.TypeOf<AddNonExistingPropertyTypeViewModel>());
+        }
+
+
 
         private static void AssertForTempDataViewMethod(DashboardController adminController, IActionResult result)
         {
