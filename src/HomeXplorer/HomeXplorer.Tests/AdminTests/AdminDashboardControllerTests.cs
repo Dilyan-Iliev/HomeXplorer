@@ -1078,6 +1078,154 @@
             AssertForTempDataViewMethod(adminController, result);
         }
 
+        [Test]
+        public async Task AllAgents_Should_Return_Correct_Data()
+        {
+            //Arrange
+            var expectedResult = new List<AllAgentsViewModel>()
+            {
+                new AllAgentsViewModel()
+                {
+                    FullName = "Test Name",
+                    City = "Test City",
+                    Country = "Test Country",
+                    Role = "Test Role",
+                    ProfileImageUrl = "Test Profile Image URL",
+                    TotalPropertiesLiked = 2,
+                    TotalPropertiesRented = 4,
+                    TotalPropertiesUploaded = 6
+                },
+            };
+
+            adminService.Setup(a => a.GetAllAgentsStatisticsAsync())
+                .ReturnsAsync(expectedResult);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            //Act
+            var result = await adminController.AllAgents();
+
+            //Assert
+            adminService.Verify(x => x.GetAllAgentsStatisticsAsync(), Times.Once);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.Not.Null);
+            Assert.That(viewResult!.Model, Is.TypeOf<List<AllAgentsViewModel>>());
+        }
+
+        [Test]
+        public async Task AllAgents_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            var expectedResult = new List<AllAgentsViewModel>()
+            {
+                new AllAgentsViewModel()
+                {
+                    FullName = "Test Name",
+                    City = "Test City",
+                    Country = "Test Country",
+                    Role = "Test Role",
+                    ProfileImageUrl = "Test Profile Image URL",
+                    TotalPropertiesLiked = 2,
+                    TotalPropertiesRented = 4,
+                    TotalPropertiesUploaded = 6
+                },
+            };
+
+            adminService.Setup(a => a.GetAllAgentsStatisticsAsync())
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AllAgents();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
+        [Test]
+        public async Task AllRenters_Should_Return_Correct_Data()
+        {
+            //Arrange
+            var expectedResult = new List<AllRentersViewModel>()
+            {
+                new AllRentersViewModel()
+                {
+                    FullName = "Test Name",
+                    City = "Test City",
+                    Country = "Test Country",
+                    Role = "Test Role",
+                    ProfileImageUrl = "Test Image URL",
+                    TotalPropertiesLiked = 3,
+                    TotalPropertiesRented = 1,
+                    TotalReviewsAdded = 0
+                }
+            };
+
+            adminService.Setup(a => a.GetAllRentersStatisticsAsync())
+                .ReturnsAsync(expectedResult);
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            //Act
+            var result = await adminController.AllRenters();
+
+            //Assert
+            adminService.Verify(x => x.GetAllRentersStatisticsAsync(), Times.Once);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.Not.Null);
+            Assert.That(viewResult!.Model, Is.TypeOf<List<AllRentersViewModel>>());
+        }
+
+        [Test]
+        public async Task AllRenters_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            var expectedResult = new List<AllRentersViewModel>()
+            {
+                new AllRentersViewModel()
+                {
+                    FullName = "Test Name",
+                    City = "Test City",
+                    Country = "Test Country",
+                    Role = "Test Role",
+                    ProfileImageUrl = "Test Image URL",
+                    TotalPropertiesLiked = 3,
+                    TotalPropertiesRented = 1,
+                    TotalReviewsAdded = 0
+                }
+            };
+
+            adminService.Setup(a => a.GetAllRentersStatisticsAsync())
+                .ThrowsAsync(new Exception());
+
+            var adminController =
+                new DashboardController(adminService.Object, countryService.Object, agentPropertyService.Object);
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            adminController.TempData = tempData;
+
+            //Act
+            var result = await adminController.AllRenters();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            AssertForTempDataViewMethod(adminController, result);
+        }
+
         private static void AssertForTempDataViewMethod(DashboardController adminController, IActionResult result)
         {
             Assert.That(result, Is.TypeOf<RedirectToActionResult>());
