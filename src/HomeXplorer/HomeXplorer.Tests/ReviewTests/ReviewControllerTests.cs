@@ -1,14 +1,15 @@
 ﻿namespace HomeXplorer.Tests.ReviewTests
 {
+    using System.Security.Claims;
+
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+
     using Moq;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.Areas.Renter.Controllers;
-    using Microsoft.AspNetCore.Mvc;
     using HomeXplorer.ViewModels.Property.Renter;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc.ViewFeatures;
-    using System.Security.Claims;
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     public class ReviewControllerTests
     {
