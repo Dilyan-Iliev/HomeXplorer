@@ -273,14 +273,14 @@
 
                 ICollection<string>? imagesUrls = null;
 
-                if (newImages.Any())
+                if (newImages!.Any())
                 {
-                    imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, newImages);
+                    imagesUrls = await this.cloudinaryService.UploadMany(this.cloudinary, newImages!);
                 }
 
                 var deletedPhotos = model.DeletedPhotosIds;
 
-                await this.propertyService.EditAsync(model, id, imagesUrls, oldPropertyImages, deletedPhotos);
+                await this.propertyService.EditAsync(model, id, imagesUrls, oldPropertyImages, deletedPhotos!);
 
                 return this.RedirectToAction("Details", "Property", new { area = UserRoleConstants.Agent, id });
             }

@@ -4,7 +4,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-
+		<UserSecretsId>aspnet-HomeXplorer-678cb22a-7d3d-4f46-b61c-212ac6e29d35</UserSecretsId>
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
