@@ -323,6 +323,333 @@
             AssertForTempDataViewMethod(controller, result);
         }
 
+        [Test]
+        public async Task AddToFavorite_Should_Return_Correct_Redirection_And_TempDataMessage()
+        {
+            //Arrange
+            var propertyId = Guid.NewGuid();
+
+            propertyService.Setup(ps => ps.AddToFavoritesAsync(propertyId, It.IsAny<string>()))
+                .Verifiable();
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.AddFavorite(propertyId);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["SuccessfullyAddedToFavs"],
+                    Is.EqualTo("The property was successfully added to favorites"));
+            });
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(controller.Favorites)));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Property"));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Renter"));
+            });
+        }
+
+        [Test]
+        public async Task AddToFavorite_Should_Return_Correct_Redirection_And_TempDataMessage_On_Exception()
+        {
+            //Arrange
+            var propertyId = Guid.NewGuid();
+
+            propertyService.Setup(ps => ps.AddToFavoritesAsync(propertyId, It.IsAny<string>()))
+                .ThrowsAsync(new Exception());
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.AddFavorite(propertyId);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["UnexpectedError"],
+                    Is.EqualTo("Something went wrong, please try again"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(controller.Favorites)));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Property"));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Renter"));
+            });
+        }
+
+        [Test]
+        public async Task RemoveFromFavorite_Should_Return_Correct_Redirection_And_TempDataMessage()
+        {
+            //Arrange
+            var propertyId = Guid.NewGuid();
+
+            propertyService.Setup(ps => ps.RemoveFromFavoritesAsync(propertyId, It.IsAny<string>()))
+                .Verifiable();
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.RemoveFavorite(propertyId);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["SuccessfullyRemovedFromFavs"],
+                    Is.EqualTo("The property was successfully removed from favorites"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(controller.Favorites)));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Property"));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Renter"));
+            });
+        }
+
+        [Test]
+        public async Task RemoveFromFavorite_Should_Return_Correct_Redirection_And_TempDataMessage_On_Excetpion()
+        {
+            //Arrange
+            var propertyId = Guid.NewGuid();
+
+            propertyService.Setup(ps => ps.RemoveFromFavoritesAsync(propertyId, It.IsAny<string>()))
+                .ThrowsAsync(new Exception());
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.RemoveFavorite(propertyId);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["UnexpectedError"],
+                    Is.EqualTo("Something went wrong, please try again"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(controller.Favorites)));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Property"));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Renter"));
+            });
+        }
+
+        [Test]
+        public async Task Rent_Should_Return_Correct_Redirection_And_TempDataMessage()
+        {
+            //Arrange
+            var propertyId = Guid.NewGuid();
+
+            propertyService.Setup(ps => ps.RentAsync(propertyId, It.IsAny<string>()))
+                .Verifiable();
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Rent(propertyId);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["SuccessfullyRented"],
+                    Is.EqualTo("The property was successfully rented"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(controller.Rented)));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Property"));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Renter"));
+            });
+        }
+
+        [Test]
+        public async Task Rent_Should_Return_Correct_Redirection_And_TempDataMessage_On_Excetpion()
+        {
+            //Arrange
+            var propertyId = Guid.NewGuid();
+
+            propertyService.Setup(ps => ps.RentAsync(propertyId, It.IsAny<string>()))
+                .ThrowsAsync(new Exception());
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Rent(propertyId);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["UnexpectedError"],
+                    Is.EqualTo("Something went wrong, please try again"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(controller.Rented)));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Property"));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Renter"));
+            });
+        }
+
+        [Test]
+        public async Task Leave_Should_Return_Correct_Redirection_And_TempDataMessage()
+        {
+            //Arrange
+            var propertyId = Guid.NewGuid();
+
+            propertyService.Setup(ps => ps.LeaveAsync(propertyId, It.IsAny<string>()))
+                .Verifiable();
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Leave(propertyId);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["SuccessfullyLeft"],
+                    Is.EqualTo("The property was successfully left"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(controller.Rented)));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Property"));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Renter"));
+            });
+        }
+
+        [Test]
+        public async Task Leave_Should_Return_Correct_Redirection_And_TempDataMessage_On_Excetpion()
+        {
+            //Arrange
+            var propertyId = Guid.NewGuid();
+
+            propertyService.Setup(ps => ps.LeaveAsync(propertyId, It.IsAny<string>()))
+                .ThrowsAsync(new Exception());
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Leave(propertyId);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["UnexpectedError"],
+                    Is.EqualTo("Something went wrong, please try again"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo(nameof(controller.Rented)));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Property"));
+                Assert.That(redirectResult!.RouteValues!["area"], Is.EqualTo("Renter"));
+            });
+        }
+
         private static void AssertForTempDataViewMethod(PropertyController propertyController,
             IActionResult result)
         {
