@@ -650,6 +650,200 @@
             });
         }
 
+        [Test]
+        public async Task Favorites_Should_Return_ViewResult_With_Not_Null_Model()
+        {
+            //Arrange
+            var model = new List<LatestPropertiesViewModel>
+            {
+                new LatestPropertiesViewModel()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Test name",
+                    Price = 55,
+                    Size = 20,
+                    City = "Test city",
+                    Status = "Test status",
+                    Visits = 2,
+                    AddedOn = DateTime.UtcNow.ToString("MM/dd/yyyy"),
+                    CoverImageUrl = "Test Cover Image URL"
+                }
+            };
+
+            propertyService.Setup(ps => ps.GetAllFavoritesAsync(It.IsAny<string>()))
+                .ReturnsAsync(model);
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            //Act
+            var result = await controller.Favorites();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.Not.Null);
+            Assert.That(viewResult!.Model, Is.TypeOf<List<LatestPropertiesViewModel>>());
+        }
+
+        [Test]
+        public async Task Favorites_Should_Return_TempDataView_On_Null_Model()
+        {
+            //Arrange
+            ICollection<LatestPropertiesViewModel>? model = null;
+
+            propertyService.Setup(ps => ps.GetAllFavoritesAsync(It.IsAny<string>()))
+                .ReturnsAsync(model!);
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Favorites();
+
+            //Assert
+            AssertForTempDataViewMethod(controller, result);
+        }
+
+        [Test]
+        public async Task Favorites_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            ICollection<LatestPropertiesViewModel> model = new List<LatestPropertiesViewModel>();
+
+            propertyService.Setup(ps => ps.GetAllFavoritesAsync(It.IsAny<string>()))
+                .ThrowsAsync(new Exception());
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Favorites();
+
+            //Assert
+            AssertForTempDataViewMethod(controller, result);
+        }
+
+        [Test]
+        public async Task Rented_Should_Return_ViewResult_With_Not_Null_Model()
+        {
+            //Arrange
+            var model = new List<LatestPropertiesViewModel>
+            {
+                new LatestPropertiesViewModel()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Test name",
+                    Price = 55,
+                    Size = 20,
+                    City = "Test city",
+                    Status = "Test status",
+                    Visits = 2,
+                    AddedOn = DateTime.UtcNow.ToString("MM/dd/yyyy"),
+                    CoverImageUrl = "Test Cover Image URL"
+                }
+            };
+
+            propertyService.Setup(ps => ps.GetAllRentedAsync(It.IsAny<string>()))
+                .ReturnsAsync(model);
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            //Act
+            var result = await controller.Rented();
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.Not.Null);
+            Assert.That(viewResult!.Model, Is.TypeOf<List<LatestPropertiesViewModel>>());
+        }
+
+        [Test]
+        public async Task Rented_Should_Return_TempDataView_On_Null_Model()
+        {
+            //Arrange
+            ICollection<LatestPropertiesViewModel>? model = null;
+
+            propertyService.Setup(ps => ps.GetAllRentedAsync(It.IsAny<string>()))
+                .ReturnsAsync(model!);
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Rented();
+
+            //Assert
+            AssertForTempDataViewMethod(controller, result);
+        }
+
+        [Test]
+        public async Task Rented_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            ICollection<LatestPropertiesViewModel> model = new List<LatestPropertiesViewModel>();
+
+            propertyService.Setup(ps => ps.GetAllRentedAsync(It.IsAny<string>()))
+                .ThrowsAsync(new Exception());
+
+            var controller = new PropertyController(propertyService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Rented();
+
+            //Assert
+            AssertForTempDataViewMethod(controller, result);
+        }
+
         private static void AssertForTempDataViewMethod(PropertyController propertyController,
             IActionResult result)
         {
