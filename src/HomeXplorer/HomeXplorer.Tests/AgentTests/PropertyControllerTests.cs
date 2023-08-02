@@ -18,6 +18,9 @@
     using HomeXplorer.ViewModels.Country;
     using HomeXplorer.ViewModels.PropertyType;
     using HomeXplorer.ViewModels.BuildingType;
+    using MessagePack;
+    using HomeXplorer.Data.Entities;
+    using System.Xml.Linq;
 
     public class PropertyControllerTests
     {
@@ -191,6 +194,246 @@
             var viewResult = result as ViewResult;
             Assert.That(viewResult!.Model, Is.Not.Null);
             Assert.That(viewResult!.Model, Is.TypeOf<AddPropertyViewModel>());
+
+            var model = viewResult.Model as AddPropertyViewModel;
+            Assert.Multiple(() =>
+            {
+                Assert.That(model!.Countries, Is.Not.Null);
+                Assert.That(model!.Countries, Is.EqualTo(countries));
+
+                Assert.That(model!.PropertyTypes, Is.Not.Null);
+                Assert.That(model!.PropertyTypes, Is.EqualTo(propertyTypes));
+
+                Assert.That(model!.BuildingTypes, Is.Not.Null);
+                Assert.That(model!.BuildingTypes, Is.EqualTo(buildingTypes));
+            });
+        }
+
+        [Test]
+        public async Task HttpGet_Add_Should_Return_TempDataView_On_Exception()
+        {
+            countryService.Setup(cs => cs.GetCountriesAsync())
+                .ThrowsAsync(new Exception());
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+                buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+                agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Add();
+
+            //Assert
+            AssertForTempDataViewMethod(controller, result);
+        }
+
+        [Test]
+        [TestCase(null, null, 249, 39, null, null, null, null, null, null, null)]
+        [TestCase(null, null, 100_000, 500, null, null, null, null, null, null, null)]
+        [TestCase("Qwertyuio", "Qwertyuiopasdfghjklz", 250, 40, "Qwertyuiopasdfg", 1, 1, 1, 1, 1, null)]
+        [TestCase("Qwertyuiop", "Qwertyuiopasdfghj", 100000, 500, "Qwertyuiopasdfg", 1, 1, 1, 1, 1, null)]
+        [TestCase("Qwertyuiop", "Qwertyuiopasdfghjklz", 250, 40, "Qwertyuiopasd", 1, 1, 1, 1, 1, null)]
+        public async Task HttpPost_Add_On_Invalid_Model_Should_Return_Same_View_With_Model(string name,
+            string description, decimal price, int size, string address, int? countryId, int? cityId,
+            int? propertyTypeId, int? propertyStatusId, int? buildingTypeId, ICollection<IFormFile>? images)
+        {
+            //Arrange
+            var model = new AddPropertyViewModel()
+            {
+                Name = name,
+                Description = description,
+                Price = price,
+                Size = size,
+                Address = address,
+                CountryId = countryId ?? 0,
+                CityId = cityId ?? 0,
+                PropertyTypeId = propertyTypeId ?? 0,
+                PropertyStatusId = propertyStatusId ?? 0,
+                BuildingTypeId = buildingTypeId ?? 0,
+                Images = images!
+            };
+
+            agentPropService.Setup(aps => aps.AddAsync(model, It.IsAny<ICollection<string>>(),
+                It.IsAny<string>()))
+                .Verifiable();
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+                buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+                agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description)
+                || string.IsNullOrEmpty(address) || countryId == null
+                || cityId == null || propertyTypeId == null || propertyStatusId == null
+                || buildingTypeId == null || images == null)
+            {
+                controller.ModelState.AddModelError("Name", "All fields are required");
+            }
+            else if (price < 250 || price > 100000)
+            {
+                controller.ModelState.AddModelError("Price", "Price field must be between 250 and 100000");
+            }
+            else if (size < 40 || size > 500)
+            {
+                controller.ModelState.AddModelError("Size", "Size field must be between 40 and 500");
+            }
+
+            //Act
+            var result = await controller.Add(model);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+        }
+
+        [Test]
+        public async Task HttpPost_Add_Should_Return_ViewResult_With_TempDataMessage_On_Invalid_DropdownOption()
+        {
+            var model = new AddPropertyViewModel()
+            {
+                Name = "Test Name",
+                Description = "Test Description",
+                Price = 125,
+                Size = 59,
+                Address = "Test Address",
+                CountryId = -1,
+                CityId = -2,
+                PropertyTypeId = 0,
+                PropertyStatusId = 0,
+                BuildingTypeId = -1,
+                Images = null!
+            };
+
+            countryService.Setup(cs => cs.GetCountriesAsync())
+                .ReturnsAsync(new List<SelectCountryViewModel>());
+
+            propertyTypeService.Setup(pts => pts.GetPropertyTypesAsync())
+                .ReturnsAsync(new List<SelectPropertyTypeViewModel>());
+
+            buildingTypeService.Setup(bts => bts.GetBuildingTypesAsync())
+                .ReturnsAsync(new List<SelectBuildingTypeViewModel>());
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<Country>(It.IsAny<int>()))
+                .ReturnsAsync(false);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<City>(It.IsAny<int>()))
+                .ReturnsAsync(false);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<PropertyType>(It.IsAny<int>()))
+                .ReturnsAsync(false);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<BuildingType>(It.IsAny<int>()))
+                .ReturnsAsync(false);
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+               buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+               agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Add(model);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<ViewResult>());
+                Assert.That(controller.TempData["InvalidDropdownOption"],
+                    Is.EqualTo("You must choose a valid option from the dropdowns"));
+            });
+        }
+
+        [Test]
+        public async Task HttpPost_Add_Should_Return_Correct_Redirection_On_Valid_Model_And_DropdownOptions()
+        {
+            var model = new AddPropertyViewModel()
+            {
+                Name = "Test Name",
+                Description = "Test Description",
+                Price = 125,
+                Size = 59,
+                Address = "Test Address",
+                CountryId = 1,
+                CityId = 2,
+                PropertyTypeId = 1,
+                PropertyStatusId = 1,
+                BuildingTypeId = 1,
+                Images = new List<IFormFile>()
+            };
+
+            countryService.Setup(cs => cs.GetCountriesAsync())
+                .ReturnsAsync(new List<SelectCountryViewModel>());
+
+            propertyTypeService.Setup(pts => pts.GetPropertyTypesAsync())
+                .ReturnsAsync(new List<SelectPropertyTypeViewModel>());
+
+            buildingTypeService.Setup(bts => bts.GetBuildingTypesAsync())
+                .ReturnsAsync(new List<SelectBuildingTypeViewModel>());
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<Country>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<City>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<PropertyType>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<BuildingType>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            cloudinaryService.Setup(cs => cs.UploadMany(cloudinary.Object,
+                It.IsAny<ICollection<IFormFile>>()))
+                .ReturnsAsync(new List<string>());
+
+            agentPropService.Setup(aps => aps.AddAsync(model, It.IsAny<List<string>>(), It.IsAny<string>()))
+                .Verifiable();
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+               buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+               agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            //Act
+            var result = await controller.Add(model);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+
+            var redirectionResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectionResult!.ActionName, Is.EqualTo("Index"));
+                Assert.That(redirectionResult!.ControllerName, Is.EqualTo("Home"));
+                Assert.That(redirectionResult!.RouteValues!["area"], Is.EqualTo("Agent"));
+            });
         }
 
         private static void AssertForTempDataViewMethod(PropertyController propertyController,
