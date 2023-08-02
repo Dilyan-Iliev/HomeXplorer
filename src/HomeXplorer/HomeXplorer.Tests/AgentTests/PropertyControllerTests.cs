@@ -21,6 +21,7 @@
     using MessagePack;
     using HomeXplorer.Data.Entities;
     using System.Xml.Linq;
+    using HomeXplorer.Services.Exceptions;
 
     public class PropertyControllerTests
     {
@@ -434,6 +435,77 @@
                 Assert.That(redirectionResult!.ControllerName, Is.EqualTo("Home"));
                 Assert.That(redirectionResult!.RouteValues!["area"], Is.EqualTo("Agent"));
             });
+        }
+
+        [Test]
+        public async Task HttpPost_Add_Should_Return_ViewResult_On_InvalidFileExtensionException()
+        {
+            var model = new AddPropertyViewModel()
+            {
+                Name = "Test Name",
+                Description = "Test Description",
+                Price = 125,
+                Size = 59,
+                Address = "Test Address",
+                CountryId = 1,
+                CityId = 2,
+                PropertyTypeId = 1,
+                PropertyStatusId = 1,
+                BuildingTypeId = 1,
+                Images = new List<IFormFile>(),
+                Errors = new List<string>() { "Not allowed file extension" }
+            };
+
+            countryService.Setup(cs => cs.GetCountriesAsync())
+                .ReturnsAsync(new List<SelectCountryViewModel>());
+
+            propertyTypeService.Setup(pts => pts.GetPropertyTypesAsync())
+                .ReturnsAsync(new List<SelectPropertyTypeViewModel>());
+
+            buildingTypeService.Setup(bts => bts.GetBuildingTypesAsync())
+                .ReturnsAsync(new List<SelectBuildingTypeViewModel>());
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<Country>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<City>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<PropertyType>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<BuildingType>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            cloudinaryService.Setup(cs => cs.UploadMany(cloudinary.Object,
+                It.IsAny<ICollection<IFormFile>>()))
+                .ThrowsAsync(new InvalidFileExtensionException("Not allowed file extension"));
+
+            //agentPropService.Setup(aps => aps.AddAsync(model, It.IsAny<List<string>>(), It.IsAny<string>()))
+            //    .Verifiable();
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+               buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+               agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            //Act
+            var result = await controller.Add(model);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            var resultModel = viewResult!.Model as AddPropertyViewModel;
+            Assert.That(resultModel!.Errors!, Has.Count.EqualTo(model.Errors.Count));
+            Assert.That(resultModel!.Errors!.ElementAt(0),
+                Is.EqualTo("Not allowed file extension"));
         }
 
         private static void AssertForTempDataViewMethod(PropertyController propertyController,

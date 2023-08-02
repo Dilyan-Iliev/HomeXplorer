@@ -102,7 +102,7 @@
                 }
                 catch (Exception)
                 {
-                    this.TempDataView();
+                    return this.TempDataView();
                 }
             }
 
@@ -142,6 +142,10 @@
                 model.BuildingTypes = await this.buildingTypeService.GetBuildingTypesAsync();
 
                 return this.View(model);
+            }
+            catch (Exception)
+            {
+                return this.TempDataView();
             }
         }
 

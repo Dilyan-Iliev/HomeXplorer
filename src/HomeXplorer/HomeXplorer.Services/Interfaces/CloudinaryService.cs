@@ -58,7 +58,6 @@
             }
 
             return resultURIs;
-
         }
 
         public async Task<string> UploadSingle(Cloudinary cloudinary, IFormFile file)
