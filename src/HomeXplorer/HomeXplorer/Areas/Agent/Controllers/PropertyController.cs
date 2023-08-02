@@ -298,6 +298,10 @@
 
                 return this.View(model);
             }
+            catch (Exception)
+            {
+                return this.TempDataView();
+            }
         }
 
         private IActionResult TempDataView()
