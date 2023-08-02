@@ -481,9 +481,6 @@
                 It.IsAny<ICollection<IFormFile>>()))
                 .ThrowsAsync(new InvalidFileExtensionException("Not allowed file extension"));
 
-            //agentPropService.Setup(aps => aps.AddAsync(model, It.IsAny<List<string>>(), It.IsAny<string>()))
-            //    .Verifiable();
-
             var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
                buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
                agentPropService.Object, propertyStatusService.Object, repo.Object)
@@ -506,6 +503,295 @@
             Assert.That(resultModel!.Errors!, Has.Count.EqualTo(model.Errors.Count));
             Assert.That(resultModel!.Errors!.ElementAt(0),
                 Is.EqualTo("Not allowed file extension"));
+        }
+
+        [Test]
+        public async Task HttpPost_Add_Should_Return_TempDataView_On_Exceptions_Different_Than_InvalidFileExtensionException()
+        {
+            var model = new AddPropertyViewModel()
+            {
+                Name = "Test Name",
+                Description = "Test Description",
+                Price = 125,
+                Size = 59,
+                Address = "Test Address",
+                CountryId = 1,
+                CityId = 2,
+                PropertyTypeId = 1,
+                PropertyStatusId = 1,
+                BuildingTypeId = 1,
+                Images = new List<IFormFile>(),
+                Errors = new List<string>() { "Not allowed file extension" }
+            };
+
+            countryService.Setup(cs => cs.GetCountriesAsync())
+                .ReturnsAsync(new List<SelectCountryViewModel>());
+
+            propertyTypeService.Setup(pts => pts.GetPropertyTypesAsync())
+                .ReturnsAsync(new List<SelectPropertyTypeViewModel>());
+
+            buildingTypeService.Setup(bts => bts.GetBuildingTypesAsync())
+                .ReturnsAsync(new List<SelectBuildingTypeViewModel>());
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<Country>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<City>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<PropertyType>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.ExistByIdAsync<BuildingType>(It.IsAny<int>()))
+                .ReturnsAsync(true);
+
+            agentPropService.Setup(aps => aps.AddAsync(model, It.IsAny<ICollection<string>>(), It.IsAny<string>()))
+                .ThrowsAsync(new Exception());
+
+            cloudinaryService.Setup(cs => cs.UploadMany(cloudinary.Object,
+                It.IsAny<ICollection<IFormFile>>()))
+                .ReturnsAsync(new List<string>());
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+               buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+               agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Add(model);
+
+            //Assert
+            AssertForTempDataViewMethod(controller, result);
+        }
+
+        [Test]
+        public async Task Details_Should_Return_ViewResult_With_Correct_Not_Null_Model()
+        {
+            //Arrange
+            var model = new DetailsPropertyViewModel()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test Property Name",
+                Description = "Test Property Description",
+                Address = "Test Property Address",
+                City = "Test Property City",
+                Country = "Test Property Country",
+                Size = 15,
+                Price = 50,
+                AddedOd = DateTime.UtcNow.ToString("MM/dd/yyyy"),
+                PropertyType = "Test Property Type",
+                PropertyStatus = "Test Property Status",
+                BuildingType = "Test Building Type",
+                Images = null!
+            };
+
+            agentPropService.Setup(aps => aps.GetDetailsAsync(model.Id))
+                .ReturnsAsync(model);
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+               buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+               agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            //Act
+            var result = await controller.Details(model.Id);
+
+            //Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<ViewResult>());
+
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult!.Model, Is.Not.Null);
+            Assert.That(viewResult!.Model, Is.TypeOf<DetailsPropertyViewModel>());
+
+            var detailsModel = viewResult!.Model as DetailsPropertyViewModel;
+            Assert.Multiple(() =>
+            {
+                Assert.That(detailsModel!.Id, Is.EqualTo(model.Id));
+                Assert.That(detailsModel.Name, Is.EqualTo(model.Name));
+                Assert.That(detailsModel.Size, Is.EqualTo(model.Size));
+                Assert.That(detailsModel.City, Is.EqualTo(model.City));
+                Assert.That(detailsModel.Price, Is.EqualTo(model.Price));
+                Assert.That(detailsModel.Images, Is.EqualTo(model.Images));
+                Assert.That(detailsModel.Country, Is.EqualTo(model.Country));
+                Assert.That(detailsModel.AddedOd, Is.EqualTo(model.AddedOd));
+                Assert.That(detailsModel.Address, Is.EqualTo(model.Address));
+                Assert.That(detailsModel.Description, Is.EqualTo(model.Description));
+            });
+        }
+
+        [Test]
+        public async Task HttpPost_Should_Return_Correct_Redirection_On_Null_Model()
+        {
+            //Arrange
+            DetailsPropertyViewModel? model = null;
+
+            agentPropService.Setup(aps => aps.GetDetailsAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(model);
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+               buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+               agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Details(It.IsAny<Guid>());
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["DetailsError"],
+                    Is.EqualTo("Can not show the details of the property"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo("Index"));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Home"));
+                Assert.That(redirectResult!.RouteValues!["area"],
+                    Is.EqualTo("Agent"));
+            });
+        }
+
+        [Test]
+        public async Task Details_Should_Return_TempDataView_On_Exception()
+        {
+            //Arrange
+            var model = new DetailsPropertyViewModel() { Id = Guid.NewGuid() };
+
+            agentPropService.Setup(aps => aps.GetDetailsAsync(model.Id))
+                .ThrowsAsync(new Exception());
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+               buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+               agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Details(model.Id);
+
+            //Assert
+            AssertForTempDataViewMethod(controller, result);
+        }
+
+        [Test]
+        public async Task Delete_Should_Return_Correct_Redirection_On_No_Exception()
+        {
+            //Arrange
+            var property = new Property() { Id = Guid.NewGuid() };
+            agentPropService.Setup(aps => aps.DeleteAsync(property.Id))
+                .Verifiable();
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+               buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+               agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Delete(property.Id);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["SuccessDelete"],
+                    Is.EqualTo("You removed successfuly a property"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo("Index"));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Home"));
+                Assert.That(redirectResult!.RouteValues!["area"],
+                    Is.EqualTo("Agent"));
+            });
+        }
+
+        [Test]
+        public async Task Delete_Should_Return_Correct_Redirection_On_Exception()
+        {
+            //Arrange
+            var property = new Property() { Id = Guid.NewGuid() };
+            agentPropService.Setup(aps => aps.DeleteAsync(property.Id))
+                .ThrowsAsync(new Exception());
+
+            var controller = new PropertyController(propertyTypeService.Object, countryService.Object,
+               buildingTypeService.Object, cloudinaryService.Object, cloudinary.Object,
+               agentPropService.Object, propertyStatusService.Object, repo.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = context
+                }
+            };
+
+            var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            //Act
+            var result = await controller.Delete(property.Id);
+
+            //Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result, Is.TypeOf<RedirectToActionResult>());
+                Assert.That(controller.TempData["FailedDelete"],
+                    Is.EqualTo("Something went wrong, try again"));
+            });
+
+            var redirectResult = result as RedirectToActionResult;
+            Assert.Multiple(() =>
+            {
+                Assert.That(redirectResult!.ActionName, Is.EqualTo("Details"));
+                Assert.That(redirectResult!.ControllerName, Is.EqualTo("Home"));
+                Assert.That(redirectResult!.RouteValues!["area"],
+                    Is.EqualTo("Agent"));
+                Assert.That(redirectResult!.RouteValues!["id"],
+                    Is.EqualTo(property.Id));
+            });
         }
 
         private static void AssertForTempDataViewMethod(PropertyController propertyController,

@@ -23,7 +23,7 @@
         public void TearDown()
         {
             dbContext.Database.EnsureDeleted();
-            //dbContext.Dispose();
+            dbContext.Dispose();
         }
     }
 }
