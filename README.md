@@ -24,6 +24,7 @@ HomeXplorer is online platform for renting and managing properties.
   <li>ASP.NET Core 6</li>
   <li>Entity Framework Core</li>
   <li>MS SQL Server</li>
+  <li>NUnit and Moq for testing</li>
   <li>Bootstrap 5</li>
   <li>HTML 5</li>
   <li>CSS 3</li>
