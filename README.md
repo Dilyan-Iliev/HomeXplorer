@@ -35,7 +35,7 @@ HomeXplorer is online platform for renting and managing properties.
 </ol>
 
 <hr />
-<p>Database Scheme: </p>
+<p><a href="https://github-production-user-asset-6210df.s3.amazonaws.com/102140524/258149186-b9d0ddf4-acf6-4b0d-afda-43a5faf66101.png">Database Scheme</a></p>
 
 <hr />
 <h2>App Features:</h2>
