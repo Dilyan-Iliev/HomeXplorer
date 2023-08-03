@@ -1,6 +1,6 @@
 # HomeXplorer
 
-<p>ASP.NET Core 6 Web Application Project</p>
+<p>ASP.NET Core 6 Web Application Educational Project</p>
 
 <h2>C# Web Development Path at <a href="https://softuni.bg/" target="_blank">SoftUni, Bulgaria</a></h2>
 
