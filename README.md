@@ -48,3 +48,6 @@ When it comes to the platform administrator, one can check platform statistics (
 <br/>
 <br/>
 When it comes to non-registered users - they could list and search for properties and to check property details.
+<br/>
+<br/>
+The application has two main layouts - one for the agents ; renters ; non-registered users and one for the administrator.
