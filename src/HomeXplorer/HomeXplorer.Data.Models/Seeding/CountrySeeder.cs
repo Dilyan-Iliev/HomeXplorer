@@ -12,6 +12,11 @@
                 {
                     Id = 1,
                     Name = "Bulgaria"
+                },
+                new Country()
+                {
+                    Id = 2,
+                    Name = "Greece"
                 }
             };
 

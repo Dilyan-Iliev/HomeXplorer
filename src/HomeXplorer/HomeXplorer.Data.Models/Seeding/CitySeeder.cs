@@ -9,42 +9,32 @@
     {
         public static ICollection<City>? GenerateCities()
         {
-            //check the path
-            string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"bin\..\bg.json");
-            string jsonFile = File.ReadAllText(jsonPath);
+            var cities = new List<City>();
 
-            CityViewModel[]? cityModels = JsonSerializer.Deserialize<CityViewModel[]>(jsonFile);
-
-            return cityModels?.Select(c => new City
+            var jsonPaths = new List<string>
             {
-                Id = c.Id,
-                Name = c.Name,
-                CountryId = c.CountryId
-            }).ToList() ?? null;
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"bin\..\bg.json"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"bin\..\gr.json")
+            };
 
-            //CityViewModel[]? cityModels =
-            //    JsonSerializer.Deserialize<CityViewModel[]>(jsonFile);
+            foreach (var jsonPath in jsonPaths)
+            {
+                string jsonFile = File.ReadAllText(jsonPath);
 
-            //var cities = new List<City>();
+                CityViewModel[]? cityModels = JsonSerializer.Deserialize<CityViewModel[]>(jsonFile);
 
-            //if (cityModels != null)
-            //{
-            //    foreach (var c in cityModels)
-            //    {
-            //        City city = new City
-            //        {
-            //            Id = c.Id,
-            //            Name = c.Name,
-            //            CountryId = c.CountryId,
-            //        };
+                if (cityModels != null)
+                {
+                    cities.AddRange(cityModels.Select(c => new City
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        CountryId = c.CountryId
+                    }));
+                }
+            }
 
-            //        cities.Add(city);
-            //    }
-
-            //    return cities;
-            //}
-
-            //return null;
+            return cities.Any() ? cities : null;
         }
     }
 }
