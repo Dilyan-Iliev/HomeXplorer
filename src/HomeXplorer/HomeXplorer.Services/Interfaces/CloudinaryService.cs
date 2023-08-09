@@ -18,8 +18,6 @@
             ICollection<string> resultURIs = new List<string>();
 
             string[] allowedFileExtensions = new string[] { "jpg", "png", "jpeg" };
-            
-            //TODO: Add where this method is used a check if result is null or no
 
             if (!files.Any())
             {

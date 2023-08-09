@@ -1,6 +1,6 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-    const countryDropdown = document.getElementById('countryDropdown');
-    const cityDropdown = document.getElementById('cityDropdown');
+    const countryDropdown = document.getElementById('countryDropdown1');
+    const cityDropdown = document.getElementById('cityDropdown1');
     console.log('Script loaded')
     countryDropdown.addEventListener('change', async function () {
         const selectedCountryId = this.value;

@@ -55,7 +55,7 @@
                     <div class="col-md-6 mb-2">
                         <div class="form-group mt-3">
                             <label asp-for="@Model.CountryId" class="pb-2">Country</label>
-                            <select asp-for="@Model.CountryId" class="form-control form-select form-control-a" id="countryDropdown">
+                            <select asp-for="@Model.CountryId" class="form-control form-select form-control-a" id="countryDropdown1">
                                 <option value="" selected>Select a country</option>
                                 @foreach (var country in Model.Countries)
                                 {
@@ -68,7 +68,7 @@
                     <div class="col-md-6 mb-2">
                         <div class="form-group mt-3">
                             <label asp-for="@Model.CityId" class="pb-2">City</label>
-                            <select asp-for="@Model.CityId" class="form-control form-select form-control-a" id="cityDropdown" disabled>
+                            <select asp-for="@Model.CityId" class="form-control form-select form-control-a" id="cityDropdown1" disabled>
                                 <option value="">Select a city</option>
                             </select>
                         </div>
@@ -125,4 +125,4 @@
     </div>
 </nav><!-- End Header/Navbar -->
 
-<script src="~/js/register/loadCities.js"></script>
+<script src="~/js/register/loadCitiesForSearch.js"></script>

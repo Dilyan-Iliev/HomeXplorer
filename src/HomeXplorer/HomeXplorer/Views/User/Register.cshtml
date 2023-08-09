@@ -78,8 +78,8 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="@Model.CountryId" class="form-label-add-edit">Choose a country</label>
-            <select asp-for="@Model.CountryId" class="form-control" aria-required="true" id="countryDropdown">
+            <label asp-for="@Model.CountryId" class="pb-2">Country</label>
+            <select asp-for="@Model.CountryId" class="form-control form-select form-control-a js-dropdown" id="countryDropdown">
                 <option value="" selected>Select a country</option>
                 @foreach (var country in Model.Countries)
                 {
@@ -90,9 +90,9 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="@Model.CityId" class="form-label-add-edit">Choose a city</label>
-            <select asp-for="@Model.CityId" class="form-control" aria-required="true" id="cityDropdown" disabled>
-                <option value="">Select City</option>
+            <label asp-for="@Model.CityId" class="pb-2">City</label>
+            <select asp-for="@Model.CityId" class="form-control form-select form-control-a js-dropdown" id="cityDropdown" disabled>
+                <option value="">Select a city</option>
             </select>
             <span asp-validation-for="@Model.CityId" class="text-danger"></span>
         </div>
@@ -107,9 +107,9 @@
     <!-- end previous / next buttons -->
 </form>
 
-<script src="~/js/register/register.js"></script>
 <script src="~/js/register/loadCities.js"></script>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/register/register.js"></script>
 }
