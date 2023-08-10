@@ -20,7 +20,8 @@
                 Email = "applicationtest@abv.bg",
                 NormalizedEmail = "APPLICATIONTEST@ABV.BG",
                 UserName = "applicationtest@abv.bg",
-                NormalizedUserName = "APPLICATIONTEST@ABV.BG"
+                NormalizedUserName = "APPLICATIONTEST@ABV.BG",
+                PhoneNumber = "0888888888"
             };
 
             adminUser.PasswordHash = hasher.HashPassword(adminUser, "homeXplorerAdmin123!");
@@ -35,7 +36,8 @@
                 Email = "agenttest@test.bg",
                 NormalizedEmail = "AGENTTEST@TEST.BG",
                 UserName = "agenttest@test.bg",
-                NormalizedUserName = "AGENTTEST@TEST.BG"
+                NormalizedUserName = "AGENTTEST@TEST.BG",
+                PhoneNumber = "0888888889"
             };
 
             agentUser.PasswordHash = hasher.HashPassword(agentUser, "homeXplorerAgent123!");
@@ -50,7 +52,8 @@
                 Email = "rentertest@test.bg",
                 NormalizedEmail = "RENTERTEST@TEST.BG",
                 UserName = "rentertest@test.bg",
-                NormalizedUserName = "RENTERTEST@TEST.BG"
+                NormalizedUserName = "RENTERTEST@TEST.BG",
+                PhoneNumber = "0888888810"
             };
 
             renterUser.PasswordHash = hasher.HashPassword(renterUser, "homeXplorerRenter123!");

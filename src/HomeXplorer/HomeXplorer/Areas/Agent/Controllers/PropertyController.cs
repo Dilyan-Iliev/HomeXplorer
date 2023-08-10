@@ -157,6 +157,10 @@
                 var property = await this.propertyService
                     .GetDetailsAsync(id);
 
+                //check if the agent is the uploader of the property in order to see its details:
+                //string currentUserId = this.User.GetId();
+
+
                 if (property == null)
                 {
                     this.TempData["DetailsError"] = "Can not show the details of the property";
