@@ -12,7 +12,7 @@
 
         Task<DetailsPropertyViewModel?> GetDetailsAsync(Guid id);
 
-        Task DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(Guid id, string userId);
 
         Task EditAsync(EditPropertyViewModel model, Guid propertyId,
             ICollection<string>? imageUrls, ICollection<CloudImage> oldImages, ICollection<int> deletedPhotosIds);

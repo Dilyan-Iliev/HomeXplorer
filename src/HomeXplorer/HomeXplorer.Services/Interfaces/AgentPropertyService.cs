@@ -134,18 +134,23 @@
         }
 
 
-        public async Task DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id, string userId)
         {
             var property = await this.dbContext
                 .Properties
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 
-            if (property != null)
+            bool isDeletionSucceeded = false;
+
+            if (property != null && property.Agent.UserId == userId)
             {
                 property.IsActive = false;
                 await this.dbContext.SaveChangesAsync();
+                isDeletionSucceeded = true;
             }
+
+            return isDeletionSucceeded;
         }
 
         public async Task EditAsync(EditPropertyViewModel model, Guid propertyId,

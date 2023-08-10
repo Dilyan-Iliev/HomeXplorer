@@ -189,8 +189,7 @@
         {
             try
             {
-
-                await this.propertyService.DeleteAsync(id);
+                await this.propertyService.DeleteAsync(id, this.User.GetId());
 
                 this.TempData["SuccessDelete"] = "You removed successfuly a property";
 
