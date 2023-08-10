@@ -11,15 +11,15 @@
 
 @if (this.TempData.ContainsKey("UnexpectedError"))
 {
-    <div class="text-center text-danger">@this.TempData["UnexpectedError"]</div>
+    <div class="alert alert-danger text-center">@this.TempData["UnexpectedError"]</div>
 }
 @if (this.TempData.ContainsKey("SuccessfullyRented"))
 {
-    <div class="text-center text-success">@this.TempData["SuccessfullyRented"]</div>
+    <div class="alert alert-success text-center">@this.TempData["SuccessfullyRented"]</div>
 }
 @if (this.TempData.ContainsKey("SuccessfullyLeft"))
 {
-    <div class="text-center text-success">@this.TempData["SuccessfullyLeft"]</div>
+    <div class="alert alert-success text-center">@this.TempData["SuccessfullyLeft"]</div>
 }
 
 <section class="property-grid grid">

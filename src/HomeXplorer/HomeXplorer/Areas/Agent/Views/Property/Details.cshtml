@@ -2,11 +2,11 @@
 
 @if (this.TempData.ContainsKey("FailedDelete"))
 {
-    <div class="text-danger text-center">@this.TempData["FailedDelete"]</div>
+    <div class="alert alert-danger text-center">@this.TempData["FailedDelete"]</div>
 }
 @if (this.TempData.ContainsKey("UnexpectedError"))
 {
-    <div class="text-center text-danger">@this.TempData["UnexpectedError"]</div>
+    <div class="alert alert-danger text-center">@this.TempData["UnexpectedError"]</div>
 }
 
 <!-- ======= Intro Single ======= -->

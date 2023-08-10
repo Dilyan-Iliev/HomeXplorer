@@ -6,7 +6,7 @@
 
 @if (this.TempData.ContainsKey("ReviewError"))
 {
-    <div class="text-center text-danger">@this.TempData["ReviewError"]</div>
+    <div class="alert alert-danger text-center">@this.TempData["ReviewError"]</div>
 }
 
 <form method="post" style="max-width: 500px; margin: 0 auto;">

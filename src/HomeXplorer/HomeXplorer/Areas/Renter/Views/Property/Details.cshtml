@@ -4,7 +4,7 @@
 <section class="intro-single">
     @if (this.TempData.ContainsKey("UnexpectedError"))
     {
-        <div class="text-center text-danger">@this.TempData["UnexpectedError"]</div>
+        <div class="alert alert-danger text-center">@this.TempData["UnexpectedError"]</div>
     }
 
     <div class="container">

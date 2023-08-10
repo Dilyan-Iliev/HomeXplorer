@@ -4,11 +4,11 @@
     <div>
         @if (this.TempData.ContainsKey("InvalidCityAdded"))
         {
-            <h4 class="text text-center text-danger">@this.TempData["InvalidCityAdded"]</h4>
+            <h4 class="alert alert-danger text-center">@this.TempData["InvalidCityAdded"]</h4>
         }
         @if (this.TempData.ContainsKey("InvalidDropdownOption"))
         {
-            <h4 class="text text-center text-danger">@this.TempData["InvalidDropdownOption"]</h4>
+            <h4 class="alert alert-danger text-center">@this.TempData["InvalidDropdownOption"]</h4>
         }
     </div>
 

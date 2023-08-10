@@ -5,15 +5,15 @@
 
     @if (this.TempData.ContainsKey("SuccessfullyDeleted"))
     {
-        <div class="text-center text-info">
+        <div class="alert alert-info text-center">
             @this.TempData["SuccessfullyDeleted"]
         </div>
     }
 
-    @if (this.TempData.ContainsKey(SuccessfullyApproved))
+    @if (this.TempData.ContainsKey("SuccessfullyApproved"))
     {
-        <div class="text-center text-success">
-            @this.TempData[SuccessfullyApproved]
+        <div class="alert alert-success text-center">
+            @this.TempData["SuccessfullyApproved"]
         </div>
     }
 

@@ -18,7 +18,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> AllProperties(int pageNumber = 1, int pageSize = 3,
+        public async Task<IActionResult> AllProperties(int pageNumber = 1, int pageSize = 6,
             PropertySorting propertySorting = PropertySorting.Default)
         {
             try
@@ -34,7 +34,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> AllNearby(int pageNumber = 1, int pageSize = 3,
+        public async Task<IActionResult> AllNearby(int pageNumber = 1, int pageSize = 6,
             PropertySorting propertySorting = PropertySorting.Default)
         {
             string userId = this.User.GetId();

@@ -11,15 +11,15 @@
 
 @if (this.TempData.ContainsKey("UnexpectedError"))
 {
-    <div class="text-center text-danger">@this.TempData["UnexpectedError"]</div>
+    <div class="alert alert-danger text-center">@this.TempData["UnexpectedError"]</div>
 }
 @if (this.TempData.ContainsKey("SuccessfullyAddedToFavs"))
 {
-    <div class="text-center text-success">@this.TempData["SuccessfullyAddedToFavs"]</div>
+    <div class="alert alert-success text-center">@this.TempData["SuccessfullyAddedToFavs"]</div>
 }
 @if (this.TempData.ContainsKey("SuccessfullyRemovedFromFavs"))
 {
-    <div class="text-center text-success">@this.TempData["SuccessfullyRemovedFromFavs"]</div>
+    <div class="alert alert-success text-center">@this.TempData["SuccessfullyRemovedFromFavs"]</div>
 }
 
 @if (!Model.Any())
