@@ -138,8 +138,16 @@
         {
             var property = await this.dbContext
                 .Properties
+                .Include(p => p.Agent)
+                .ThenInclude(a => a.User)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
+
+            //if (property != null)
+            //{
+            //    property.IsActive = false;
+            //    await this.dbContext.SaveChangesAsync();
+            //}
 
             bool isDeletionSucceeded = false;
 

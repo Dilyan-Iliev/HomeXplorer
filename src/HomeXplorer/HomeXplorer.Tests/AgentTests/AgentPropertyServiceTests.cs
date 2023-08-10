@@ -164,7 +164,7 @@
             await dbContext.SaveChangesAsync();
 
             //Act
-            await aps.DeleteAsync(property.Id);
+            await aps.DeleteAsync(property.Id, user.Id);
 
             //Assert
             Assert.That(property.IsActive, Is.False);

@@ -4,6 +4,22 @@
 {
     <div class="alert alert-danger text-center">@this.TempData["BadAccess"]</div>
 }
+@if (this.TempData.ContainsKey("IndexError"))
+{
+    <div class="alert alert-danger text-center">@this.TempData["IndexError"]</div>
+}
+@if (this.TempData.ContainsKey("DetailsError"))
+{
+    <div class="alert alert-danger text-center">@this.TempData["DetailsError"]</div>
+}
+@if (this.TempData.ContainsKey("SuccessDelete"))
+{
+    <div class="alert alert-success text-center">@this.TempData["SuccessDelete"]</div>
+}
+@if (this.TempData.ContainsKey("ProfileError"))
+{
+    <div class="alert alert-danger text-center">@this.TempData["ProfileError"]</div>
+}
 
 @if (!Model.Any())
 {
@@ -13,23 +29,6 @@
 }
 else
 {
-    @if (this.TempData.ContainsKey("IndexError"))
-    {
-        <div class="text-danger text-center">@this.TempData["IndexError"]</div>
-    }
-    @if (this.TempData.ContainsKey("DetailsError"))
-    {
-        <div class="text-danger text-center">@this.TempData["DetailsError"]</div>
-    }
-    @if (this.TempData.ContainsKey("SuccessDelete"))
-    {
-        <div class="text-success text-center">@this.TempData["SuccessDelete"]</div>
-    }
-    @if (this.TempData.ContainsKey("ProfileError"))
-    {
-        <div class="text-danger text-center">@this.TempData["ProfileError"]</div>
-    }
-
     <!-- ======= Latest Properties Section ======= -->
     <section class="section-property section-t8">
         <div class="container">
