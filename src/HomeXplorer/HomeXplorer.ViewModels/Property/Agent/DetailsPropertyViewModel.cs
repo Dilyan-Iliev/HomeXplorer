@@ -31,6 +31,8 @@
 
         public string AddedOd { get; set; } = null!;
 
+        public string AgentId { get; set; }
+
         public IEnumerable<PropertyImagesViewModel> Images { get; set; }
     }
 }

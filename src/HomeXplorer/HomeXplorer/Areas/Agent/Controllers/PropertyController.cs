@@ -157,15 +157,23 @@
                 var property = await this.propertyService
                     .GetDetailsAsync(id);
 
-                //check if the agent is the uploader of the property in order to see its details:
-                //string currentUserId = this.User.GetId();
-
 
                 if (property == null)
                 {
                     this.TempData["DetailsError"] = "Can not show the details of the property";
 
                     return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent });
+                }
+
+                //check if the agent is the uploader of the property in order to see its details:
+                string currentUserId = this.User.GetId();
+
+                string? agentUploaderId = property?.AgentId;
+
+                if (currentUserId != agentUploaderId)
+                {
+                    this.TempData["BadAccess"] = "You are not uploader of this property";
+                    return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent});
                 }
 
                 return this.View(property);
@@ -181,6 +189,7 @@
         {
             try
             {
+
                 await this.propertyService.DeleteAsync(id);
 
                 this.TempData["SuccessDelete"] = "You removed successfuly a property";
@@ -204,6 +213,15 @@
 
                 if (model != null)
                 {
+                    var currentUserId = this.User.GetId();
+                    var agentUploaderId = model.AgentId;
+
+                    if (currentUserId != agentUploaderId)
+                    {
+                        this.TempData["BadAccess"] = "You are not uploader of this property";
+                        return this.RedirectToAction("Index", "Home", new { area = UserRoleConstants.Agent });
+                    }
+
                     var editModel = new EditPropertyViewModel()
                     {
                         Name = model.Name,

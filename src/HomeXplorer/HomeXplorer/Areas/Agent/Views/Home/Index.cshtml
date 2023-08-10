@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<IndexAgentPropertiesViewModel>
 
+@if (this.TempData.ContainsKey("BadAccess"))
+{
+    <div class="alert alert-danger text-center">@this.TempData["BadAccess"]</div>
+}
+
 @if (!Model.Any())
 {
     <div>
@@ -8,7 +13,7 @@
 }
 else
 {
-    @if(this.TempData.ContainsKey("IndexError"))
+    @if (this.TempData.ContainsKey("IndexError"))
     {
         <div class="text-danger text-center">@this.TempData["IndexError"]</div>
     }

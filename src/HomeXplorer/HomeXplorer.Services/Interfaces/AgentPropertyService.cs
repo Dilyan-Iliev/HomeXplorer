@@ -214,6 +214,7 @@
                 .Where(p => p.Id == propertyId)
                 .Select(p => new EditPropertyViewModel()
                 {
+                    AgentId = p.Agent.UserId,
                     Name = p.Name,
                     Description = p.Description,
                     Address = p.Address,
@@ -270,6 +271,7 @@
                     PropertyStatus = p.PropertyStatus.Name,
                     PropertyType = p.PropertyType.Name,
                     BuildingType = p.BuildingType.Name,
+                    AgentId = p.Agent.UserId,
                     Images = p.Images
                         .Select(i => new PropertyImagesViewModel()
                         {

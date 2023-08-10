@@ -28,6 +28,8 @@
             this.Errors = new List<string>();
         }
 
+        public string AgentId { get; set; } = null!;
+
         [Required(ErrorMessage = FieldRequired)]
         [StringLength(NameMaxLength, MinimumLength = NameMinLength,
             ErrorMessage = FieldLength)]
