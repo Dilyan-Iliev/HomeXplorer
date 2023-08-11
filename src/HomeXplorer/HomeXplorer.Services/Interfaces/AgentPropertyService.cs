@@ -73,7 +73,7 @@
             IQueryable<Property> properties = this.dbContext
                 .Properties
                 .AsNoTracking()
-                .Where(p => p.Agent.UserId == userId);
+                .Where(p => p.Agent.UserId == userId && p.IsActive);
 
             properties = propertySorting switch
             {
