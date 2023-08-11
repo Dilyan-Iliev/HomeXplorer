@@ -1,5 +1,10 @@
 ﻿@model BaseMainPageViewModel
 
+@if (this.TempData.ContainsKey("UnexpectedError"))
+{
+    <div class="alert alert-info text-center">@this.TempData["UnexpectedError"]</div>
+}
+
 @if (Model.SliderProperties.Any())
 {
     <div class="intro intro-carousel swiper position-relative">

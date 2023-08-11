@@ -74,7 +74,7 @@
             catch (Exception)
             {
                 this.TempData["UnexpectedError"] = "Something went wrong, please try again";
-                return this.View();
+                return this.RedirectToAction(nameof(Index));
             }
         }
 
