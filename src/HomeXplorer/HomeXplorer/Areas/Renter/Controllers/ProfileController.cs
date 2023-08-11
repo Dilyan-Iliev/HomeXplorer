@@ -10,9 +10,9 @@
     using HomeXplorer.Extensions;
     using HomeXplorer.Services.Contracts;
     using HomeXplorer.ViewModels.Profile;
+    using HomeXplorer.Services.Exceptions;
 
     using static HomeXplorer.Common.UserRoleConstants;
-    using HomeXplorer.Services.Exceptions;
 
     public class ProfileController : BaseRenterController
     {

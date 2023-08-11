@@ -35,7 +35,7 @@
 
             if (renter != null)
             {
-                //If != null -> this property is already added to favorites
+                //If favProperty != null -> this property is already added to favorites
                 RenterPropertyFavorite? favProperty = await this.dbContext
                     .RentersPropertiesFavorites
                     .FirstOrDefaultAsync(rpf => rpf.RenterId == renter.Id

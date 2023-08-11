@@ -23,7 +23,6 @@
 
                 var properties = await this.propertyService.GetLastThreeAsync(userId);
                 return View(properties);
-
             }
             catch (Exception)
             {

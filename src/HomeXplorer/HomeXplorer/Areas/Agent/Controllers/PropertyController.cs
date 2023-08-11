@@ -233,6 +233,7 @@
                         CityId = model.CityId,
                         PropertyTypeId = model.PropertyTypeId,
                         PropertyStatusId = model.PropertyStatusId,
+                        AgentId = model.AgentId,
 
                         AddedImages = await this.propertyService.GetAllImageUrlsForPropertyAsync(id),
 
