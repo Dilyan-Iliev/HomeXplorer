@@ -6,6 +6,14 @@
         {
             <div class="alert alert-danger text-center">@this.TempData["ProfileError"]</div>
         }
+        @if (this.TempData.ContainsKey("InvalidFile"))
+        {
+            <div class="alert alert-danger text-center">@this.TempData["InvalidFile"]</div>
+        }
+        @if (this.TempData.ContainsKey("ErrorUpdateProfilPicture"))
+        {
+            <div class="alert alert-danger text-center">@this.TempData["ErrorUpdateProfilPicture"]</div>
+        }
     </div>
 
     <div class="row">

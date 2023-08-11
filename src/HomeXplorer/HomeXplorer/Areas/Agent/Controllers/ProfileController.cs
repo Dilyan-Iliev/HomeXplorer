@@ -12,6 +12,7 @@
     using HomeXplorer.ViewModels.Profile;
 
     using static HomeXplorer.Common.UserRoleConstants;
+    using HomeXplorer.Services.Exceptions;
 
     public class ProfileController
         : BaseAgentController
@@ -97,10 +98,15 @@
 
                 return this.RedirectToAction(nameof(MyProfile));
             }
+            catch (InvalidFileExtensionException)
+            {
+                this.TempData["InvalidFile"] = "Allowed file types are: jpg, png, jpeg!";
+                return this.RedirectToAction(nameof(MyProfile), "Profile", new { area = Agent });
+            }
             catch (Exception)
             {
                 this.TempData["ProfileError"] = "Something went wrong, try again";
-                return this.RedirectToAction("MyProfie", "Profile", new { area = Agent });
+                return this.RedirectToAction(nameof(MyProfile), "Profile", new { area = Agent });
             }
         }
     }
