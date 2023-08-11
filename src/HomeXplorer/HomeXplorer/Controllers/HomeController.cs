@@ -16,14 +16,17 @@
         private readonly ILogger<HomeController> _logger;
         private readonly IRenterPropertyService renterPropertyService;
         private readonly IReviewService reviewService;
+        private readonly IHomePropertyService homePropertyService;
 
         public HomeController(ILogger<HomeController> logger,
             IRenterPropertyService renterPropertyService,
-            IReviewService reviewService)
+            IReviewService reviewService,
+            IHomePropertyService homePropertyService)
         {
             _logger = logger;
             this.renterPropertyService = renterPropertyService;
             this.reviewService = reviewService;
+            this.homePropertyService = homePropertyService;
         }
 
         [AllowAnonymous]
@@ -57,6 +60,22 @@
             };
 
             return this.View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> All()
+        {
+            try
+            {
+                var model = await homePropertyService.GetAllPropertiesAsync();
+                return this.View(model);
+            }
+            catch (Exception)
+            {
+                this.TempData["UnexpectedError"] = "Something went wrong, please try again";
+                return this.View();
+            }
         }
 
         [AllowAnonymous]
