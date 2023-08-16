@@ -18,6 +18,7 @@
             this.reviewService = reviewService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             string? userId = this.User?.GetId();

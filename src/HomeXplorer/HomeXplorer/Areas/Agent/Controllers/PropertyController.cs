@@ -67,7 +67,6 @@
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            //Check if renter user can access this view and others
             try
             {
                 var model = new AddPropertyViewModel()

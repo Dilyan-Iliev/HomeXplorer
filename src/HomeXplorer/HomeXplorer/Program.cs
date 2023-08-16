@@ -13,8 +13,8 @@ namespace HomeXplorer
 
             var services = builder.Services;
 
-            var connectionString = builder.Configuration.GetConnectionString("MSSQL")
-                ?? throw new InvalidOperationException("Connection string 'MSSQL' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
             services.AddDbContext<HomeXplorerDbContext>(options =>
                 options.UseSqlServer(connectionString));
